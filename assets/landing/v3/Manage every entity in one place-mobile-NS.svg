@@ -1,0 +1,190 @@
+<svg width="594" height="319" viewBox="0 0 594 319" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_1343_31835)">
+<path d="M0 21.75C0 9.73781 9.73781 0 21.75 0H572.25C584.262 0 594 9.73781 594 21.75V297.25C594 309.262 584.262 319 572.25 319H21.75C9.7378 319 0 309.262 0 297.25V21.75Z" fill="black"/>
+<g clip-path="url(#clip1_1343_31835)">
+<g filter="url(#filter0_d_1343_31835)">
+<rect x="203.037" y="315.95" width="403.025" height="37.9152" rx="14.0427" fill="white"/>
+</g>
+<rect x="193.128" y="48.644" width="477.151" height="335.675" rx="13.43" fill="#F2F5F6" stroke="#E2E2E2" stroke-width="0.702134"/>
+<rect x="192.946" y="48.1904" width="477.286" height="39.3384" fill="white" stroke="#E6EBED" stroke-width="0.861319"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.2362" font-weight="bold" letter-spacing="0px"><tspan x="205.811" y="73.0647">CFO Dashboard</tspan></text>
+<rect x="333.46" y="56.4976" width="158.843" height="24.4135" rx="12.2067" fill="#44ED90" stroke="#00CA71" stroke-width="0.989344"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="11.2223" font-weight="500" letter-spacing="0px"><tspan x="341.051" y="72.094">1. United States of America</tspan></text>
+<rect x="429.436" y="257.531" width="116.092" height="224.928" rx="3.22477" transform="rotate(90 429.436 257.531)" fill="white"/>
+<line x1="211.762" y1="279.777" x2="422.984" y2="279.777" stroke="#CCD6DB" stroke-width="0.657197"/>
+<rect x="210.975" y="266.587" width="63.9003" height="4.86039" rx="2.43019" fill="#D9D9D9"/>
+<rect x="355.352" y="301.531" width="27.8174" height="12.5027" fill="#F7F7F7"/>
+<rect x="355.352" y="301.531" width="27.8174" height="12.5027" stroke="#CCD6DB" stroke-width="0.478396"/>
+<rect x="361.094" y="305.353" width="16.19" height="4.86039" rx="2.43019" fill="#D9D9D9"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M218.969 302.086L221.439 299.384C221.676 299.125 222.085 299.125 222.322 299.384L224.792 302.086C224.798 302.093 224.804 302.099 224.81 302.106H348.985C349.315 302.106 349.583 302.374 349.583 302.704V313.108C349.583 313.438 349.315 313.706 348.985 313.706H213.746C213.416 313.706 213.148 313.438 213.148 313.108V302.704C213.148 302.374 213.416 302.106 213.746 302.106H218.951C218.957 302.099 218.963 302.093 218.969 302.086Z" fill="white"/>
+<path d="M221.439 299.384L221.219 299.182V299.182L221.439 299.384ZM218.969 302.086L219.19 302.287L219.19 302.287L218.969 302.086ZM222.322 299.384L222.543 299.182V299.182L222.322 299.384ZM224.792 302.086L224.572 302.287L224.572 302.287L224.792 302.086ZM224.81 302.106L224.581 302.299L224.671 302.405H224.81V302.106ZM218.951 302.106V302.405H219.091L219.18 302.299L218.951 302.106ZM221.439 299.384L221.219 299.182L218.749 301.884L218.969 302.086L219.19 302.287L221.66 299.586L221.439 299.384ZM222.322 299.384L222.543 299.182C222.187 298.793 221.574 298.793 221.219 299.182L221.439 299.384L221.66 299.586C221.779 299.456 221.983 299.456 222.101 299.586L222.322 299.384ZM224.792 302.086L225.013 301.884L222.543 299.182L222.322 299.384L222.101 299.586L224.572 302.287L224.792 302.086ZM224.81 302.106L225.039 301.914C225.031 301.904 225.022 301.894 225.013 301.884L224.792 302.086L224.572 302.287C224.575 302.291 224.578 302.295 224.581 302.299L224.81 302.106ZM224.81 302.106V302.405H348.985V302.106V301.807H224.81V302.106ZM348.985 302.106V302.405C349.15 302.405 349.284 302.539 349.284 302.704H349.583H349.882C349.882 302.209 349.48 301.807 348.985 301.807V302.106ZM349.583 302.704H349.284V313.108H349.583H349.882V302.704H349.583ZM349.583 313.108H349.284C349.284 313.273 349.15 313.407 348.985 313.407V313.706V314.005C349.48 314.005 349.882 313.603 349.882 313.108H349.583ZM348.985 313.706V313.407H213.746V313.706V314.005H348.985V313.706ZM213.746 313.706V313.407C213.581 313.407 213.447 313.273 213.447 313.108H213.148H212.849C212.849 313.603 213.251 314.005 213.746 314.005V313.706ZM213.148 313.108H213.447V302.704H213.148H212.849V313.108H213.148ZM213.148 302.704H213.447C213.447 302.539 213.581 302.405 213.746 302.405V302.106V301.807C213.251 301.807 212.849 302.209 212.849 302.704H213.148ZM213.746 302.106V302.405H218.951V302.106V301.807H213.746V302.106ZM218.969 302.086L218.749 301.884C218.739 301.894 218.731 301.904 218.722 301.914L218.951 302.106L219.18 302.299C219.183 302.295 219.186 302.291 219.19 302.287L218.969 302.086Z" fill="#CCD6DB"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M218.492 289.786H217.595V287.095H213.558V286.198H218.492V289.786ZM217.146 287.544H212.213V291.58H213.11V292.477L214.455 291.58H217.146V287.544ZM216.249 288.889V288.441H213.11V288.889H216.249ZM216.249 289.338V289.786H213.11V289.338H216.249ZM216.249 290.683V290.235H213.11V290.683H216.249Z" fill="#008C4E"/>
+<rect x="221.93" y="285.75" width="19.399" height="4.86039" rx="2.43019" fill="#D9D9D9"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M248.15 292.926V286.348H251.888L253.383 287.992V292.926H248.15ZM252.262 290.87H250.393V291.281H252.262V290.87ZM249.272 289.637H252.262V290.048H249.272V289.637ZM252.262 288.403H249.272V288.814H252.262V288.403Z" fill="#008C4E"/>
+<rect x="256.748" y="286.348" width="19.399" height="4.86039" rx="2.43019" fill="#D9D9D9"/>
+<path d="M285.884 287.581V286.759H285.061V287.581H283.828V291.692H287.939V290.459H288.762V292.514H283.006V286.759H288.762V289.624L287.939 289.637V288.166L285.126 290.973L284.548 290.395L287.355 287.581H285.884Z" fill="#008C4E"/>
+<rect x="292.164" y="286.348" width="19.399" height="4.86039" rx="2.43019" fill="#D9D9D9"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M320.134 287.279C320.018 287.352 319.935 287.438 319.883 287.536L319.658 287.992H319.421V287.639H318.483V287.992H318.014V292.103H324.592V287.992H322.947L322.722 287.536C322.671 287.438 322.586 287.352 322.469 287.279C322.351 287.206 322.239 287.17 322.131 287.17H320.474C320.363 287.17 320.249 287.206 320.134 287.279ZM320.429 289.174C320.669 288.934 320.96 288.814 321.303 288.814C321.646 288.814 321.937 288.934 322.177 289.174C322.417 289.414 322.536 289.705 322.536 290.048C322.536 290.39 322.417 290.682 322.177 290.921C321.937 291.161 321.646 291.281 321.303 291.281C320.96 291.281 320.669 291.161 320.429 290.921C320.19 290.682 320.07 290.39 320.07 290.048C320.07 289.705 320.19 289.414 320.429 289.174Z" fill="#008C4E"/>
+<rect x="327.582" y="286.348" width="19.399" height="4.86039" rx="2.43019" fill="#D9D9D9"/>
+<rect x="660.91" y="257.365" width="116.09" height="224.923" rx="3.22471" transform="rotate(90 660.91 257.365)" fill="white"/>
+<line x1="443.244" y1="279.608" x2="654.462" y2="279.608" stroke="#CCD6DB" stroke-width="0.657183"/>
+<path d="M548.531 296.468C565.197 296.468 578.707 309.978 578.707 326.644C578.707 343.309 565.197 356.819 548.531 356.819C531.866 356.819 518.355 343.309 518.355 326.644C518.355 309.978 531.866 296.468 548.531 296.468ZM548.531 345.956C559.197 345.956 567.844 337.31 567.844 326.644C567.844 315.977 559.197 307.331 548.531 307.331C537.865 307.331 529.219 315.977 529.219 326.644C529.219 337.31 537.865 345.956 548.531 345.956Z" fill="#006388"/>
+<path d="M548.531 296.468C565.197 296.468 578.707 309.978 578.707 326.644C578.707 343.309 565.197 356.819 548.531 356.819C531.866 356.819 518.355 343.309 518.355 326.644C518.355 309.978 531.866 296.468 548.531 296.468ZM548.531 345.956C559.197 345.956 567.844 337.31 567.844 326.644C567.844 315.977 559.197 307.331 548.531 307.331C537.865 307.331 529.219 315.977 529.219 326.644C529.219 337.31 537.865 345.956 548.531 345.956Z" fill="#4AA4BE"/>
+<rect x="443.578" y="266.56" width="62.2135" height="4.73211" rx="2.36606" fill="#D9D9D9"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.15196" letter-spacing="0px"><tspan x="579.92" y="298.516">US</tspan></text>
+<path d="M569.139 304.561L574.114 296.465H578.707" stroke="#848484" stroke-width="0.367997"/>
+<rect x="660.93" y="134.853" width="116.09" height="224.924" rx="3.22471" transform="rotate(90 660.93 134.853)" fill="white"/>
+<line x1="443.262" y1="157.097" x2="654.48" y2="157.097" stroke="#CCD6DB" stroke-width="0.657185"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.06178" font-weight="bold" letter-spacing="0px"><tspan x="442.455" y="149.424">Income Trend US</tspan></text>
+<rect x="502.924" y="180.752" width="16.9689" height="151.562" transform="rotate(-90 502.924 180.752)" fill="#F7F7F7"/>
+<line x1="517.982" y1="188.289" x2="654.238" y2="188.289" stroke="#C2CBCF" stroke-width="0.165511"/>
+<line x1="517.982" y1="193.238" x2="654.238" y2="193.238" stroke="#C2CBCF" stroke-width="0.165511"/>
+<line x1="517.982" y1="198.182" x2="654.238" y2="198.182" stroke="#C2CBCF" stroke-width="0.165511"/>
+<line x1="517.982" y1="207.579" x2="654.238" y2="207.579" stroke="#C2CBCF" stroke-width="0.165511"/>
+<line x1="517.982" y1="212.529" x2="654.238" y2="212.529" stroke="#C2CBCF" stroke-width="0.165511"/>
+<line x1="517.982" y1="217.475" x2="654.238" y2="217.475" stroke="#C2CBCF" stroke-width="0.165511"/>
+<line x1="517.982" y1="222.422" x2="654.238" y2="222.422" stroke="#C2CBCF" stroke-width="0.165511"/>
+<line x1="517.982" y1="231.045" x2="654.238" y2="231.045" stroke="#C2CBCF" stroke-width="0.165511"/>
+<line x1="517.982" y1="235.992" x2="654.238" y2="235.992" stroke="#C2CBCF" stroke-width="0.165511"/>
+<line x1="517.982" y1="240.94" x2="654.238" y2="240.94" stroke="#C2CBCF" stroke-width="0.165511"/>
+<line x1="517.982" y1="245.961" x2="654.238" y2="245.961" stroke="#C2CBCF" stroke-width="0.165511"/>
+<rect x="517.844" y="236.034" width="59.6054" height="4.88284" fill="#DDEDED"/>
+<rect x="517.844" y="231.067" width="59.6054" height="4.88284" fill="#BBDBDA"/>
+<rect x="517.844" y="207.64" width="59.608" height="9.72992" fill="#BBDBDA"/>
+<rect x="517.844" y="183.368" width="59.608" height="9.76398" fill="#99C8C8"/>
+<text fill="#0060A7" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="3.97226" letter-spacing="0px"><tspan x="442.117" y="182.553">US&#10;</tspan><tspan x="446.307" y="187.351">South West&#10;</tspan><tspan x="446.307" y="192.149">South East&#10;</tspan><tspan x="442.117" y="201.745">&#10;</tspan><tspan x="442.117" y="206.543">All Sectors&#10;</tspan><tspan x="442.117" y="211.341">     Financial Services&#10;</tspan><tspan x="446.307" y="216.139">Insurance&#10;</tspan><tspan x="442.117" y="230.533">All Segments&#10;</tspan><tspan x="442.117" y="235.331">     Mid-Market&#10;</tspan><tspan x="446.307" y="240.129">Enterprise&#10;</tspan></text>
+<text fill="#1B1B1B" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="3.97226" letter-spacing="0px"><tspan x="442.117" y="196.947">Total US&#10;</tspan><tspan x="442.117" y="220.937">Total All Sectors&#10;</tspan><tspan x="442.117" y="225.735">&#10;</tspan><tspan x="442.117" y="244.927">Total All Segments</tspan></text>
+<text fill="#0060A7" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="3.97226" letter-spacing="0px"><tspan x="442.117" y="187.351">     </tspan><tspan x="442.117" y="192.149">     </tspan><tspan x="442.117" y="216.139">     </tspan><tspan x="442.117" y="240.129">     </tspan></text>
+<text fill="#0060A7" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="3.97226" letter-spacing="0px"><tspan x="558.088" y="201.693">&#10;</tspan><tspan x="558.088" y="235.279">36,400.00&#10;</tspan><tspan x="558.088" y="240.077">29,400.00&#10;</tspan></text>
+<text fill="#1B1B1B" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="3.97226" letter-spacing="0px"><tspan x="558.088" y="182.501">&#10;</tspan><tspan x="558.088" y="187.299">29,400.00&#10;</tspan><tspan x="558.088" y="192.097">36,400.00&#10;</tspan><tspan x="558.088" y="206.491">&#10;</tspan><tspan x="558.088" y="211.289">36,400.00&#10;</tspan><tspan x="558.088" y="216.087">29,400.00&#10;</tspan><tspan x="558.088" y="225.683">&#10;</tspan><tspan x="558.088" y="230.481">&#10;</tspan></text>
+<text fill="#1B1B1B" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="3.97226" font-weight="500" letter-spacing="0px"><tspan x="558.088" y="196.895">65,800.00&#10;</tspan></text>
+<text fill="#1B1B1B" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="3.97226" font-weight="500" letter-spacing="0px"><tspan x="558.088" y="220.885">65,800.00&#10;</tspan><tspan x="558.088" y="244.875">65,800.00</tspan></text>
+<text opacity="0.6" fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="2.75148" letter-spacing="0px"><tspan x="572.854" y="172.389">YTD</tspan></text>
+<text opacity="0.6" fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="2.75148" letter-spacing="0px"><tspan x="569.103" y="175.084">6/6/23</tspan></text>
+<text opacity="0.6" fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="2.75148" letter-spacing="0px"><tspan x="570.068" y="178.113">Actual</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="3.21006" font-weight="500" letter-spacing="0px"><tspan x="565.213" y="169.382">Revenue</tspan></text>
+<rect x="429.514" y="134.448" width="116.092" height="224.928" rx="3.22477" transform="rotate(90 429.514 134.448)" fill="white"/>
+<rect x="239.653" y="162.173" width="183.006" height="62.974" fill="white" stroke="#E6EBED" stroke-width="0.806194"/>
+<rect x="240.059" y="176.601" width="182.2" height="13.3493" fill="#F7F7F7"/>
+<rect x="240.059" y="204.043" width="182.2" height="13.3493" fill="#F7F7F7"/>
+<path d="M300.523 161.769L300.523 225.549" stroke="#E6EBED" stroke-width="0.806194"/>
+<path d="M361.789 161.769L361.789 225.549" stroke="#E6EBED" stroke-width="0.806194"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.03097" letter-spacing="0px"><tspan x="239.312" y="234.445">31/1/2023</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.03097" letter-spacing="0px"><tspan x="289.885" y="234.445">28/02/2024</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.03097" letter-spacing="0px"><tspan x="351.154" y="234.445">31/03/2024</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.03097" letter-spacing="0px"><tspan x="401.139" y="234.445">30/04/2024</tspan></text>
+<line x1="211.838" y1="156.618" x2="423.061" y2="156.618" stroke="#CCD6DB" stroke-width="0.806194"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.06194" font-weight="bold" letter-spacing="0px"><tspan x="211.031" y="149.016">Company Performance</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.03097" letter-spacing="0px"><tspan x="279.303" y="244.117">Revenue</tspan></text>
+<path d="M273.077 244.09H271.234V242.155H273.077V244.09ZM275.38 244.089H273.537V240.864H275.38V244.089ZM277.682 244.086H275.839V242.796H277.682V244.086Z" fill="#CBD95D"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.03097" letter-spacing="0px"><tspan x="315.584" y="244.117">Total Costs</tspan></text>
+<path d="M309.368 244.09H307.525V242.155H309.368V244.09ZM311.667 244.089H309.824V240.864H311.667V244.089ZM313.973 244.086H312.13V242.796H313.973V244.086Z" fill="#37B5B3"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.03097" letter-spacing="0px"><tspan x="355.607" y="244.117">Net Income (Loss)</tspan></text>
+<path d="M349.394 244.09H347.551V242.155H349.394V244.09ZM351.693 244.089H349.851V240.864H351.693V244.089ZM354 244.086H352.157V242.796H354V244.086Z" fill="#F7B632"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.83716" letter-spacing="0px"><tspan x="231.32" y="223.971">$0</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.83716" letter-spacing="0px"><tspan x="215.612" y="213.488">$800,000</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.83716" letter-spacing="0px"><tspan x="211.707" y="201.397">$1,200,000</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.83716" letter-spacing="0px"><tspan x="211.505" y="189.306">$1,800,000</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.83716" letter-spacing="0px"><tspan x="211.505" y="177.211">$2,400,000</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.83716" letter-spacing="0px"><tspan x="211.505" y="165.924">$3,000,000</tspan></text>
+<path d="M292.062 195.045L262.382 200.304L244.789 198.201L244.789 224.195H417.353V182.724L402.247 188.283L368.659 188.133L322.274 194.294L292.062 195.045Z" fill="#F7B632" stroke="#DB9811" stroke-width="0.989344"/>
+<path d="M274.959 206.819L244.789 205.797V224.196H417.35V195.21L402.417 200.686L366.991 199.883L323.565 204.264L290.744 203.932L274.959 206.819Z" fill="#45C4BB" stroke="#34ACA4" stroke-width="0.989344"/>
+<path d="M267.02 211.984L244.789 211.341V224.196H417.353L417.37 203.78L402.606 206.107L368.82 206.199L325.79 209.137L290.683 209.688L267.02 211.984Z" fill="#CBD95D" stroke="#B2C425" stroke-width="0.989344"/>
+<path d="M258.396 97.8661C258.396 96.9789 259.317 96.2598 260.453 96.2598H324.876C326.012 96.2598 326.932 96.9789 326.932 97.8661V128.921C326.932 129.808 326.012 130.528 324.876 130.528H260.453C259.317 130.528 258.396 129.808 258.396 128.921V97.8661Z" fill="white"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.99686" letter-spacing="0px"><tspan x="261.822" y="105.506">Operating Expenses</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.71025" font-weight="bold" letter-spacing="0px"><tspan x="261.934" y="117.454">$549,779</tspan></text>
+<g clip-path="url(#clip2_1343_31835)">
+<rect width="9.42364" height="9.42364" transform="translate(320.191 118.536) rotate(-180)" fill="white"/>
+<line x1="315.548" y1="115.467" x2="315.548" y2="110.086" stroke="#00D639" stroke-width="1.6073" stroke-linecap="round"/>
+<path d="M312.512 114.417L315.251 117.061C315.406 117.21 315.652 117.21 315.807 117.061L318.546 114.417" stroke="#00D639" stroke-width="1.60918" stroke-linecap="round"/>
+</g>
+<text fill="#0060A7" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.28347" letter-spacing="0px"><tspan x="262.731" y="126.975">- $9,704 vs prior quarter</tspan></text>
+<path d="M329.34 97.8661C329.34 96.9789 330.26 96.2598 331.396 96.2598H395.819C396.955 96.2598 397.875 96.9789 397.875 97.8661V128.921C397.875 129.808 396.955 130.528 395.819 130.528H331.396C330.26 130.528 329.34 129.808 329.34 128.921V97.8661Z" fill="white"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.99686" letter-spacing="0px"><tspan x="332.766" y="105.506">Current Assets</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.71025" font-weight="bold" letter-spacing="0px"><tspan x="332.766" y="117.454">$28.6M</tspan></text>
+<g clip-path="url(#clip3_1343_31835)">
+<rect width="9.42364" height="9.42364" transform="translate(381.6 109.113)" fill="white"/>
+<line x1="386.243" y1="112.183" x2="386.243" y2="117.564" stroke="#00D639" stroke-width="1.6073" stroke-linecap="round"/>
+<path d="M389.279 113.232L386.54 110.589C386.385 110.439 386.139 110.439 385.984 110.589L383.245 113.232" stroke="#00D639" stroke-width="1.60918" stroke-linecap="round"/>
+</g>
+<text fill="#0060A7" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.28347" letter-spacing="0px"><tspan x="332.375" y="126.975">+$2,281,359 vs prior quarter </tspan></text>
+<path d="M400.289 97.8661C400.289 96.9789 401.21 96.2598 402.345 96.2598H466.769C467.904 96.2598 468.825 96.9789 468.825 97.8661V128.921C468.825 129.808 467.904 130.528 466.769 130.528H402.345C401.21 130.528 400.289 129.808 400.289 128.921V97.8661Z" fill="white"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.99686" letter-spacing="0px"><tspan x="403.715" y="105.506">Current Liabilities</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.71025" font-weight="bold" letter-spacing="0px"><tspan x="403.717" y="117.454">$23.7M</tspan></text>
+<g clip-path="url(#clip4_1343_31835)">
+<rect width="9.42364" height="9.42364" transform="translate(461.969 118.536) rotate(-180)" fill="white"/>
+<line x1="457.325" y1="115.467" x2="457.325" y2="110.086" stroke="#00D639" stroke-width="1.6073" stroke-linecap="round"/>
+<path d="M454.289 114.417L457.028 117.061C457.183 117.21 457.429 117.21 457.584 117.061L460.323 114.417" stroke="#00D639" stroke-width="1.60918" stroke-linecap="round"/>
+</g>
+<text fill="#0060A7" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.28347" letter-spacing="0px"><tspan x="405.298" y="126.975">-$505,656 vs prior month</tspan></text>
+<path d="M471.234 97.8661C471.234 96.9789 472.155 96.2598 473.29 96.2598H537.714C538.849 96.2598 539.77 96.9789 539.77 97.8661V128.921C539.77 129.808 538.849 130.528 537.714 130.528H473.29C472.155 130.528 471.234 129.808 471.234 128.921V97.8661Z" fill="white"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.99686" letter-spacing="0px"><tspan x="474.66" y="105.506">Deferred Revenue</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.71025" font-weight="bold" letter-spacing="0px"><tspan x="474.662" y="117.454">$19.0M</tspan></text>
+<g clip-path="url(#clip5_1343_31835)">
+<rect width="9.42364" height="9.42364" transform="translate(523.488 109.113)" fill="white"/>
+<line x1="528.132" y1="112.183" x2="528.132" y2="117.564" stroke="#00D639" stroke-width="1.6073" stroke-linecap="round"/>
+<path d="M531.168 113.232L528.429 110.589C528.274 110.439 528.028 110.439 527.873 110.589L525.134 113.232" stroke="#00D639" stroke-width="1.60918" stroke-linecap="round"/>
+</g>
+<text fill="#0060A7" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.28347" letter-spacing="0px"><tspan x="474.789" y="126.975">+$117,568 vs prior month</tspan></text>
+<path d="M542.18 97.8661C542.18 96.9789 543.1 96.2598 544.236 96.2598H608.659C609.795 96.2598 610.715 96.9789 610.715 97.8661V128.921C610.715 129.808 609.795 130.528 608.659 130.528H544.236C543.1 130.528 542.18 129.808 542.18 128.921V97.8661Z" fill="white"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.99686" letter-spacing="0px"><tspan x="545.605" y="105.506">EBITDA</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.71025" font-weight="bold" letter-spacing="0px"><tspan x="545.609" y="117.454">$1,638,143</tspan></text>
+<text fill="#0060A7" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="4.28347" letter-spacing="0px"><tspan x="546.806" y="126.975">+$26,810 vs prior year</tspan></text>
+</g>
+<g filter="url(#filter1_d_1343_31835)">
+<rect x="24" y="48.2285" width="161.41" height="192.059" rx="21.4324" fill="white"/>
+<rect x="24.2679" y="48.4964" width="160.874" height="191.523" rx="21.1645" stroke="#D1DADE" stroke-width="0.535811"/>
+</g>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="12.6646" font-weight="bold" letter-spacing="0px"><tspan x="39.2715" y="74.0565">Entities</tspan></text>
+<rect x="39.8125" y="89.459" width="57.6734" height="20.706" rx="10.353" fill="#3281D8"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.14737" font-weight="500" letter-spacing="0px"><tspan x="47.7344" y="102.929">Top Level</tspan></text>
+<rect x="39.8125" y="118.772" width="130.281" height="20.706" rx="10.353" fill="#44ED90"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.14737" font-weight="500" letter-spacing="0px"><tspan x="46.3965" y="132.092">1. United States of America</tspan></text>
+<rect x="39.8125" y="148.088" width="91.789" height="20.706" rx="10.353" fill="#89D8DA"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.14737" font-weight="500" letter-spacing="0px"><tspan x="46.3965" y="162.004">2. United Kingdom</tspan></text>
+<rect x="39.8125" y="177.405" width="54.9431" height="20.706" rx="10.353" fill="#00A19F"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.14737" font-weight="500" letter-spacing="0px"><tspan x="46.3965" y="190.892">3. Canada</tspan></text>
+<rect x="39.8125" y="206.72" width="62.2156" height="20.706" rx="10.353" fill="#00BB66"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.14737" font-weight="500" letter-spacing="0px"><tspan x="46.3965" y="220.113">4. Australia</tspan></text>
+</g>
+<defs>
+<filter id="filter0_d_1343_31835" x="174.952" y="304.716" width="459.196" height="94.0858" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="16.8512"/>
+<feGaussianBlur stdDeviation="14.0427"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1343_31835"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1343_31835" result="shape"/>
+</filter>
+<filter id="filter1_d_1343_31835" x="-15.1724" y="32.5596" width="239.755" height="270.403" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="23.5034"/>
+<feGaussianBlur stdDeviation="19.5862"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1343_31835"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1343_31835" result="shape"/>
+</filter>
+<clipPath id="clip0_1343_31835">
+<path d="M0 21.75C0 9.73781 9.73781 0 21.75 0H572.25C584.262 0 594 9.73781 594 21.75V297.25C594 309.262 584.262 319 572.25 319H21.75C9.7378 319 0 309.262 0 297.25V21.75Z" fill="white"/>
+</clipPath>
+<clipPath id="clip1_1343_31835">
+<rect x="192.875" y="48" width="480.066" height="336.67" rx="13.8547" fill="white"/>
+</clipPath>
+<clipPath id="clip2_1343_31835">
+<rect width="9.42364" height="9.42364" fill="white" transform="translate(320.191 118.536) rotate(-180)"/>
+</clipPath>
+<clipPath id="clip3_1343_31835">
+<rect width="9.42364" height="9.42364" fill="white" transform="translate(381.6 109.113)"/>
+</clipPath>
+<clipPath id="clip4_1343_31835">
+<rect width="9.42364" height="9.42364" fill="white" transform="translate(461.969 118.536) rotate(-180)"/>
+</clipPath>
+<clipPath id="clip5_1343_31835">
+<rect width="9.42364" height="9.42364" fill="white" transform="translate(523.488 109.113)"/>
+</clipPath>
+</defs>
+</svg>
