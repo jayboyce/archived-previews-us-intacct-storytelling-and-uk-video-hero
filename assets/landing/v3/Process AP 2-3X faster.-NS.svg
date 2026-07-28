@@ -1,0 +1,73 @@
+<svg width="411" height="292" viewBox="0 0 411 292" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 21.75C0 9.73781 9.73781 0 21.75 0H388.25C400.262 0 410 9.73781 410 21.75V270.25C410 282.262 400.262 292 388.25 292H21.75C9.73781 292 0 282.262 0 270.25V21.75Z" fill="black"/>
+<rect x="19.8398" y="129.309" width="370.994" height="116.496" rx="17.9224" fill="white" stroke="url(#paint0_linear_1106_33754)" stroke-width="3.58448"/>
+<g clip-path="url(#clip0_1106_33754)">
+<text fill="#1A1A1A" style="white-space: pre" xml:space="preserve" font-family="Sage Text" font-size="13.5789" font-weight="bold" letter-spacing="0px"><tspan x="35.9702" y="158.381">Journal Entry</tspan></text>
+</g>
+<text fill="black" fill-opacity="0.7" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="14.9364" letter-spacing="0px"><tspan x="35.9702" y="190.838">Vendor</tspan></text>
+<text fill="#1A1A1A" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="14.9364" font-weight="500" letter-spacing="0px"><tspan x="35.9702" y="217.352">ACME Inc.</tspan></text>
+<line x1="117.004" y1="173.709" x2="117.004" y2="222.911" stroke="#CCD6DB" stroke-opacity="0.5" stroke-width="0.878612"/>
+<text fill="black" fill-opacity="0.7" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="14.9364" letter-spacing="0px"><tspan x="129.158" y="190.838">PO</tspan></text>
+<text fill="#1A1A1A" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="14.9364" font-weight="500" letter-spacing="0px"><tspan x="129.158" y="217.352">PO-003499</tspan></text>
+<line x1="221.192" y1="173.709" x2="221.192" y2="222.911" stroke="#CCD6DB" stroke-opacity="0.5" stroke-width="0.878612"/>
+<text fill="black" fill-opacity="0.7" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="14.9364" letter-spacing="0px"><tspan x="233.347" y="190.838">Total</tspan></text>
+<text fill="#1A1A1A" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="14.9364" font-weight="500" letter-spacing="0px"><tspan x="233.347" y="217.352">$3,460.39</tspan></text>
+<line x1="316.38" y1="173.709" x2="316.38" y2="222.911" stroke="#CCD6DB" stroke-opacity="0.5" stroke-width="0.878612"/>
+<text fill="black" fill-opacity="0.7" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="14.9364" letter-spacing="0px"><tspan x="328.535" y="190.838">Due</tspan></text>
+<text fill="#1A1A1A" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="14.9364" font-weight="500" letter-spacing="0px"><tspan x="328.535" y="217.352">Aug 8</tspan></text>
+<rect opacity="0.6" x="26.7563" y="201" width="82.8911" height="22.1043" rx="3.68405" fill="url(#paint1_linear_1106_33754)"/>
+<rect opacity="0.6" x="129.909" y="201" width="82.8911" height="22.1043" rx="3.68405" fill="url(#paint2_linear_1106_33754)"/>
+<rect opacity="0.6" x="227.543" y="201" width="82.8911" height="22.1043" rx="3.68405" fill="url(#paint3_linear_1106_33754)"/>
+<rect opacity="0.6" x="320.936" y="201" width="51.975" height="21.5069" rx="3.68405" fill="url(#paint4_linear_1106_33754)"/>
+<rect x="98.6982" y="50.4492" width="219.101" height="59.1439" rx="7.64458" fill="#ECEEEF"/>
+<path d="M120.861 64.3867C119.723 64.3867 118.791 65.3194 118.791 66.4571V72.5091C118.791 73.6468 119.723 74.5795 120.861 74.5795H129.461C130.599 74.5795 131.531 73.6468 131.531 72.5091V66.4571C131.531 65.3194 130.599 64.3867 129.461 64.3867H120.861ZM120.861 65.3423H129.461C130.082 65.3423 130.576 65.836 130.576 66.4571V66.8092L125.161 69.7363L119.746 66.8092V66.4571C119.746 65.836 120.24 65.3423 120.861 65.3423ZM119.746 67.8955L124.934 70.7C125.004 70.7376 125.082 70.7574 125.161 70.7574C125.24 70.7574 125.318 70.7376 125.388 70.7L130.576 67.8955V72.5091C130.576 73.1302 130.082 73.6239 129.461 73.6239H120.861C120.24 73.6239 119.746 73.1302 119.746 72.5091V67.8955Z" fill="black"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="17.6336" font-weight="bold" letter-spacing="0em"><tspan x="117.459" y="95.9492">ACME Inc. Invoice</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="13.5984" letter-spacing="0em"><tspan x="137.903" y="75.5419">EMAIL</tspan></text>
+<path d="M293.59 71.957L281.424 84.5289C279.222 86.8041 279.222 90.4157 281.424 92.6909C283.73 95.074 287.552 95.074 289.858 92.6908L301.807 80.3436C303.229 78.8738 303.229 76.5407 301.807 75.0709C300.317 73.5313 297.848 73.5313 296.358 75.0709L283.915 87.929C283.165 88.7042 283.165 89.9347 283.915 90.7098C284.701 91.5218 286.003 91.5218 286.789 90.7098L299.336 77.7446" stroke="#ABABAB" stroke-width="1.34418" stroke-linecap="round"/>
+<path d="M161.168 127.516L161.168 121.658C161.168 119.223 163.142 117.249 165.577 117.249L178.266 117.249C180.701 117.249 182.675 115.275 182.675 112.84L182.675 107.801" stroke="url(#paint5_linear_1106_33754)" stroke-width="3.58448"/>
+<path d="M104.075 127.516L104.075 121.658C104.075 119.223 106.049 117.249 108.484 117.249L133.718 117.249C136.153 117.249 138.127 115.275 138.127 112.84L138.127 107.801" stroke="url(#paint6_linear_1106_33754)" stroke-width="3.58448"/>
+<path d="M263.584 127.516L263.584 121.658C263.584 119.223 261.61 117.249 259.175 117.249L246.487 117.249C244.052 117.249 242.078 115.275 242.078 112.84L242.078 107.801" stroke="url(#paint7_linear_1106_33754)" stroke-width="3.58448"/>
+<path d="M320.677 127.516L320.677 121.658C320.677 119.223 318.703 117.249 316.268 117.249L291.033 117.249C288.598 117.249 286.624 115.275 286.624 112.84L286.624 107.801" stroke="url(#paint8_linear_1106_33754)" stroke-width="3.58448"/>
+<defs>
+<linearGradient id="paint0_linear_1106_33754" x1="394.689" y1="192.485" x2="49.1415" y2="192.485" gradientUnits="userSpaceOnUse">
+<stop stop-color="#00D639"/>
+<stop offset="0.475962" stop-color="white"/>
+<stop offset="1" stop-color="#00D639"/>
+</linearGradient>
+<linearGradient id="paint1_linear_1106_33754" x1="83.744" y1="210.712" x2="26.8301" y2="212.936" gradientUnits="userSpaceOnUse">
+<stop stop-color="#00D639"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint2_linear_1106_33754" x1="186.896" y1="210.712" x2="129.982" y2="212.936" gradientUnits="userSpaceOnUse">
+<stop stop-color="#00D639"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint3_linear_1106_33754" x1="284.531" y1="210.712" x2="227.617" y2="212.936" gradientUnits="userSpaceOnUse">
+<stop stop-color="#00D639"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint4_linear_1106_33754" x1="356.669" y1="210.45" x2="320.95" y2="211.349" gradientUnits="userSpaceOnUse">
+<stop stop-color="#00D639"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="paint5_linear_1106_33754" x1="179.361" y1="127.516" x2="179.361" y2="109.593" gradientUnits="userSpaceOnUse">
+<stop offset="0.389423" stop-color="#00D639"/>
+<stop offset="1" stop-color="white"/>
+</linearGradient>
+<linearGradient id="paint6_linear_1106_33754" x1="132.881" y1="127.516" x2="132.881" y2="109.593" gradientUnits="userSpaceOnUse">
+<stop offset="0.389423" stop-color="#00D639"/>
+<stop offset="1" stop-color="white"/>
+</linearGradient>
+<linearGradient id="paint7_linear_1106_33754" x1="245.391" y1="127.516" x2="245.391" y2="109.593" gradientUnits="userSpaceOnUse">
+<stop offset="0.389423" stop-color="#00D639"/>
+<stop offset="1" stop-color="white"/>
+</linearGradient>
+<linearGradient id="paint8_linear_1106_33754" x1="291.871" y1="127.516" x2="291.871" y2="109.593" gradientUnits="userSpaceOnUse">
+<stop offset="0.389423" stop-color="#00D639"/>
+<stop offset="1" stop-color="white"/>
+</linearGradient>
+<clipPath id="clip0_1106_33754">
+<rect width="116.496" height="17" fill="white" transform="translate(35.9702 144.639)"/>
+</clipPath>
+</defs>
+</svg>
