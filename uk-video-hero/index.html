@@ -71,29 +71,57 @@
 
     /* ---- Hero shell ---- */
     .ns-hero {
+      /* Single source of truth for the video panel. --video-width is the
+         fraction of the page grid the video covers; --video-w/--video-h are its
+         resulting pixel size. The scrim and the hero's min-height both derive
+         from these, so changing --video-width alone resizes everything
+         consistently and keeps the scrim's bottom edge on the video's. */
+      --video-width: 0.62;
+      /* The panel BLEEDS to the right viewport edge, so its width tracks the
+         viewport (not the page grid). Its height is capped at --video-h-max so
+         the hero can't grow unbounded on wide screens — which means at wide
+         widths the frame IS cropped, anchored top (see object-position) to
+         protect heads.
+         --video-w is the panel's width; --video-h is its natural 16:9 height;
+         --video-h-cap is what it actually gets. */
+      --video-w: calc(100vw * var(--video-width));
+      --video-h: calc(var(--video-w) * 9 / 16);
+      --video-h-max: 360px;
+      --video-h-cap: min(var(--video-h), var(--video-h-max));
       position: relative;
       background: var(--black);
       color: var(--white);
-      padding-top: 64px;
-      padding-bottom: 32px;
-      min-height: 440px;
+      /* Padding trimmed so the copy block fits inside the band set by
+         --video-h-max. Stock 64/32 pushed the shell past the video's height
+         because the copy block is ~274px on a standard laptop.
+         --video-h-max is 360px: 25px above live sage.com's 335px hero band and
+         86px below this hero's original 446px. Live has no video in its hero,
+         so matching 335 exactly cropped ~62% of the frame at 2560 and cut the
+         desk action out entirely. */
+      padding-top: 40px;
+      padding-bottom: 20px;
+      height: var(--video-h-cap);
+      min-height: var(--video-h-cap);
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       overflow: hidden;
     }
 
-    /* The video occupies the right ~70% of the hero (shrunk ~30% toward the
-       right). Its hard left edge is NOT visible because the scrim below is
-       full-bleed and holds solid black until ~40%, burying the edge inside the
-       fade — so there's no seam. */
+    /* The video bleeds to the RIGHT viewport edge and spans --video-width of the
+       viewport. Its height is --video-h-cap: the natural 16:9 height until that
+       hits --video-h-max, after which the frame is cropped rather than letting
+       the hero grow. The crop is top-anchored (object-position below), so it
+       comes off the bottom and heads stay safe.
+       The scrim is full-bleed and takes the SAME height, so its fade always ends
+       exactly on the video's bottom edge. Its horizontal fade is expressed in
+       percentages, so it rescales with the panel automatically. */
     .ns-hero__bg {
       position: absolute;
       top: 0;
-      right: 0;
-      bottom: 0;
-      left: 30%;                     /* video panel = right 70% */
-      height: 440px;
+      right: 0;                      /* bleed to the viewport edge */
+      width: var(--video-w);
+      height: var(--video-h-cap);
       overflow: hidden;
       z-index: 0;
     }
@@ -105,15 +133,25 @@
       display: block;
       background: #1c2b28;           /* fallback tone before video paints */
     }
-    /* Scrim is FULL-BLEED (spans the whole hero, not just the video panel), so
-       its horizontal fade can cross over the video's left edge and hide the seam. */
+    /* Scrim is FULL-BLEED horizontally (spans the whole hero, not just the video
+       panel), so its horizontal fade can cross over the video's left edge and
+       hide the seam.
+       Its HEIGHT must track the video panel, not a fixed px value: the panel is
+       aspect-ratio driven, so it gets shorter as the viewport narrows. A fixed
+       height made the vertical fade overshoot the video's bottom edge on smaller
+       screens — the dark band landed on the hero's own background instead of on
+       the footage, so the lower scrim appeared to vanish. aspect-ratio here
+       matches the panel exactly at every width. */
     .ns-hero__scrim {
       position: absolute;
       top: 0;
       right: 0;
-      bottom: 0;
       left: 0;
-      height: 440px;
+      /* Scrim stays full-bleed horizontally, but its HEIGHT is taken straight
+         from --video-h so its bottom edge always lands exactly on the video's.
+         Using the shared variable (rather than its own ratio) keeps them locked
+         together at every width, including past the --page-max cap. */
+      height: var(--video-h-cap);
       z-index: 0;
       background:
         /* Vertical fade. It still has to reach solid black at 100% — the video
@@ -131,18 +169,18 @@
           #000 98%,
           #000 100%
         ),
-        /* Solid black over the copy, holding past the video's 30% left edge, then
+        /* Solid black over the copy, holding past the video's 38% left edge, then
            easing to clear over the imagery — buries the panel seam, keeps the
            darker left you liked. */
         linear-gradient(
           100deg,
           rgba(0, 0, 0, 1) 0%,
-          rgba(0, 0, 0, 1) 30%,
-          rgba(0, 0, 0, 0.9) 42%,
-          rgba(0, 0, 0, 0.66) 56%,
-          rgba(0, 0, 0, 0.4) 72%,
-          rgba(0, 0, 0, 0.18) 88%,
-          rgba(0, 0, 0, 0.06) 100%
+          rgba(0, 0, 0, 1) 43%,
+          rgba(0, 0, 0, 0.86) 54%,
+          rgba(0, 0, 0, 0.6) 66%,
+          rgba(0, 0, 0, 0.34) 78%,
+          rgba(0, 0, 0, 0.15) 90%,
+          rgba(0, 0, 0, 0.05) 100%
         );
     }
 
@@ -247,19 +285,65 @@
       box-shadow: 0 0 0 2px #1b1b1b, 0 0 0 4px #ffb500;
     }
 
+    /* [OPT-CHANGE 5] Tighten the gap between the hero and the tabset below.
+       NOT part of the hero — this targets sage's own tabset component
+       (.nav-tabs-wrapper-outer, from sage-main.css), which ships a
+       24px padding-top. Measured from the video's bottom edge to the BOTTOM of
+       the pill that was ~82px on a standard laptop; the pill's own 56px height
+       is most of that, and only the 24px padding is actually removable space.
+       Dropping it to 8px takes the gap above the pill from 26px to 10px (and
+       hero-to-pill-bottom from 82px to 66px) without crowding the control. The selector
+       mirrors the bundle's own (.score-tab.button-tabset .nav-tabs-wrapper-outer,
+       specificity 0,3,0) rather than using !important — a bare
+       .nav-tabs-wrapper-outer (0,1,0) loses to it and silently does nothing.
+       This is a DELIBERATE deviation from stock Sage spacing — it cannot ship
+       inside the scoped hero bundle (that CSS is scoped to .uk-hero-root and
+       this element is outside it). See CHANGES.md [OPT-CHANGE 5]. */
+    .score-tab.button-tabset .nav-tabs-wrapper-outer,
+    .score-tab.large-button-tabset .nav-tabs-wrapper-outer {
+      padding-top: 8px;
+    }
+
     /* ---- Responsive h1 scale (matches the sage bundle: 34→46→44→50) ---- */
     @media (max-width: 1200px) { :root { --fs-h1: 44px; } }
     @media (max-width: 992px)  { :root { --fs-h1: 46px; } }
 
-    /* ---- Mobile (≤720px): flat scrim, shorter band ---- */
-    @media (max-width: 720px) {
-      :root { --fs-h1: 34px; --page-gutter: 20px; }
-      .ns-hero { min-height: 400px; padding-top: 72px; }
+    /* ---- Tablet + mobile (≤1024px): flat scrim, full-bleed video ----
+       The desktop layout puts the copy BESIDE the video, relying on the scrim's
+       horizontal fade to hide the panel's left edge. As the viewport narrows the
+       panel's edge moves left, so by ~1024px the headline overlaps the footage
+       and its contrast depends on whichever frame is playing (the café scene is
+       bright) — a WCAG 1.4.3 risk, since contrast must hold against the WORST
+       frame. From 1024px down we switch to the stacked treatment: video
+       full-bleed behind the copy with a flat bottom-up scrim that darkens the
+       band uniformly. Same pattern ≤720px always used, started earlier. */
+    @media (max-width: 1024px) {
+      /* Type/gutter stay at tablet scale here; the ≤720px block below drops
+         them to the phone values. Only the LAYOUT switches at 1024. */
+      :root { --fs-h1: 40px; --page-gutter: 32px; }
+      /* Mobile stacks copy OVER a full-bleed video, so the shell must grow to
+         fit the copy — a fixed height clips it. Desktop's `height` is released
+         back to `auto` here; only the min-height floor applies. */
+      .ns-hero { height: auto; min-height: 400px; padding-top: 72px; }
       /* Full-bleed on mobile. At 30% the panel's hard left edge runs
          vertically through the headline and copy, and the mobile scrim has no
-         horizontal fade to bury it — so the seam shows straight down the text. */
-      .ns-hero__bg { height: 400px; left: 0; }
+         horizontal fade to bury it — so the seam shows straight down the text.
+         Mobile is the ONE case where cropping is intended: a full-width 16:9
+         panel would only be ~211px tall at 375px, too short for the hero. So we
+         override aspect-ratio with a fixed height and let object-fit:cover crop.
+         The scrim takes the SAME fixed height so its fade still ends exactly on
+         the video's bottom edge. */
+      .ns-hero__bg {
+        aspect-ratio: auto;
+        height: 400px;
+        /* Override the desktop grid anchoring: full-bleed edge to edge. */
+        left: 0;
+        right: 0;
+        width: auto;
+      }
       .ns-hero__scrim {
+        aspect-ratio: auto;
+        height: 400px;
         background:
           linear-gradient(
             to top,
@@ -274,6 +358,12 @@
       .ns-hero__subtitle { color: #fff; }   /* AA over worst-case bright frame */
     }
 
+    /* ---- Phone (≤720px): phone type scale. Layout already stacked above. ---- */
+    @media (max-width: 720px) {
+      :root { --fs-h1: 34px; --page-gutter: 20px; }
+      .ns-hero { padding-top: 72px; }
+    }
+
   </style>
 </head>
 <body>
@@ -283,7 +373,7 @@
         id="heroVideo"
         class="ns-hero__video"
         autoplay muted loop playsinline preload="auto"
-        poster="assets/video/sage-intacct-hero-poster.jpg">
+        poster="assets/video/gb-hero-v4-poster.jpg">
         <!-- Source chosen by viewport in the script below. -->
       </video>
     </div>
@@ -1873,8 +1963,8 @@ Businesses all over the world trust Sage                    </span></h2>
       // Pick the encode by viewport at load — <source media> is unreliable for
       // <video> across browsers, so set the source here instead.
       var src = window.matchMedia("(max-width: 640px)").matches
-        ? "assets/video/sage-intacct-hero-loop-web-mobile.mp4"
-        : "assets/video/sage-intacct-hero-loop-web.mp4";
+        ? "assets/video/gb-hero-v4-web-mobile.mp4"
+        : "assets/video/gb-hero-v4-web.mp4";
       var source = document.createElement("source");
       source.src = src;
       source.type = "video/mp4";
