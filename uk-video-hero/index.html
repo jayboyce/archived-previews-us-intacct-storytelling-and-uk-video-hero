@@ -50,8 +50,26 @@
       --font-text: "Sage Text", "Sage UI", system-ui, sans-serif;
       --fs-h1: 50px;
       --fs-body: 18px;
-      --page-max: 1280px;
-      --page-gutter: 40px;
+      /* [v2 LIVE-MATCH] Live sage.com caps its .container at 1440px and lets it
+         CENTRE — the side inset is auto margin, not a fixed gutter. So the
+         inset scales with the viewport: 51px at 1280, 144px at 1728.
+
+         Ours was capped at 1280 with a fixed gutter, which meant content
+         stopped growing past 1280 and the inset ran away — 275px at 1728
+         against live's 144px. Matching the cap fixes the whole family of
+         widths at once rather than tuning a gutter per breakpoint. */
+      /* [v2 LIVE-MATCH] Live sage.com sizes its .container as 92% of the
+         viewport, capped at 1440px, with NO padding — the side inset is the
+         leftover 8% (4% a side) until the cap bites, then auto margin.
+         Measured on live: 1178/1280, 1288/1400, 1440/1728 = 92.00%.
+
+         A fixed gutter can't reproduce that: it's proportional below the cap
+         and constant above it. Ours was max-width 1280 + 40px gutter, so the
+         content stopped growing and the inset ran away (275px at 1728 against
+         live's 144px). */
+      --page-max: 1440px;
+      --page-width: 92%;
+      --page-gutter: 0px;
     }
 
     * { box-sizing: border-box; }
@@ -63,7 +81,8 @@
     }
 
     .container {
-      width: 100%;
+      /* 92% + auto margins reproduces live's inset at every width. */
+      width: var(--page-width);
       max-width: var(--page-max);
       margin-inline: auto;
       padding-inline: var(--page-gutter);
@@ -86,7 +105,7 @@
          --video-h-cap is what it actually gets. */
       --video-w: calc(100vw * var(--video-width));
       --video-h: calc(var(--video-w) * 9 / 16);
-      --video-h-max: 360px;
+      --video-h-max: 483px;
       --video-h-cap: min(var(--video-h), var(--video-h-max));
       position: relative;
       background: var(--black);
@@ -94,18 +113,55 @@
       /* Padding trimmed so the copy block fits inside the band set by
          --video-h-max. Stock 64/32 pushed the shell past the video's height
          because the copy block is ~274px on a standard laptop.
-         --video-h-max is 360px: 25px above live sage.com's 335px hero band and
-         86px below this hero's original 446px. Live has no video in its hero,
-         so matching 335 exactly cropped ~62% of the frame at 2560 and cut the
-         desk action out entirely. */
+         --video-h-max is 560px. It was 360px, which matched live sage.com's
+         335px hero band closely — but at that cap the frame was cropped ~62% at
+         2560 and the desk action (hands, receipts) fell off the bottom edge, so
+         you couldn't see what the subjects were doing. Stakeholders asked for a
+         taller band and accepted the taller section; a follow-up change will
+         address the overall section height separately. */
       padding-top: 40px;
-      padding-bottom: 20px;
-      height: var(--video-h-cap);
-      min-height: var(--video-h-cap);
+      /* [v2 SKETCH] The pill sits directly under the hero copy now, so this
+         padding IS the copy-to-pill gap. Zero was too tight at 26px. */
+      padding-bottom: 32px;
+      /* [v2 OVERLAP] The hero no longer ends at the video's bottom edge. The
+         media panel now extends past the hero's own content and sits BEHIND the
+         tabset and card row that follow, so the shell is sized by its copy and
+         the video overhangs it. --media-overhang is how far past the hero the
+         footage runs; the sections below are pulled up by the same amount.
+         The old fixed `height`/`min-height` are gone: they pinned the shell to
+         the video, which is exactly what we're breaking. overflow stays visible
+         so the panel can escape. */
+      --media-overhang: 77px;
+      /* Horizontal offset for the scrim's left ramp: higher pulls the fade
+         further left, 0 restores the original position.
+
+         Expressed in vw, not px, because the amount of room available scales
+         with the viewport. The solid-black stop (43%) has to stay at or right
+         of the video's left edge, or the fade starts before the footage does
+         and the panel seam shows. That slack is 51px at 1025 (the narrowest
+         desktop width — below it the layout switches to the stacked mobile
+         treatment) and 128px at 2560.
+
+         The hard ceiling is 5vw: the video's left edge is 38% of the viewport
+         and the solid stop is 43%, so the gap between them is a constant 5% of
+         the width at EVERY size — the limit is a ratio, not a pixel value.
+
+         4.5vw leaves 0.5vw of margin (9px at 1728, 5px at 1025) so rounding
+         and subpixel layout can't push the fade past the edge. A fixed px
+         value can't work here: 90px looked right at 1728 but overshoots the
+         51px of room available at 1025. */
+      --scrim-shift: 4.5vw;
+      /* [v2 SKETCH] The shell is sized by its COPY now, not by the video band.
+         min-height used to be --video-h-cap (560px), which held ~210px of dead
+         space under the subtitle and shoved the tabset far below the copy. The
+         sketch has the pill sitting just under the subtitle, so the floor drops
+         to roughly the copy's own height and the video no longer sets it. */
+      min-height: 0;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      overflow: hidden;
+      overflow: visible;
+      z-index: 0;
     }
 
     /* The video bleeds to the RIGHT viewport edge and spans --video-width of the
@@ -121,7 +177,9 @@
       top: 0;
       right: 0;                      /* bleed to the viewport edge */
       width: var(--video-w);
-      height: var(--video-h-cap);
+      /* [v2 OVERLAP] Extends past the hero by --media-overhang so the footage
+         runs behind the tabset and the top of the cards. */
+      height: calc(var(--video-h-cap) + var(--media-overhang));
       overflow: hidden;
       z-index: 0;
     }
@@ -151,38 +209,80 @@
          from --video-h so its bottom edge always lands exactly on the video's.
          Using the shared variable (rather than its own ratio) keeps them locked
          together at every width, including past the --page-max cap. */
-      height: var(--video-h-cap);
+      /* [v2 OVERLAP] Matches the media panel's extended height so the fade
+         still lands exactly on the video's bottom edge. */
+      height: calc(var(--video-h-cap) + var(--media-overhang));
       z-index: 0;
       background:
-        /* Vertical fade. It still has to reach solid black at 100% — the video
-           is cropped ~127px at the bottom, and without full black that hard
-           edge shows as a seam.
-           But the fade is held OFF until 78% and then run steeply, instead of
-           starting at 46% and crossing 50% opacity by 68%. The subject's hands
-           and the receipts land at 71-84% of the hero, which the old ramp was
-           burying at half opacity — the action is the point of the shot. */
+        /* Vertical fade. It still has to reach solid black at 100% — the frame
+           is cropped at the bottom, and without full black that hard edge shows
+           as a seam.
+           [v2 OVERLAP] The stops were re-derived when the panel grew from the
+           video band alone to band + --media-overhang (502px -> 850px at
+           1440). The tuned shape — clear over the action, then a soft graduated
+           base — is unchanged; the percentages just had to move up to keep it
+           in the same PIXEL place, and the fade now has to be fully black
+           before the panel's bottom edge, which sits beside the cards where a
+           hard line would be obvious. */
         linear-gradient(
           to bottom,
-          rgba(0, 0, 0, 0) 76%,
-          rgba(0, 0, 0, 0.30) 86%,
-          rgba(0, 0, 0, 0.72) 93%,
-          #000 98%,
+          rgba(0, 0, 0, 0) 52%,
+          rgba(0, 0, 0, 0.18) 62%,
+          rgba(0, 0, 0, 0.52) 72%,
+          rgba(0, 0, 0, 0.86) 82%,
+          #000 90%,
           #000 100%
         ),
         /* Solid black over the copy, holding past the video's 38% left edge, then
            easing to clear over the imagery — buries the panel seam, keeps the
            darker left you liked. */
+        /* --scrim-shift moves the whole ramp horizontally. Applied via calc()
+           rather than folded into the percentages so it stays a true 30px at
+           every width: as a percentage it would be ~2.3% at 1280 but ~1.5% at
+           2000, i.e. a different shift on every screen. */
         linear-gradient(
           100deg,
           rgba(0, 0, 0, 1) 0%,
-          rgba(0, 0, 0, 1) 43%,
-          rgba(0, 0, 0, 0.86) 54%,
-          rgba(0, 0, 0, 0.6) 66%,
-          rgba(0, 0, 0, 0.34) 78%,
-          rgba(0, 0, 0, 0.15) 90%,
+          rgba(0, 0, 0, 1) calc(43% - var(--scrim-shift)),
+          rgba(0, 0, 0, 0.86) calc(54% - var(--scrim-shift)),
+          rgba(0, 0, 0, 0.6) calc(66% - var(--scrim-shift)),
+          rgba(0, 0, 0, 0.34) calc(78% - var(--scrim-shift)),
+          rgba(0, 0, 0, 0.15) calc(90% - var(--scrim-shift)),
           rgba(0, 0, 0, 0.05) 100%
         );
     }
+
+    /* ================== TEMPORARY DEBUG GUIDE — REMOVE ==================
+       Bright pink rule on the video panel's LEFT edge, to judge how far the
+       scrim's horizontal fade has to reach now the margins moved.
+
+       Sits on .ns-hero__bg (the media panel), so it tracks the real edge at
+       every width rather than a guessed offset. Above the scrim (z-index 2) so
+       the fade doesn't tint it, and pointer-events:none so it can't intercept
+       clicks. Delete this whole block — and nothing else — to remove.        */
+    .ns-hero::before {
+      /* HIDDEN, not deleted — flip `none` back to `""` to bring the guide back
+         (or add class="debug-scrim" to <body>, see the rule below). */
+      content: none;
+      position: absolute;
+      top: 0;
+      /* Same height as the media panel, so the rule spans exactly the edge the
+         scrim has to cover. */
+      height: calc(var(--video-h-cap) + var(--media-overhang));
+      /* The panel bleeds right and is --video-w wide, so its left edge is
+         --video-w in from the right. */
+      right: var(--video-w);
+      width: 2px;
+      background: #ff00a8;
+      /* Above the scrim: .ns-hero__bg and .ns-hero__scrim are both z-index:0
+         siblings, so a child of the panel would paint underneath the scrim. */
+      z-index: 5;
+      pointer-events: none;
+    }
+    /* Toggle without editing CSS: in devtools run
+         document.body.classList.add('debug-scrim')                          */
+    body.debug-scrim .ns-hero::before { content: ""; }
+    /* ================ END TEMPORARY DEBUG GUIDE ======================== */
 
     /* ---- Content ---- */
     .ns-hero__content {
@@ -304,6 +404,121 @@
       padding-top: 8px;
     }
 
+    /* ---- [v2 OVERLAP] Tabset + cards sitting ON the video ----------------
+       The tabset and the card row are a sibling .page-wrapper AFTER the hero,
+       not children of it. To get them over the footage we pull the whole
+       wrapper up by the hero's --media-overhang and let the hero's media panel
+       (which now extends by that same amount) show through behind them.
+
+       Two things this depends on:
+       - The wrapper ships a solid black background from the sage bundle. That
+         would hide the video completely, so it's cleared here — and ONLY for
+         the two sections that overlap. Everything below keeps the black.
+       - z-index/position: the wrapper needs its own stacking context above the
+         hero's media, or the video paints over the pill and the cards.       */
+    .uk-sections {
+      position: relative;
+      z-index: 1;
+      margin-top: calc(var(--media-overhang, 0px) * -1);
+      background: transparent;
+    }
+    /* The pull-up is applied to the wrapper, so the sections inside it must not
+       re-assert the bundle's black or they'd mask the footage behind them. */
+    .uk-sections > .container:first-child,
+    .uk-sections > .container:first-child .score-column1,
+    .uk-sections > .container:first-child .score-center {
+      background: transparent;
+    }
+    /* Restore the page's black BELOW the overlapping region. Without this the
+       transparent wrapper would expose the body behind every later section. */
+    .uk-sections > *:not(:first-child) {
+      position: relative;
+      background: var(--black);
+    }
+
+    /* [v2 LIVE-MATCH] Card row proportions.
+       Measured against live sage.com/en-gb at a 1280 viewport: its .container
+       renders 1178px wide (max-width 1440, no padding — the width comes from
+       the .score-stripe wrapper it sits in), giving 377px cards at the shared
+       24px gap. Ours was 1280 wide with 40px gutters -> 384px cards.
+
+       Everything INSIDE the card already matched live exactly (32px padding,
+       32px radius, #F2F5F6, 14/26/17px type, 48px button, 392px height); width
+       was the only discrepancy, so only width is corrected here.
+
+       Scoped to the tabset's own container rather than the global .container:
+       the hero copy shares that class and must keep the wider 1280 measure. */
+    /* No width override needed now: .container matches live's 1440 cap, and
+       the card row inherits it exactly as live's does. */
+
+    /* [v2 LIVE-MATCH] Card internals: make the CTAs align across the row.
+       Measured against live: there .score-highlight is a flex column that fills
+       the card in ALL three cards (304px each), so .caption (flex-grow:1)
+       resolves to a uniform 268px and every button lands 56px off the card's
+       bottom edge.
+
+       Ours was 277/277/304 — the inner chain sized to CONTENT instead of
+       filling the 392px card, because .flex-item and the two .score-style-box
+       wrappers are display:block, which breaks the stretch between the card and
+       .score-highlight. The shortest cards therefore floated their buttons 27px
+       higher than the tallest one.
+
+       Restoring the chain as flex columns lets the existing flex-grow:1 on
+       .caption do the work — no new spacing values, no copy or CTA changes. */
+    .uk-sections .score-flex-box.col-3 > .flex-item,
+    .uk-sections .score-flex-box.col-3 .score-style-box.all-corners-sm,
+    .uk-sections .score-flex-box.col-3 .score-style-box.padding-none {
+      display: flex;
+      flex-direction: column;
+    }
+    /* The wrappers must actually fill the card for .caption's grow to resolve
+       against the full height rather than the content height. */
+    .uk-sections .score-flex-box.col-3 .score-style-box.all-corners-sm,
+    .uk-sections .score-flex-box.col-3 .score-style-box.padding-none,
+    .uk-sections .score-flex-box.col-3 .score-highlight {
+      flex: 1 1 auto;
+    }
+
+    /* [v2 PN17] Glossy micro-UI image at the TOP of each card.
+       PN17 (pattern library, content-panels-continued) puts this SVG in a
+       .score-center-text block AFTER the text/CTA; this is the variation with
+       it above, so the block is the first child instead.
+
+       The card is a flex column (see the CTA-alignment rule above), so the
+       image is a flex sibling of the text block. flex-shrink:0 stops it being
+       squashed when the text is long, and .caption keeps its flex-grow:1 so
+       the CTAs stay aligned across the row. */
+    .ns-card__media {
+      flex: 0 0 auto;
+      margin-bottom: 24px;   /* PN17's margin-b-sm, applied above instead */
+    }
+    /* Inlined <svg>, not <img>: an SVG loaded through <img> is an isolated
+       document and cannot see the page's @font-face rules, so its
+       font-family="Sage UI" text fell back to a system font. Inlining puts the
+       text in this document, where Sage UI resolves. */
+    .ns-card__media-img {
+      display: block;
+      width: 100%;
+      height: auto;          /* with the viewBox kept, preserves 404x267 */
+    }
+    /* The SVGs set font-family="Sage UI" per <text>; make sure the face used is
+       the page's, and keep rendering crisp at the scaled-down size. */
+    .ns-card__media-img text {
+      font-family: "Sage UI", "Sage Text", system-ui, sans-serif;
+    }
+
+    /* [v2 OVERLAP] Tighten pill -> cards. Measured 40px; the sketch runs
+       noticeably tighter, so the tabset's own bottom padding comes off and the
+       gap lands at ~24px. */
+    .uk-sections .tab-content-wrapper-outer {
+      padding-top: 0;
+      /* [v2 SKETCH] Tighter than stock after the hero shell was unpinned from
+         the video band. -46px puts the visual gap (pill bottom -> card top) at
+         36px; it was 22px at -60px. Note the tabset wrapper extends ~42px below
+         the pill's visible edge, so this margin is NOT the gap itself. */
+      margin-top: -46px;
+    }
+
     /* ---- Responsive h1 scale (matches the sage bundle: 34→46→44→50) ---- */
     @media (max-width: 1200px) { :root { --fs-h1: 44px; } }
     @media (max-width: 992px)  { :root { --fs-h1: 46px; } }
@@ -320,11 +535,28 @@
     @media (max-width: 1024px) {
       /* Type/gutter stay at tablet scale here; the ≤720px block below drops
          them to the phone values. Only the LAYOUT switches at 1024. */
-      :root { --fs-h1: 40px; --page-gutter: 32px; }
+      /* Below the desktop layout, revert to the fixed-gutter model: 92% of a
+         phone viewport leaves too little measure. width:100% hands control
+         back to --page-gutter. */
+      :root { --fs-h1: 40px; --page-gutter: 32px; --page-width: 100%; }
       /* Mobile stacks copy OVER a full-bleed video, so the shell must grow to
          fit the copy — a fixed height clips it. Desktop's `height` is released
          back to `auto` here; only the min-height floor applies. */
-      .ns-hero { height: auto; min-height: 400px; padding-top: 72px; }
+      .ns-hero {
+        height: auto;
+        /* [v2 SKETCH] Same fix as desktop: the 520px floor was the mobile band's
+           height, which held ~200px of dead space between the subtitle and the
+           pill. The shell is sized by its copy; --media-band below is what the
+           footage actually gets. */
+        min-height: 0;
+        padding-top: 72px;
+        /* [v2 OVERLAP] Much smaller than desktop's. The cards stack to a single
+           column here, so the same overhang would run the footage down behind
+           several of them instead of just the first — the sketch's effect is
+           the video meeting the TOP of the card row, not swallowing it. */
+        --media-band: 460px;
+        --media-overhang: 140px;
+      }
       /* Full-bleed on mobile. At 30% the panel's hard left edge runs
          vertically through the headline and copy, and the mobile scrim has no
          horizontal fade to bury it — so the seam shows straight down the text.
@@ -335,7 +567,7 @@
          the video's bottom edge. */
       .ns-hero__bg {
         aspect-ratio: auto;
-        height: 400px;
+        height: calc(var(--media-band) + var(--media-overhang));
         /* Override the desktop grid anchoring: full-bleed edge to edge. */
         left: 0;
         right: 0;
@@ -343,19 +575,24 @@
       }
       .ns-hero__scrim {
         aspect-ratio: auto;
-        height: 400px;
+        height: calc(var(--media-band) + var(--media-overhang));
         background:
           linear-gradient(
             to top,
             #000 0%,
-            rgba(0, 0, 0, 0.68) 24%,
-            rgba(0, 0, 0, 0.42) 48%,
-            rgba(0, 0, 0, 0.14) 72%,
+            #000 18%,
+            rgba(0, 0, 0, 0.63) 38%,
+            rgba(0, 0, 0, 0.37) 58%,
+            rgba(0, 0, 0, 0.12) 78%,
             rgba(0, 0, 0, 0) 100%
           ),
-          rgba(0, 0, 0, 0.6);
+          rgba(0, 0, 0, 0.56);
       }
       .ns-hero__subtitle { color: #fff; }   /* AA over worst-case bright frame */
+      /* [v2 SKETCH] Desktop's -60px pull is too tight once the cards stack: the
+         tabset scrolls horizontally here and its scroll affordance needs the
+         room, so the card row was landing flush against the pill. */
+      .uk-sections .tab-content-wrapper-outer { margin-top: -8px; }
     }
 
     /* ---- Phone (≤720px): phone type scale. Layout already stacked above. ---- */
@@ -373,7 +610,7 @@
         id="heroVideo"
         class="ns-hero__video"
         autoplay muted loop playsinline preload="auto"
-        poster="assets/video/gb-hero-v4-poster.jpg">
+        poster="assets/video/gb-hero-v9-poster.jpg">
         <!-- Source chosen by viewport in the script below. -->
       </video>
     </div>
@@ -434,7 +671,40 @@
             <div class="tab-content-wrapper-inner">
                 <div class="tab-content">
                     <div class="tab-pane fade score-tab-panel active animations-off" data-anchorable="False" data-event-messages="" data-panel-name="" data-title="Accounting" data-ux-module="score_bootstrap/Components/TabPanel" data-ux-state="loaded" id="tab-a234e830-4aec-4fb3-840b-9e08a3bd89bb" vbpg="0" aria-labelledby="tab-a234e830-4aec-4fb3-840b-9e08a3bd89bb-tab" role="tabpanel" data-tracking="body_selection"><div class="score-flex-box col-3" data-ux-module="SageDotCom/Components/FlexBox"><div class="flex-item " id="flexitem-27c7883299e647e2b51b9f50e3b10277-1">
-        <div class="score-style-box all-corners-sm padding-sm theme-light" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" style="background-color:#F2F5F6;" id="stylebox-b787776507e2477fbe23ee958b7f32e2-0"><div class="score-style-box padding-none" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" id="stylebox-58e3552b5d224146b53a52d9f825e716-0">
+        <div class="score-style-box all-corners-sm padding-sm theme-light" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" style="background-color:#F2F5F6;" id="stylebox-b787776507e2477fbe23ee958b7f32e2-0"><div class="score-center-text ns-card__media">
+  <svg class="ns-card__media-img" role="img" aria-label="Sage Sole Trader interface showing a sales invoice" viewBox="0 0 404 267" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_14_417)">
+<rect x="23" y="20" width="358" height="221" rx="10" fill="white" stroke="#E2E2E2" stroke-width="0.760539"/>
+<rect x="40" y="69" width="308" height="151" fill="#F2F5F6"/>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="11" font-weight="500" letter-spacing="0px"><tspan x="54" y="89.757">Tax year 2025/26</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.72" font-weight="bold" letter-spacing="0em"><tspan x="40.4023" y="51.6259">Self Assessment Tax Returns</tspan></text>
+<rect x="50" y="102" width="285" height="106" fill="#00D639"/>
+<rect x="104" y="103" width="230" height="104" fill="white"/>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Open Sans" font-size="14" letter-spacing="0px"><tspan x="116.979" y="163.789">Submitted 1 January&#x2028;</tspan><tspan x="116.979" y="183.189">at 2:13pm by Alice Ferns</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Lato" font-size="15.1485" font-weight="bold" letter-spacing="0px"><tspan x="116.979" y="137.529">Submitted to HMRC</tspan></text>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M67.6916 133.808L64.4058 137.094L72.6202 145.309L90.6921 127.237L87.4063 123.951L72.6202 138.737L67.6916 133.808Z" fill="white"/>
+</g>
+<path d="M285.001 200.518C285.067 190.475 288.104 180.676 293.731 172.358C299.358 164.039 307.322 157.573 316.619 153.775C325.916 149.977 336.13 149.017 345.972 151.016C355.814 153.015 364.843 157.884 371.922 165.008C379 172.133 383.81 181.194 385.746 191.048C387.681 200.903 386.655 211.11 382.797 220.382C378.939 229.655 372.421 237.577 364.067 243.15C355.712 248.723 345.894 251.697 335.851 251.697C329.145 251.697 322.506 250.371 316.315 247.795C310.124 245.219 304.504 241.444 299.778 236.687C295.051 231.93 291.313 226.286 288.777 220.078C286.241 213.871 284.958 207.223 285.001 200.518Z" fill="black"/>
+<g clip-path="url(#clip0_14_417)">
+<path d="M356.189 228.583H322.906C321.889 228.583 321.057 227.751 321.057 226.734C321.057 225.717 321.889 224.885 322.906 224.885H356.189C358.223 224.885 359.887 223.221 359.887 221.187V180.507C359.887 178.474 358.223 176.809 356.189 176.809H315.51C313.476 176.809 311.811 178.474 311.811 180.507V221.187C311.811 223.221 313.476 224.885 315.51 224.885C316.527 224.885 317.359 225.717 317.359 226.734C317.359 227.751 316.527 228.583 315.51 228.583C311.442 228.583 308.113 225.255 308.113 221.187V180.507C308.113 176.44 311.442 173.111 315.51 173.111H356.189C360.257 173.111 363.585 176.44 363.585 180.507V221.187C363.585 225.255 360.257 228.583 356.189 228.583ZM350.642 217.489H321.057C320.04 217.489 319.208 216.657 319.208 215.64C319.208 214.623 320.04 213.791 321.057 213.791H328.453V193.636C326.881 193.636 325.31 194.098 323.923 194.93C319.578 197.889 320.964 203.806 320.964 204.083L321.889 209.815C321.981 210.462 321.796 211.11 321.242 211.572C320.687 212.034 320.04 212.127 319.393 211.849C318.745 211.572 318.283 211.11 318.191 210.37L317.266 204.823C317.174 204.638 315.232 196.225 321.796 191.879C325.495 189.753 329.932 189.291 333.908 190.77V187.904H332.059C331.042 187.904 330.21 187.072 330.21 186.055C330.21 185.038 331.042 184.206 332.059 184.206H333.908V182.357C333.908 181.34 334.74 180.507 335.757 180.507C336.774 180.507 337.606 181.34 337.606 182.357V184.206H339.455C340.472 184.206 341.304 185.038 341.304 186.055C341.304 187.072 340.472 187.904 339.455 187.904H337.606V190.77C341.581 189.291 346.019 189.753 349.717 191.879C356.282 196.225 354.248 204.638 354.155 205.008L353.231 210.462C353.138 211.11 352.676 211.664 352.029 211.942C351.382 212.127 350.734 212.034 350.18 211.664C349.625 211.202 349.44 210.555 349.532 209.908L350.457 204.36C350.549 203.991 351.936 197.981 347.591 195.115C346.204 194.283 344.632 193.821 343.061 193.821V213.791H350.457C351.474 213.791 352.306 214.623 352.306 215.64C352.306 216.657 351.659 217.489 350.642 217.489ZM332.151 213.791H339.547V194.098C338.53 194.376 337.606 194.653 336.681 195.115C336.497 195.208 336.312 195.3 336.034 195.3C335.849 195.3 335.572 195.3 335.387 195.3C335.202 195.3 335.11 195.208 334.925 195.115C334 194.653 333.076 194.376 332.059 194.098V213.791H332.151Z" fill="#00D639"/>
+</g>
+<defs>
+<filter id="filter0_d_14_417" x="18.6198" y="17.6197" width="366.76" height="229.761" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="2"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_14_417"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_14_417" result="shape"/>
+</filter>
+<clipPath id="clip0_14_417">
+<rect width="55.4721" height="55.4721" fill="white" transform="translate(308.114 173.111)"/>
+</clipPath>
+</defs>
+</svg>
+</div><div class="score-style-box padding-none" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" id="stylebox-58e3552b5d224146b53a52d9f825e716-0">
 <div class="score-highlight heading-lg" vbpg="0" id="highlight-e63d29e427cf4e67a2fe78cccea6d2c6-1">
         <div class="score-highlight-header">
             Sole Traders with MTD requirements
@@ -455,7 +725,113 @@
 </div></div><div class="score-style-box spacer-xs" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" id="stylebox-a367a492278d44b08d7345b8f5bba6d2-0"></div>
 </div>
     </div><div class="flex-item " id="flexitem-047ccec938f14bc58b154e9848348a63-1">
-        <div class="score-style-box all-corners-sm padding-sm theme-light" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" style="background-color:#F2F5F6;" id="stylebox-8e576cdb51584519bbd27f9b22caaaac-0"><div class="score-style-box padding-none" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" id="stylebox-5fa3e79fe79a4bf28a636de84787043b-0">
+        <div class="score-style-box all-corners-sm padding-sm theme-light" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" style="background-color:#F2F5F6;" id="stylebox-8e576cdb51584519bbd27f9b22caaaac-0"><div class="score-center-text ns-card__media">
+  <svg class="ns-card__media-img" role="img" aria-label="Sage Accounting interface showing invoice status and amounts" viewBox="0 0 404 267" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_14_367)">
+<path d="M22.4851 32.1746C22.4851 25.4589 27.9293 20.0146 34.6451 20.0146H338.451C345.167 20.0146 350.611 25.4589 350.611 32.1746V215.298C350.611 222.014 345.167 227.459 338.451 227.459H34.6451C27.9293 227.459 22.4851 222.014 22.4851 215.298V32.1746Z" fill="white"/>
+<path d="M22.4851 32.1746C22.4851 25.4589 27.9293 20.0146 34.6451 20.0146H338.451C345.167 20.0146 350.611 25.4589 350.611 32.1746V215.298C350.611 222.014 345.167 227.459 338.451 227.459H34.6451C27.9293 227.459 22.4851 222.014 22.4851 215.298V32.1746Z" stroke="#E2E2E2" stroke-width="0.760539"/>
+</g>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.1714" font-weight="bold" letter-spacing="0em"><tspan x="39.4025" y="48.9135">Sales Invoice</tspan></text>
+<path d="M327.538 72.623H46.4249C42.2853 72.623 38.9294 75.9789 38.9294 80.1185V203.165C38.9294 207.304 42.2853 210.66 46.4249 210.66H327.538C331.678 210.66 335.034 207.304 335.034 203.165V80.1185C335.034 75.9789 331.678 72.623 327.538 72.623Z" fill="white" stroke="#E2E2E2" stroke-width="0.756557"/>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="15.2107" font-weight="bold" letter-spacing="0em"><tspan x="66.2344" y="190.281">&#xa3;168.00</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="15.2107" letter-spacing="0em"><tspan x="267.344" y="190.281">&#xa3;0.00</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.12643" letter-spacing="0em"><tspan x="217.28" y="169.001">Amount Outstanding</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.12643" font-weight="500" letter-spacing="0em"><tspan x="66.2344" y="168.803">Amount Paid</tspan></text>
+<path d="M38.3652 80.082C38.3652 75.7257 41.8966 72.1943 46.2529 72.1943H327.366C331.722 72.1943 335.254 75.7257 335.254 80.082V145.943H38.3652V80.082Z" fill="#F2F5F6"/>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.6475" font-weight="500" letter-spacing="0em"><tspan x="65.4519" y="126.256">Created</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.6475" font-weight="500" letter-spacing="0em"><tspan x="142.574" y="126.256">Sent</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.6475" font-weight="500" letter-spacing="0em"><tspan x="205.971" y="126.562">Viewed</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.6475" font-weight="500" letter-spacing="0em"><tspan x="281.366" y="126.562">Paid</tspan></text>
+<path d="M305.42 97.3594H72.262V100.006H305.42V97.3594Z" fill="#CCD6DB"/>
+<path d="M98.1705 86.1133H72.2639V109.929H98.1705V86.1133Z" fill="#F2F5F6"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M79.1754 98.3003C78.7045 97.8738 77.956 97.8685 77.4862 98.2728L76.1553 99.5886C75.6787 99.9987 75.6765 100.662 76.1351 101.084L80.7219 105.172C81.1884 105.601 81.9376 105.608 82.4126 105.205C82.4126 105.205 94.2127 94.4957 94.2331 94.4739C94.5994 94.0788 94.5952 93.5063 94.22 93.1251C94.1962 93.1008 92.9044 91.8073 92.9044 91.8073C92.4434 91.4197 91.6763 91.4294 91.2173 91.851L81.6708 100.687L79.1754 98.3003Z" fill="#00A159"/>
+<path d="M167.254 86.1133H141.348V109.929H167.254V86.1133Z" fill="#F2F5F6"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M148.26 98.3003C147.79 97.8738 147.042 97.8686 146.571 98.2729L145.241 99.5885C144.764 99.9988 144.762 100.662 145.221 101.084L149.807 105.172C150.274 105.601 151.023 105.608 151.498 105.205C151.498 105.205 163.298 94.4957 163.319 94.4738C163.685 94.0789 163.68 93.5062 163.306 93.1251C163.281 93.1008 161.99 91.8073 161.99 91.8073C161.529 91.4198 160.762 91.4294 160.303 91.851L150.757 100.687L148.26 98.3003Z" fill="#00A159"/>
+<path d="M236.338 86.1133H210.431V109.929H236.338V86.1133Z" fill="#F2F5F6"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M217.344 98.3003C216.874 97.8738 216.126 97.8685 215.655 98.2728L214.325 99.5886C213.848 99.9987 213.846 100.662 214.305 101.084L218.891 105.172C219.358 105.601 220.107 105.608 220.582 105.205C220.582 105.205 232.382 94.4957 232.403 94.4739C232.769 94.0788 232.764 93.5063 232.39 93.1251C232.365 93.1008 231.074 91.8073 231.074 91.8073C230.613 91.4197 229.846 91.4294 229.387 91.851L219.841 100.687L217.344 98.3003Z" fill="#00A159"/>
+<path d="M305.422 86.1133H279.515V109.929H305.422V86.1133Z" fill="#F2F5F6"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M286.429 98.3003C285.957 97.8738 285.209 97.8685 284.739 98.2728L283.409 99.5886C282.932 99.9987 282.93 100.662 283.388 101.084L287.975 105.172C288.441 105.601 289.19 105.608 289.666 105.205C289.666 105.205 301.465 94.4957 301.486 94.4739C301.852 94.0788 301.848 93.5063 301.473 93.1251C301.449 93.1008 300.157 91.8073 300.157 91.8073C299.696 91.4197 298.929 91.4294 298.471 91.851L288.924 100.687L286.429 98.3003Z" fill="#00A159"/>
+<path d="M152.538 180.253C152.538 169.751 161.052 161.237 171.554 161.237H366.465C376.967 161.237 385.48 169.751 385.48 180.253V223.912C385.48 234.415 376.967 242.928 366.465 242.928H171.554C161.052 242.928 152.538 234.415 152.538 223.912V180.253Z" fill="white"/>
+<g filter="url(#filter1_d_14_367)">
+<path d="M360.356 213.417H177.663C172.02 213.417 167.446 217.991 167.446 223.633V232.086C167.446 237.728 172.02 242.302 177.663 242.302H360.356C365.998 242.302 370.572 237.728 370.572 232.086V223.633C370.572 217.991 365.998 213.417 360.356 213.417Z" fill="white"/>
+</g>
+<path d="M152.538 176.146C152.538 167.912 159.212 161.237 167.446 161.237H370.572C378.806 161.237 385.48 167.912 385.48 176.146V231.004C385.48 239.237 378.806 245.912 370.572 245.912H167.446C159.212 245.912 152.538 239.237 152.538 231.004V176.146Z" fill="white"/>
+<path d="M370.572 161.704H167.446C159.47 161.704 153.004 168.17 153.004 176.147V231.121C153.004 239.097 159.47 245.563 167.446 245.563H370.572C378.548 245.563 385.014 239.097 385.014 231.121V176.147C385.014 168.17 378.548 161.704 370.572 161.704Z" stroke="#E2E2E2" stroke-width="0.898412"/>
+<mask id="mask0_14_367" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="152" y="161" width="234" height="86">
+<path d="M152.538 176.146C152.538 167.912 159.212 161.237 167.446 161.237H370.572C378.806 161.237 385.48 167.912 385.48 176.146V231.12C385.48 239.354 378.806 246.028 370.572 246.028H167.446C159.212 246.028 152.538 239.354 152.538 231.12V176.146Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_14_367)">
+<path d="M167.446 246.028C157.154 246.028 148.811 237.685 148.811 227.393V179.873C148.811 169.581 157.154 161.237 167.446 161.237C161.272 161.237 156.265 167.912 156.265 176.146V231.12C156.265 239.354 161.272 246.028 167.446 246.028Z" fill="url(#paint0_linear_14_367)"/>
+</g>
+<mask id="mask1_14_367" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="171" y="172" width="20" height="20">
+<path d="M190.624 172.419H171.174V191.869H190.624V172.419Z" fill="white"/>
+</mask>
+<g mask="url(#mask1_14_367)">
+<path d="M188.354 172.419H173.439C172.839 172.419 172.264 172.662 171.838 173.083C171.417 173.509 171.174 174.085 171.174 174.689V189.604C171.174 190.204 171.417 190.779 171.838 191.204C172.264 191.63 172.839 191.87 173.439 191.87H188.354C188.955 191.87 189.529 191.626 189.955 191.204C190.38 190.779 190.62 190.204 190.62 189.604V174.689C190.62 174.089 190.376 173.513 189.955 173.088C189.529 172.662 188.955 172.424 188.354 172.424V172.419Z" fill="white"/>
+<path d="M187.941 181.78L187.087 182.044C186.783 182.137 186.547 182.376 186.454 182.676L186.191 183.531C186.037 184.037 185.32 184.037 185.165 183.531L184.903 182.676C184.809 182.372 184.57 182.137 184.27 182.044L183.416 181.78C182.909 181.626 182.909 180.909 183.416 180.755L184.27 180.492C184.574 180.398 184.809 180.16 184.903 179.86L185.165 179.004C185.32 178.498 186.037 178.498 186.191 179.004L186.454 179.86C186.547 180.164 186.787 180.398 187.087 180.492L187.941 180.755C188.448 180.909 188.448 181.626 187.941 181.78Z" fill="url(#paint1_radial_14_367)"/>
+<path d="M177.909 174.36C180.417 174.36 182.459 176.095 182.503 178.51C182.528 179.19 182.034 179.563 181.494 179.563C180.956 179.563 180.535 179.187 180.51 178.554C180.486 177.193 179.339 176.184 177.885 176.184C176.522 176.184 175.494 177.144 175.494 178.457C175.494 179.887 176.454 180.52 178.448 181.249C180.583 182.023 182.528 182.939 182.528 185.658C182.528 188.028 180.676 189.924 178.095 189.924C175.514 189.924 173.476 188.142 173.476 185.727C173.476 184.228 174.201 183.17 174.906 183.17C175.518 183.17 175.891 183.567 175.891 184.106C175.891 184.576 175.494 184.787 175.494 185.629C175.494 187.129 176.713 188.094 178.095 188.094C179.55 188.094 180.51 187.084 180.51 185.865C180.51 184.366 179.55 183.729 177.556 183.028C175.327 182.23 173.476 181.269 173.476 178.619C173.476 176.228 175.396 174.353 177.909 174.353V174.36Z" fill="url(#paint2_linear_14_367)"/>
+</g>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.7809" font-weight="500" letter-spacing="0em"><tspan x="194.349" y="185.962">Copilot</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="12.5778" font-weight="bold" letter-spacing="0em"><tspan x="171.174" y="210.061">&#xa3;7,795 </tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="12.5778" font-weight="bold" letter-spacing="0em"><tspan x="171.174" y="229.319">Cakes </tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="12.5778" font-weight="bold" letter-spacing="0em"><tspan x="308.144" y="210.061">Canny</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="12.5778" letter-spacing="0em"><tspan x="216.83" y="210.061">of totalsales for </tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="12.5778" letter-spacing="0em"><tspan x="211.352" y="229.319">over the last 12 months</tspan></text>
+<defs>
+<filter id="filter0_d_14_367" x="18.1049" y="17.6344" width="336.886" height="216.204" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="2"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_14_367"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_14_367" result="shape"/>
+</filter>
+<filter id="filter1_d_14_367" x="155.223" y="207.305" width="227.572" height="53.3314" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="6.11165"/>
+<feGaussianBlur stdDeviation="6.11165"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_14_367"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_14_367" result="shape"/>
+</filter>
+<linearGradient id="paint0_linear_14_367" x1="152.538" y1="246.028" x2="152.538" y2="161.237" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8F49FE"/>
+<stop offset="0.512152" stop-color="#0092DB"/>
+<stop offset="1" stop-color="#13A038"/>
+</linearGradient>
+<radialGradient id="paint1_radial_14_367" cx="0" cy="0" r="1" gradientTransform="matrix(3.61808 4.14603 -3.98018 3.47336 183.459 178.676)" gradientUnits="userSpaceOnUse">
+<stop offset="0.34" stop-color="#9D60FF"/>
+<stop offset="0.52" stop-color="#5A99F1"/>
+<stop offset="0.59" stop-color="#32B3E8"/>
+<stop offset="0.68" stop-color="#0DCCE0"/>
+<stop offset="0.72" stop-color="#00D6DE"/>
+<stop offset="0.74" stop-color="#00D6D7"/>
+<stop offset="0.77" stop-color="#00D6C6"/>
+<stop offset="0.81" stop-color="#00D6AA"/>
+<stop offset="0.84" stop-color="#00D682"/>
+<stop offset="0.88" stop-color="#00D650"/>
+<stop offset="0.9" stop-color="#00D639"/>
+</radialGradient>
+<linearGradient id="paint2_linear_14_367" x1="180.697" y1="174.441" x2="175.461" y2="189.422" gradientUnits="userSpaceOnUse">
+<stop offset="0.27" stop-color="#9D60FF"/>
+<stop offset="0.33" stop-color="#7C78F8"/>
+<stop offset="0.48" stop-color="#29B7E6"/>
+<stop offset="0.54" stop-color="#00D6DE"/>
+<stop offset="0.57" stop-color="#00D6DA"/>
+<stop offset="0.59" stop-color="#00D6D0"/>
+<stop offset="0.6" stop-color="#00D6C0"/>
+<stop offset="0.62" stop-color="#00D6A8"/>
+<stop offset="0.63" stop-color="#00D68A"/>
+<stop offset="0.65" stop-color="#00D665"/>
+<stop offset="0.66" stop-color="#00D639"/>
+</linearGradient>
+</defs>
+</svg>
+</div><div class="score-style-box padding-none" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" id="stylebox-5fa3e79fe79a4bf28a636de84787043b-0">
 <div class="score-highlight heading-lg" vbpg="0" id="highlight-9d08b4b26a96466da216b345ebe2eb80-1">
         <div class="score-highlight-header">
             1-19 Employees
@@ -476,7 +852,145 @@
 </div></div><div class="score-style-box spacer-xs" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" id="stylebox-7309c07c2b28493e88f653ba9e4071f1-0"></div>
 </div>
     </div><div class="flex-item " id="flexitem-942458e51a2c480baeaff009792c9765-1">
-        <div class="score-style-box all-corners-sm padding-sm theme-light" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" style="background-color:#F2F5F6;" id="stylebox-b2212ee0108d4786bf523e61b12e4ae8-0"><div class="score-style-box padding-none" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" id="stylebox-c80a2194c5d7419e8e68fb0b33a2c879-0">
+        <div class="score-style-box all-corners-sm padding-sm theme-light" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" style="background-color:#F2F5F6;" id="stylebox-b2212ee0108d4786bf523e61b12e4ae8-0"><div class="score-center-text ns-card__media">
+  <svg class="ns-card__media-img" role="img" aria-label="Sage Intacct interface showing a financial dashboard" viewBox="0 0 404 267" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g filter="url(#filter0_d_14_267)">
+<path d="M24.2314 31.4202C24.2314 23.2102 30.8869 16.5547 39.0969 16.5547H340.123C348.333 16.5547 354.988 23.2102 354.988 31.4202V224.671C354.988 232.881 348.333 239.537 340.123 239.537H39.0969C30.8869 239.537 24.2314 232.881 24.2314 224.671V31.4202Z" fill="white"/>
+<path d="M39.0967 17.0195H340.123C348.076 17.0196 354.523 23.4667 354.523 31.4199V224.672C354.523 232.625 348.076 239.072 340.123 239.072H39.0967C31.1435 239.072 24.6965 232.625 24.6963 224.672V31.4199C24.6964 23.4667 31.1435 17.0197 39.0967 17.0195Z" stroke="#E2E2E2" stroke-width="0.929093"/>
+</g>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.7237" font-weight="bold" letter-spacing="0em"><tspan x="40.9548" y="46.0345">CFO Dashboard</tspan></text>
+<rect x="33.9868" y="57.9001" width="166.308" height="45.5255" rx="3.25182" fill="white" stroke="#E2E2E2" stroke-width="0.929093"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.29093" letter-spacing="0px"><tspan x="41.0051" y="74.3933">Assets</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="11.1491" font-weight="bold" letter-spacing="0px"><tspan x="41.0051" y="90.8288">&#xa3;14,441K</tspan></text>
+<rect width="8.64596" height="9.15454" transform="translate(95.7214 81.9368)" fill="white"/>
+<line x1="100.027" y1="84.7824" x2="100.027" y2="89.7715" stroke="#00D639" stroke-width="1.49016" stroke-linecap="round"/>
+<path d="M102.842 85.7554L100.302 83.3045C100.159 83.1657 99.9306 83.1657 99.7867 83.3045L97.2474 85.7554" stroke="#00D639" stroke-width="1.49189" stroke-linecap="round"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.29093" letter-spacing="0px"><tspan x="124.623" y="74.3933">Revenue</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="11.1491" font-weight="bold" letter-spacing="0px"><tspan x="124.623" y="90.8288">&#xa3;74,472K</tspan></text>
+<g clip-path="url(#clip0_14_267)">
+<rect width="8.64596" height="9.15454" transform="translate(179.34 81.9368)" fill="white"/>
+<line x1="183.645" y1="84.7824" x2="183.645" y2="89.7715" stroke="#00D639" stroke-width="1.49016" stroke-linecap="round"/>
+<path d="M186.46 85.7554L183.921 83.3045C183.777 83.1657 183.549 83.1657 183.405 83.3045L180.866 85.7554" stroke="#00D639" stroke-width="1.49189" stroke-linecap="round"/>
+</g>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.29093" letter-spacing="0px"><tspan x="205.671" y="74.3933">Net Income</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="11.1491" font-weight="bold" letter-spacing="0px"><tspan x="205.671" y="90.8288">$277,475K</tspan></text>
+<rect width="8.64596" height="9.15454" transform="translate(267.387 81.9368)" fill="white"/>
+<line x1="271.692" y1="84.7824" x2="271.692" y2="89.7715" stroke="#00D639" stroke-width="1.49016" stroke-linecap="round"/>
+<path d="M274.507 85.7554L271.968 83.3045C271.824 83.1657 271.596 83.1657 271.452 83.3045L268.913 85.7554" stroke="#00D639" stroke-width="1.49189" stroke-linecap="round"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.29093" letter-spacing="0px"><tspan x="294.647" y="74.3933">Assets</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="11.1491" font-weight="bold" letter-spacing="0px"><tspan x="294.647" y="90.8288">$14,441K</tspan></text>
+<rect width="8.64596" height="9.15454" transform="translate(349.364 81.9368)" fill="white"/>
+<line x1="353.669" y1="84.7824" x2="353.669" y2="89.7715" stroke="#00D639" stroke-width="1.49016" stroke-linecap="round"/>
+<path d="M356.484 85.7554L353.944 83.3045C353.801 83.1657 353.573 83.1657 353.429 83.3045L350.889 85.7554" stroke="#00D639" stroke-width="1.49189" stroke-linecap="round"/>
+<line x1="115.514" y1="57.4355" x2="115.514" y2="103.89" stroke="#E6EBED" stroke-width="0.464546"/>
+<rect x="206.798" y="113.645" width="160.733" height="116.137" rx="3.25182" fill="white" stroke="#E2E2E2" stroke-width="0.929093"/>
+<rect x="213.766" y="161.494" width="24.1564" height="146.797" transform="rotate(-90 213.766 161.494)" fill="#F7F7F7"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.43274" font-weight="bold" letter-spacing="0px"><tspan x="213.896" y="127.928">Cash Flow Detail by Entity</tspan></text>
+<line x1="213.896" y1="133.224" x2="360.693" y2="133.224" stroke="#CCD6DB" stroke-width="0.464546"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.43274" letter-spacing="0px"><tspan x="329.834" y="146.361">Houston</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.57455" letter-spacing="0px"><tspan x="342.141" y="155.842">03/05</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.43274" letter-spacing="0px"><tspan x="277.275" y="146.361">Los Angeles</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.57455" letter-spacing="0px"><tspan x="300.544" y="155.842">03/05</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.43274" font-weight="bold" letter-spacing="0px"><tspan x="214.842" y="172.178">Operations</tspan></text>
+<text fill="black" fill-opacity="0.65" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.57455" letter-spacing="0px"><tspan x="214.842" y="186.126">Net income</tspan></text>
+<text fill="black" fill-opacity="0.65" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.43274" letter-spacing="0px"><tspan x="276.643" y="185.08">331,687.23</tspan></text>
+<text fill="black" fill-opacity="0.65" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.43274" letter-spacing="0px"><tspan x="322.697" y="185.08">98,476.89</tspan></text>
+<text fill="black" fill-opacity="0.65" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.57455" letter-spacing="0px"><tspan x="214.842" y="199.667">Items not requiring </tspan><tspan x="214.842" y="206.667">cash</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.57455" font-weight="500" letter-spacing="0px"><tspan x="214.842" y="217.475">Total Operations </tspan><tspan x="214.842" y="224.475">for Cash Flow</tspan></text>
+<text fill="black" fill-opacity="0.65" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.43274" letter-spacing="0px"><tspan x="300.778" y="203.246">0.00</tspan></text>
+<text fill="black" fill-opacity="0.65" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.43274" letter-spacing="0px"><tspan x="342.375" y="203.246">0.00</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.43274" font-weight="500" letter-spacing="0px"><tspan x="276.404" y="221.036">331,687.23</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.43274" font-weight="500" letter-spacing="0px"><tspan x="322.457" y="221.036">98,476.89</tspan></text>
+<line x1="214.842" y1="209.758" x2="361.378" y2="209.758" stroke="#E2E2E2" stroke-width="0.429756"/>
+<line x1="214.842" y1="190.371" x2="361.378" y2="190.371" stroke="#E2E2E2" stroke-width="0.464546"/>
+<path d="M37.239 113.646H197.043C198.839 113.646 200.295 115.102 200.295 116.897V226.53C200.295 228.326 198.838 229.782 197.043 229.782H37.239C35.4432 229.782 33.9872 228.326 33.9871 226.53V116.897C33.9871 115.102 35.4431 113.646 37.239 113.646Z" fill="white" stroke="#E2E2E2" stroke-width="0.929093"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.43274" font-weight="bold" letter-spacing="0px"><tspan x="41.8838" y="128.259">Revenue per Retail Hour by Location</tspan></text>
+<line x1="41.8838" y1="133.73" x2="194.255" y2="133.73" stroke="#CCD6DB" stroke-width="0.464546"/>
+<rect x="101.346" y="138.684" width="26.0146" height="75.5662" fill="#F7F7F7"/>
+<rect x="155.234" y="138.684" width="26.0146" height="75.5662" fill="#F7F7F7"/>
+<rect x="172.886" y="138.684" width="15.1132" height="100.342" transform="rotate(90 172.886 138.684)" fill="#CBD95D"/>
+<rect x="189.61" y="157.576" width="15.1132" height="117.066" transform="rotate(90 189.61 157.576)" fill="#5DB2B1"/>
+<rect x="162.666" y="176.468" width="15.1132" height="90.122" transform="rotate(90 162.666 176.468)" fill="#FFB500"/>
+<rect x="152.446" y="195.358" width="15.1132" height="79.902" transform="rotate(90 152.446 195.358)" fill="#ED7D43"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.57455" letter-spacing="0px"><tspan x="52.1929" y="148.121">London</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.57455" letter-spacing="0px"><tspan x="42.1182" y="167.011">Manchester</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.57455" letter-spacing="0px"><tspan x="56.171" y="185.903">Leeds</tspan></text>
+<line x1="72.7592" y1="138.684" x2="72.7592" y2="214.25" stroke="#E6EBED" stroke-width="0.430468"/>
+<line x1="72.5439" y1="214.036" x2="191.468" y2="214.036" stroke="#E6EBED" stroke-width="0.430468"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.57455" letter-spacing="0px"><tspan x="49.2859" y="204.795">Brighton</tspan></text>
+<text fill="black" fill-opacity="0.65" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.57455" letter-spacing="0px"><tspan x="71.428" y="223.694">&#xa3;0</tspan></text>
+<text fill="black" fill-opacity="0.65" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.57455" letter-spacing="0px"><tspan x="91.126" y="223.694">&#xa3;300</tspan></text>
+<text fill="black" fill-opacity="0.65" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.57455" letter-spacing="0px"><tspan x="118.07" y="223.694">&#xa3;600</tspan></text>
+<text fill="black" fill-opacity="0.65" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.57455" letter-spacing="0px"><tspan x="145.013" y="223.694">&#xa3;900</tspan></text>
+<text fill="black" fill-opacity="0.65" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.57455" letter-spacing="0px"><tspan x="171.957" y="223.694">&#xa3;1,200</tspan></text>
+<g filter="url(#filter1_d_14_267)">
+<path d="M206.834 63.3847H369.353C376.606 63.3847 382.486 69.2647 382.486 76.5175V239.037C382.486 246.29 376.606 252.169 369.353 252.169H206.834C199.581 252.169 193.701 246.29 193.701 239.037V76.5175C193.701 69.2647 199.581 63.3847 206.834 63.3847Z" fill="white" stroke="#E2E2E2" stroke-width="0.750421"/>
+</g>
+<rect x="203.474" y="74.1798" width="11.246" height="11.246" fill="url(#pattern0_14_267)"/>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="11.246" font-weight="bold" letter-spacing="0px"><tspan x="217.532" y="83.675">Copilot</tspan></text>
+<text opacity="0.9" fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.5431" font-weight="500" letter-spacing="0px"><tspan x="214.72" y="116.353">Welcome </tspan><tspan x="260.219" y="116.353">back </tspan><tspan x="285.845" y="116.353">!</tspan></text>
+<text opacity="0.9" fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.4345" letter-spacing="0px"><tspan x="214.72" y="133.853">View </tspan><tspan x="233.407" y="133.853">insights </tspan><tspan x="264.458" y="133.853">or </tspan><tspan x="274.06" y="133.853">start </tspan><tspan x="293.892" y="133.853">a </tspan><tspan x="300.256" y="133.853">chat </tspan><tspan x="318.704" y="133.853">by </tspan><tspan x="329.517" y="133.853">using </tspan><tspan x="214.72" y="146.853">one </tspan><tspan x="230.247" y="146.853">of </tspan><tspan x="239.769" y="146.853">the </tspan><tspan x="253.944" y="146.853">following </tspan><tspan x="289.115" y="146.853">suggestions</tspan></text>
+<rect x="214.256" y="158.242" width="149.236" height="17.7981" rx="3.97892" fill="white"/>
+<rect x="214.256" y="158.242" width="149.236" height="17.7981" rx="3.97892" stroke="black" stroke-width="0.929093"/>
+<text opacity="0.7" fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.4345" font-weight="500" letter-spacing="0px"><tspan x="220.344" y="170.045">Show </tspan><tspan x="242.517" y="170.045">budget </tspan><tspan x="272.458" y="170.045">variance </tspan><tspan x="307.761" y="170.045">analysis </tspan><tspan x="340.692" y="170.045">YTD</tspan></text>
+<rect x="214.256" y="181.437" width="88.5808" height="17.7981" rx="3.97892" fill="white"/>
+<rect x="214.256" y="181.437" width="88.5808" height="17.7981" rx="3.97892" stroke="black" stroke-width="0.929093"/>
+<text opacity="0.7" fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.4345" font-weight="500" letter-spacing="0px"><tspan x="220.344" y="193.24">Run </tspan><tspan x="237.081" y="193.24">close </tspan><tspan x="259.04" y="193.24">assistant</tspan></text>
+<path d="M310.312 71.0918H363.027C367.394 71.0919 370.935 74.632 370.935 78.999C370.935 83.366 367.394 86.9061 363.027 86.9062H310.312C305.944 86.9062 302.404 83.3661 302.404 78.999C302.404 74.6319 305.944 71.0918 310.312 71.0918Z" stroke="url(#paint0_linear_14_267)" stroke-width="1.05431"/>
+<g clip-path="url(#clip1_14_267)">
+<path d="M315.813 78.9132L314.221 78.2851C314.045 78.216 313.906 78.0769 313.837 77.9014L313.209 76.309C312.982 75.7341 312.169 75.7341 311.942 76.309L311.314 77.9014C311.244 78.0769 311.105 78.2158 310.93 78.2851L309.337 78.9132C308.762 79.1399 308.762 79.9535 309.337 80.1802L310.93 80.8083C311.105 80.8774 311.244 81.0165 311.314 81.192L311.942 82.7844C312.169 83.3593 312.982 83.3593 313.209 82.7844L313.837 81.192C313.906 81.0165 314.045 80.8776 314.221 80.8083L315.813 80.1802C316.388 79.9535 316.388 79.1399 315.813 78.9132Z" fill="black" fill-opacity="0.9"/>
+<path d="M316.147 77.1658C316.805 77.1658 317.339 76.632 317.339 75.9735C317.339 75.3149 316.805 74.7811 316.147 74.7811C315.488 74.7811 314.954 75.3149 314.954 75.9735C314.954 76.632 315.488 77.1658 316.147 77.1658Z" fill="#00D639"/>
+</g>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.4345" font-weight="bold" letter-spacing="0em"><tspan x="320.151" y="82.4368">Insights</tspan></text>
+<g clip-path="url(#clip2_14_267)">
+<path d="M360.215 83.2157C362.544 83.2157 364.432 81.3276 364.432 78.9985C364.432 76.6693 362.544 74.7812 360.215 74.7812C357.886 74.7812 355.998 76.6693 355.998 78.9985C355.998 81.3276 357.886 83.2157 360.215 83.2157Z" fill="#D64309"/>
+<path d="M359.09 80.4731V80.0598C359.089 80.047 359.091 80.0341 359.097 80.0223C359.102 80.0106 359.11 80.0002 359.12 79.9923L360.074 79.0645C360.378 78.7693 360.45 78.6344 360.45 78.4783C360.451 78.4339 360.443 78.3897 360.426 78.3486C360.408 78.3075 360.383 78.2705 360.351 78.24C360.318 78.2095 360.28 78.1862 360.238 78.1715C360.196 78.1569 360.151 78.1513 360.107 78.155C359.896 78.155 359.731 78.2956 359.544 78.5304C359.539 78.5384 359.532 78.5452 359.524 78.5504C359.516 78.5556 359.507 78.5592 359.498 78.5607C359.488 78.5623 359.478 78.5619 359.469 78.5596C359.46 78.5573 359.451 78.5531 359.443 78.5472L359.022 78.3026C359.013 78.2982 359.006 78.2921 359 78.2845C358.994 78.277 358.99 78.2683 358.988 78.2591C358.986 78.2498 358.986 78.2402 358.988 78.231C358.991 78.2218 358.995 78.2131 359 78.2056C359.119 78.0044 359.288 77.8384 359.492 77.7249C359.696 77.6114 359.927 77.5546 360.16 77.5604C360.738 77.5604 361.168 77.9273 361.168 78.4123C361.168 78.7539 360.991 78.9943 360.586 79.3963L359.993 79.9825H361.117C361.125 79.9819 361.133 79.9829 361.14 79.9854C361.147 79.9879 361.153 79.9918 361.159 79.997C361.165 80.0021 361.169 80.0084 361.172 80.0153C361.175 80.0223 361.177 80.0298 361.177 80.0373V80.4886C361.176 80.5041 361.17 80.5189 361.159 80.5299C361.148 80.5409 361.133 80.5473 361.117 80.5476H359.162C359.152 80.5485 359.142 80.5472 359.133 80.5438C359.124 80.5403 359.115 80.5348 359.108 80.5276C359.101 80.5205 359.096 80.5119 359.093 80.5024C359.09 80.493 359.089 80.483 359.09 80.4731Z" fill="white"/>
+</g>
+<rect x="203.898" y="98.6667" width="169.321" height="110.788" rx="8.08307" stroke="#DEDEDE" stroke-width="0.702875"/>
+<rect x="203.857" y="220.409" width="55.9088" height="17.6151" rx="8.80755" stroke="black" stroke-opacity="0.65" stroke-width="0.765874"/>
+<text fill="black" fill-opacity="0.7" style="white-space: pre" xml:space="preserve" font-family="Sage Text" font-size="9.29093" font-weight="500" letter-spacing="0px"><tspan x="212.486" y="232.812">New chat</tspan></text>
+<defs>
+<filter id="filter0_d_14_267" x="20.2314" y="14.5547" width="338.757" height="230.982" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="2"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_14_267"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_14_267" result="shape"/>
+</filter>
+<filter id="filter1_d_14_267" x="191.326" y="63.0097" width="193.535" height="193.535" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="2"/>
+<feGaussianBlur stdDeviation="1"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_14_267"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_14_267" result="shape"/>
+</filter>
+<pattern id="pattern0_14_267" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_14_267" transform="scale(0.0526316)"/>
+</pattern>
+<linearGradient id="paint0_linear_14_267" x1="301.877" y1="87.4335" x2="371.462" y2="87.4335" gradientUnits="userSpaceOnUse">
+<stop stop-color="#00D639"/>
+<stop offset="0.512152" stop-color="#11AFFF"/>
+<stop offset="1" stop-color="#8F49FE"/>
+</linearGradient>
+<clipPath id="clip0_14_267">
+<rect width="8.64596" height="9.15454" fill="white" transform="translate(179.34 81.9368)"/>
+</clipPath>
+<clipPath id="clip1_14_267">
+<rect width="8.4345" height="8.4345" fill="white" transform="translate(308.906 74.7812)"/>
+</clipPath>
+<clipPath id="clip2_14_267">
+<rect width="8.4345" height="8.4345" fill="white" transform="translate(355.998 74.7812)"/>
+</clipPath>
+<image id="image0_14_267" width="19" height="19" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAAAXNSR0IArs4c6QAAAvpJREFUOE+VlFtIVFEUhv91ZpzLmWYmynpIRU2ke0JFavcrROiLFRWlRpN0A4seMkOigqYiCOkCFdmkRT30EGJRgUaWdHsoooslIZVOVpp5GWecM+ecFWdM89Q01X7ae+21vr3XWv/ehN8G0+lcJMAAUVXQvvkCffndJ7KFBpvL1vE6AKPAcAFIJqBOBW5sKKeD/wIcgJ3YpHhMkrDCoMAWIfCxq5zS/wYMw3bubLUPDznvWnsNk8wSDm0sM5Ro9nN5vByECgasBFQlJyNn/l6S/wQNw3btCRQLTG6jAu9+tyX+l9QLwDhDgBcq1qy/QLVRYTsO+IrB5AbIe7RE1MG0wLJ85h+AfFc5VWjzk66ebEXsrS08PryrHx6+2dbDvmIicoPwkczi6OOFFBx8+tl8rhQIvvXnaY1mP5vH04Mm37VOR+es3UfjG3SwgtKeLNkIj2REbK+Jq784A3n3lo1oiZTOqQ28OmCW077ZO4oa4p7hScqtVW22hvvtcyubBrqZ4/FVBCzI9VsZHQ6ua3corX6rcufrhNhjg6FFR7irzRGyNzub0OKow2d7rdQtNu7wT71zUqeztJq2ONkQ0+wTVfhsMnyiDMkUBMcl6fycnzoWUk9ztRS4zf6JhYIuzfDiecY8xJAFYx/cjH3Rus9vUdOCltAURQgmgAOA2puBhGmPwr5NjZNJ9l5lqWMOxmR79bD6zCwwewAEMf5hXzeZBbR8mAHuKYXqnwqWnkOllUjKrNe2Y95UTQ914wWmZfv1sJfpxdC6qWmpH9bv0XTfCpb8YFmTRx4SF12MqjNEg2mR76sYUACo+UjMCess0ugrbDTYu0sLAK4BDF0gWovElVXRYa9n2qHyXQjGSVDFy6CR2zGu4mvMq70ZstlxngXbGJD5OkIjlyF1qU7Qg8E/W14/1wMYF0MYGgdyAGQGIAKCHaBhjzF627/9GgP0N0tmQXXMhtHpAgwpgOkpMOQKUt3/95/p6vB2SwIU2Qaz2Imk0ojPKlLdvgOjeyIjtmPLKAAAAABJRU5ErkJggg=="/>
+</defs>
+</svg>
+</div><div class="score-style-box padding-none" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" id="stylebox-c80a2194c5d7419e8e68fb0b33a2c879-0">
 <div class="score-highlight heading-lg" vbpg="0" id="highlight-877614d84ae24601b3e76565cfdbedf0-1">
         <div class="score-highlight-header">
             20+ Employees
@@ -1963,8 +2477,8 @@ Businesses all over the world trust Sage                    </span></h2>
       // Pick the encode by viewport at load — <source media> is unreliable for
       // <video> across browsers, so set the source here instead.
       var src = window.matchMedia("(max-width: 640px)").matches
-        ? "assets/video/gb-hero-v4-web-mobile.mp4"
-        : "assets/video/gb-hero-v4-web.mp4";
+        ? "assets/video/gb-hero-v9-web-mobile.mp4"
+        : "assets/video/gb-hero-v9-web.mp4";
       var source = document.createElement("source");
       source.src = src;
       source.type = "video/mp4";
