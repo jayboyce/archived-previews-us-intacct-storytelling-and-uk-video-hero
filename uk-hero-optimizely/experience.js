@@ -388,25 +388,52 @@ function cardHtml(card) {
   );
 }
 
+/* [OPT-CHANGE 21] Cards are RENDERED ON CHANGE, not pre-rendered and hidden.
+
+   This matches how the live GWO-4624 experiment actually works. Confirmed by
+   observing it: changing product replaces the card container's children in a
+   single mutation (one add, one remove) and the DOM holds exactly the cards
+   on screen — three, never eleven with eight hidden.
+
+   The earlier approach rendered every panel up front and hid the inactive
+   ones. That produced three separate defects in one day, all the same shape —
+   something hidden that was not hidden enough:
+
+     - cards marked `hidden` still painted, because our own `display: flex`
+       outranked the UA's `[hidden]` rule (OPT-CHANGE 19)
+     - inactive panels stayed in the keyboard tab order, because the bundle's
+       `.tab-pane` rules outranked our `display: none` (OPT-CHANGE 20)
+     - slick fixed its dot count at init from a slide count that included
+       hidden cards, leaving phantom dots after filtering
+
+   With no hidden state none of those can occur: an off-screen card is not in
+   the document, so no CSS rule can reveal it and nothing can focus it.
+
+   `aria-live="polite"` on the container is live's own, and is what announces
+   the change to a screen reader now that content swaps in place (spec rule
+   46 — dynamic content swaps need a live region). */
+function cardsFor(panelIndex, sizeValue) {
+  var panel = config.tabs.panels[panelIndex];
+  if (!panel) return [];
+  return panel.cards.filter(function (card) {
+    var declared = card.sizes || [];
+    if (!sizeValue || sizeValue === 'all') {
+      return !card.defaultHidden;
+    }
+    return !declared.length || declared.indexOf(sizeValue) !== -1;
+  });
+}
+
+function cardRowHtml(panelIndex, sizeValue) {
+  return cardsFor(panelIndex, sizeValue).map(cardHtml).join('');
+}
+
 function tabsBlock() {
   var t = config.tabs;
   var active = t.activeIndex || 0;
 
-  /* [OPT-CHANGE 16] Product selector, ported from the live GWO-4624 experiment
-     (T_UK_GWO-4624_Homepage_Product_Filtering) which is A/B running on the
-     en-gb homepage. Markup names follow that experiment so the two are
-     directly comparable; see reference/uk-hero-vs-gwo4624.md for every point
-     where this build deviates from it.
-
-     Native <select>, exactly as live: no custom dropdown, so it inherits the
-     platform's own keyboard and screen-reader handling rather than
-     re-implementing a listbox (spec rule 45a — semantic HTML first).
-
-     Each <option> value IS the id of the panel it reveals, so the selector
-     drives the same panels directly. Live GWO-4624 has no tabset behind it —
-     it builds the cards itself — so none is emitted here either. */
   var options = t.panels.map(function (p, i) {
-    return '<option value="' + tabId(i) + '"' + (i === active ? ' selected' : '') + '>' +
+    return '<option value="' + i + '"' + (i === active ? ' selected' : '') + '>' +
              esc(p.title) +
            '</option>';
   }).join('');
@@ -438,29 +465,14 @@ function tabsBlock() {
         : '') +
     '</div>';
 
-  var panels = t.panels.map(function (p, i) {
-    var on = i === active;
-    var inner = p.rawHtml
-      ? p.rawHtml
-      : '<div class="score-flex-box col-3">' +
-          p.cards.map(cardHtml).join('') +
-        '</div>';
-    return (
-      '<div class="tab-pane fade score-tab-panel animations-off' +
-           (on ? ' active' : '') + '" ' +
-           'id="' + tabId(i) + '" role="tabpanel"' + (on ? '' : ' hidden') + '>' +
-        inner +
-      '</div>'
-    );
-  }).join('');
-
   return (
     '<div class="uk-sections">' +
       '<div class="uk-tabs-container">' +
         '<div class="score-tab button-tabset ai-gradient sage-ai">' +
           controls +
-          '<div class="tab-content-wrapper-outer">' +
-            '<div class="tab-content">' + panels + '</div>' +
+          '<div class="score-flex-box col-3 animations-off" ' +
+               'data-uk-hero-cards aria-live="polite">' +
+            cardRowHtml(active, 'all') +
           '</div>' +
         '</div>' +
       '</div>' +
@@ -517,31 +529,16 @@ function renderBody() {
     });
   }
 
-  // [OPT-CHANGE 16] Panel switching driven by the GWO-4624 <select>, not by a
+  // [OPT-CHANGE 21] Re-render the card row on every change, as live GWO-4624
   function wireSelector(root) {
     var product = root.querySelector('[data-uk-hero-product]');
-    if (!product) return;
-
-    function show(panelId) {
-      var panels = [].slice.call(root.querySelectorAll('.score-tab-panel'));
-      panels.forEach(function (panel) {
-        var on = panel.id === panelId;
-        panel.classList.toggle('active', on);
-        if (on) { panel.removeAttribute('hidden'); }
-        else { panel.setAttribute('hidden', ''); }
-      });
-      var shown = root.querySelector('#' + panelId);
-      if (shown) initCarousel(shown);
-    }
-
+    var row = root.querySelector('[data-uk-hero-cards]');
+    if (!product || !row) return;
     var size = root.querySelector('[data-uk-hero-size]');
 
-    function syncSizes(panelId) {
+    function syncSizes(panelIndex) {
       if (!size) return;
-      var panel = config.tabs.panels.filter(function (p, i) {
-        return tabId(i) === panelId;
-      })[0];
-      var list = (panel && panel.sizes) || [];
+      var list = (config.tabs.panels[panelIndex] || {}).sizes || [];
       size.innerHTML = '';
       list.forEach(function (sz) {
         var o = document.createElement('option');
@@ -552,32 +549,44 @@ function renderBody() {
       size.selectedIndex = 0;
     }
 
-    product.addEventListener('change', function () {
-      show(product.value);
-      syncSizes(product.value);
-    });
-
-    if (size) {
-      size.addEventListener('change', function () {
-        filterBySize(root.querySelector('#' + product.value), size.value);
-      });
+    function render() {
+      var panelIndex = parseInt(product.value, 10) || 0;
+      var sizeValue = size ? size.value : 'all';
+      teardownCarousel(row);
+      row.innerHTML = cardRowHtml(panelIndex, sizeValue);
+      initCarousel(row);
     }
+
+    product.addEventListener('change', function () {
+      syncSizes(parseInt(product.value, 10) || 0);
+      render();
+    });
+    if (size) size.addEventListener('change', render);
+
+    initCarousel(row);
+    wireCarouselResize(root, row);
   }
 
-  // [OPT-CHANGE 17] Below 1200px the three cards become a single-card slick
+  // [OPT-CHANGE 17] Below 1200px the cards become a single-card slick
   var CAROUSEL_MAX = 1199;
 
   function carouselWanted() {
     return window.matchMedia('(max-width: ' + CAROUSEL_MAX + 'px)').matches;
   }
 
-  function initCarousel(panel) {
-    if (!panel) return;
+  function slickable(row) {
     var $ = window.jQuery;
-    var row = panel.querySelector('.score-flex-box');
-    if (!row || !$ || !$.fn || !$.fn.slick) return;
-    var $row = $(row);
+    return (row && $ && $.fn && $.fn.slick) ? $(row) : null;
+  }
 
+  function teardownCarousel(row) {
+    var $row = slickable(row);
+    if ($row && $row.hasClass('slick-initialized')) $row.slick('unslick');
+  }
+
+  function initCarousel(row) {
+    var $row = slickable(row);
+    if (!$row) return;
     if (carouselWanted()) {
       if (!$row.hasClass('slick-initialized')) {
         $row.slick({
@@ -586,7 +595,6 @@ function renderBody() {
           arrows: false,
           dots: true,
           infinite: false,
-          mobileFirst: false,
           respondTo: 'slider'
         });
       }
@@ -595,38 +603,11 @@ function renderBody() {
     }
   }
 
-  function filterBySize(panel, size) {
-    if (!panel) return;
-    var $ = window.jQuery;
-    var row = panel.querySelector('.score-flex-box');
-    if (!row) return;
-    var $row = $ && $.fn && $.fn.slick ? $(row) : null;
-    var wasSlick = $row && $row.hasClass('slick-initialized');
-    if (wasSlick) $row.slick('unslick');
-
-    [].slice.call(row.querySelectorAll('.flex-item')).forEach(function (item) {
-      var attr = item.getAttribute('data-sizes');
-      var declared = attr ? attr.split(/\s+/).filter(Boolean) : [];
-      var show;
-      if (!size || size === 'all') {
-        show = item.getAttribute('data-default-hidden') === null;
-      } else {
-        show = !declared.length || declared.indexOf(size) !== -1;
-      }
-      item.hidden = !show;
-    });
-
-    initCarousel(panel);
-  }
-
-  function wireCarouselResize(root) {
+  function wireCarouselResize(root, row) {
     var t = null;
     window.addEventListener('resize', function () {
       clearTimeout(t);
-      t = setTimeout(function () {
-        var active = root.querySelector('.score-tab-panel.active');
-        initCarousel(active);
-      }, 150);
+      t = setTimeout(function () { initCarousel(row); }, 150);
     });
   }
 
@@ -659,8 +640,6 @@ function renderBody() {
     wireKbdGate();
     wireHeroVideo(wrapper);
     wireSelector(wrapper);
-    wireCarouselResize(wrapper);
-    initCarousel(wrapper.querySelector('.score-tab-panel.active'));
   }
 
   if (document.readyState === 'loading') {
