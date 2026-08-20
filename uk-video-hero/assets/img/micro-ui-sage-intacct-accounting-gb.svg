@@ -4,7 +4,7 @@
 <path d="M4 14C4 6.26801 10.268 0 18 0H302C309.732 0 316 6.26801 316 14V143C316 150.732 309.732 157 302 157H18C10.268 157 4 150.732 4 143V14Z" fill="white"/>
 <path d="M18 0.464844H302C309.475 0.464846 315.535 6.52458 315.535 14V143C315.535 150.475 309.475 156.535 302 156.535H18C10.5246 156.535 4.46484 150.475 4.46484 143V14C4.46484 6.52458 10.5246 0.464844 18 0.464844Z" stroke="#C6C6C6" stroke-width="0.929093"/>
 </g>
-<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.17" font-weight="bold" letter-spacing="0em"><tspan x="21" y="23.7578">CFO Dashboard</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.17" font-weight="bold" letter-spacing="0em"><tspan x="16" y="23.7578">CFO Dashboard</tspan></text>
 <rect x="16.4197" y="32.4197" width="150.244" height="41.1283" rx="2.93773" fill="white" stroke="#E2E2E2" stroke-width="0.839352"/>
 <text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.39352" letter-spacing="0px"><tspan x="22.7971" y="47.1919">Assets</tspan></text>
 <text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.0722" font-weight="bold" letter-spacing="0px"><tspan x="22.7971" y="62.199">&#xa3;14,441K</tspan></text>
