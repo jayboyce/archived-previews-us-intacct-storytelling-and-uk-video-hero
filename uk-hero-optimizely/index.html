@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>UK homepage hero — deliverable preview</title>
+
+<!-- ============================================================
+     DELIVERABLE PREVIEW.
+
+     This page runs the REAL deliverable — experience.js + styles.css,
+     unmodified — inside a static copy of sage.com/en-gb's chrome, so it can
+     be compared 1:1 against the live site.
+
+     There is no second copy of the hero here. Everything below the nav is
+     rendered by experience.js at runtime. That is the point: the prototype
+     and the deliverable used to be maintained separately and drifted apart
+     (different panels, different filtering). This page cannot drift, because
+     it IS the deliverable.
+
+     DEV-ONLY, and different from production in exactly three documented ways
+     (spec rule 59):
+       1. assetBase points at the local asset folder, not Sitecore
+       2. previewMount is used instead of the Sitecore anchor
+       3. the chrome below is static and inert — no dropdowns, no search,
+          no sticky behaviour, links go nowhere
+     ============================================================ -->
+
+<link rel="preconnect" href="https://www.sage.com">
+<link rel="stylesheet" href="https://www.sage.com/Areas/SageDotCom/css/main.css">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Page ground. The bundle styles the page but this file is served standalone,
+   so the dark background the hero sits on is set here. */
+html, body { margin: 0; padding: 0; background: #000; }
+body { overflow-x: hidden; }
+
+/* ---- Static live-site chrome (inert reference only) ---- */
+/* ---- [v2 OVERLAP] Tabset + cards sitting ON the video ---------------- The tabset and the card row are a sibling .page-wrapper AFTER the hero, not children of it. To get them over the footage we pull the whole wrapper up by the hero's --media-overhang and let the hero's media panel (which now extends by that same amount) show through behind them. Two things this depends on: - The wrapper ships a solid black background from the sage bundle. That would hide the video completely, so it's cleared here — and ONLY for the two sections that overlap. Everything below keeps the black. - z-index/position: the wrapper needs its own stacking context above the hero's media, or the video paints over the pill and the cards. */ /* ============================================================ LIVE-SITE CHROME — static reference only. See the markup comment. Values measured from sage.com/en-gb at 1440px, not estimated: promo strip 54px tall, 8px 0 padding, Sage Ai gradient header 60px tall, #000 container max-width 1440px, centred (58px inset at 1440) ============================================================ */ .live-promo {
+      /* The live gradient's exact stops. */
+      background: linear-gradient(90deg,
+        #00d639 0%, #11afff 51.22%, #8f49fe 100%);
+      padding: 8px 0;
+    }
+.live-promo__inner {
+      max-width: 1440px;
+      margin-inline: auto;
+      padding-inline: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 38px;
+    }
+.live-promo__text {
+      font-family: var(--font-text);
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 27.2px;
+      color: rgba(0, 0, 0, 0.9);
+      text-decoration: underline;
+    }
+/* Live uses a Sage-UI-Icons glyph here. That font is not in this prototype's local asset set, so the chevron is drawn as an inline SVG sized to match the glyph's rendered 17x18 box. */ .live-promo__chevron {
+      width: 17px;
+      height: 18px;
+      flex: none;
+      color: rgba(0, 0, 0, 0.9);
+    }
+.live-nav {
+      background: #000;
+      height: 60px;
+    }
+.live-nav__inner {
+      max-width: 1440px;
+      margin-inline: auto;
+      padding-inline: 58px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      /* Logo (57px at x=58) to first nav item at x=154 => 39px. */
+      gap: 39px;
+    }
+.live-nav__logo {
+      width: 57px;
+      height: 32px;
+      flex: none;
+      display: block;
+    }
+.live-nav__links {
+      display: flex;
+      align-items: center;
+      /* 40px. Measured as the gap between the live nav items' BOX edges
+         (39.7 / 39.8 / 40.6 across the clean pairs), not inferred from their
+         left positions — the label widths themselves are already identical to
+         live, so the gap was the only variable. */
+      gap: 40px;
+    }
+.live-nav__links span {
+      font-family: var(--font-text);
+      font-size: 16px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+      white-space: nowrap;
+    }
+.live-nav__actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      /* Live: search control occupies a 32px box starting at x=1198; Login
+         starts at 1286. That is a 56px gap between the two boxes. */
+      gap: 56px;
+    }
+.live-nav__search {
+      /* 32px footprint to match the live control's box; the drawn glyph is
+         inset within it via padding so the icon itself stays 22px. */
+      width: 32px;
+      height: 32px;
+      padding: 5px;
+      box-sizing: border-box;
+      color: #fff;
+      flex: none;
+    }
+.live-nav__login {
+      font-family: var(--font-text);
+      font-size: 16px;
+      font-weight: 500;
+      color: #fff;
+      border: 2px solid #fff;
+      border-radius: 24px;
+      /* Measured 96x32 on live, including the border box. */
+      min-width: 96px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding-inline: 16px;
+      white-space: nowrap;
+    }
+</style>
+</head>
+<body>
+  <div class="live-promo">
+    <div class="live-promo__inner">
+      <span class="live-promo__text">Late to submission? You can still send your MTD quarterly update for free</span>
+      <svg class="live-promo__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <header class="live-nav">
+    <div class="live-nav__inner">
+      <img class="live-nav__logo" src="../uk-video-hero/assets/img/sage-nav-logo.svg" alt="Sage">
+      <nav class="live-nav__links">
+        <span>Products &amp; Solutions</span>
+        <span>Making Tax Digital</span>
+        <span>Accountants</span>
+        <span>Partners</span>
+        <span>Blog</span>
+        <span>Support</span>
+      </nav>
+      <div class="live-nav__actions">
+        <svg class="live-nav__search" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M16.5 16.5L21 21" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="live-nav__login">Login</span>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- experience.js renders the hero, selector and cards into this element. -->
+  <div id="preview-mount"></div>
+
+  <!-- Scope-leak probe (spec rule 16): deliverable classes OUTSIDE the
+       injected root. If styles.css is correctly scoped this stays plain
+       unstyled text at the foot of the page. -->
+  <div id="leak-probe" style="padding:12px 16px;font:13px system-ui,sans-serif;color:#888;">
+    <span class="uk-hero__eyebrow">Scope probe — must be unstyled plain text.</span>
+  </div>
+
+  <!-- jQuery + slick: part of the sage.com bundle in production. Loaded here
+       so the card carousel can actually be exercised below 1200px — without
+       them it degrades to a plain card row and the carousel goes untested. -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+  <script>
+    // DEV-ONLY config. Production sets assetBase to the Sitecore media path
+    // and anchor to the Sitecore row; neither exists on localhost.
+    window.UK_HERO_CONFIG = {
+      assetBase: '../uk-video-hero/assets',
+      flatAssets: false,
+      nestedFolders: { '.mp4': 'video/', '.jpg': 'video/', '.svg': 'img/' },
+      previewMount: '#preview-mount'
+    };
+  </script>
+  <script src="experience.js"></script>
+</body>
+</html>

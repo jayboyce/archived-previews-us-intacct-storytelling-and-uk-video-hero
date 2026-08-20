@@ -1528,11 +1528,17 @@
                 <label class="opt-gwo-label" for="opt-gwo-product">I am interested in</label>
                 <span class="opt-select-wrap">
                   <select id="opt-gwo-product" class="opt-gwo-select">
+            <!-- Products MATCH LIVE GWO-4624: MTD, Accounting, Payroll & HR, ERP.
+                 "Accountants" and "Explore Sage Ai" are NOT products on live —
+                 the two accountant cards are reached through the business-size
+                 filter ("Accountants in practice") under Accounting, and live
+                 has no Sage Ai panel at all. Both panels remain in the markup;
+                 the Accountants one is still the target of that filter.
+                 MTD reuses the Accounting panel, filtered to Sole Trader. -->
+            <option value="tab-a234e830-4aec-4fb3-840b-9e08a3bd89bb" data-product="MTD">MTD</option>
             <option value="tab-a234e830-4aec-4fb3-840b-9e08a3bd89bb" selected>Accounting</option>
-            <option value="tab-ee051fb5-dc95-490b-91d2-47d3411bb032">Payroll & HR</option>
-            <option value="tab-f9879329-a2d3-4a3b-a18c-16d5c1c28964">Accountants</option>
+            <option value="tab-ee051fb5-dc95-490b-91d2-47d3411bb032">Payroll &amp; HR</option>
             <option value="tab-1f336887-464f-4d7b-abb2-770a8032256c">ERP</option>
-            <option value="tab-47d796e1-884f-40a6-b5cd-d9d112fe14bd">Explore Sage Ai</option>
                   </select>
                 </span>
                 <label class="opt-gwo-label" for="opt-gwo-size">software, for a business of</label>
@@ -3498,10 +3504,26 @@ Businesses all over the world trust Sage                    </span></h2>
       /* Panel ids, read off the markup so nothing can drift out of sync. */
       var PANEL = {};
       [].forEach.call(product.options, function (o) { PANEL[o.text.trim()] = o.value; });
+      /* The Accountants panel is no longer a selectable product, but the
+         "Accountants in practice" size still switches to it, so its id has to
+         stay reachable. Read it off the markup rather than hard-coding. */
+      (function () {
+        var acc = document.querySelector('[data-title="Accountants"]');
+        if (acc) PANEL['Accountants'] = acc.id;
+      })();
 
       /* Live's matrix. `cards: null` means "show everything in the panel".
          Otherwise the listed card titles are the ones kept. */
       var MATRIX = {
+        /* MTD reuses the Accounting panel, filtered to the one card live
+           shows there. Its only size is "Just me". */
+        'MTD': {
+          panel: PANEL['Accounting'],
+          sizes: [
+            { label: 'Select business size', cards: ['Sage Sole Trader'] },
+            { label: 'Just me',              cards: ['Sage Sole Trader'] }
+          ]
+        },
         'Accounting': {
           panel: PANEL['Accounting'],
           sizes: [
@@ -3522,10 +3544,6 @@ Businesses all over the world trust Sage                    </span></h2>
             { label: '250+ Employees',    cards: ['Sage People'] }
           ]
         },
-        'Accountants': {
-          panel: PANEL['Accountants'],
-          sizes: [{ label: 'Select business size', cards: null }]
-        },
         'ERP': {
           panel: PANEL['ERP'],
           sizes: [
@@ -3533,10 +3551,6 @@ Businesses all over the world trust Sage                    </span></h2>
             { label: '10-49 Employees', cards: ['Operations for Sage Intacct'] },
             { label: '50+ Employees',   cards: ['Sage X3'] }
           ]
-        },
-        'Explore Sage Ai': {
-          panel: PANEL['Explore Sage Ai'],
-          sizes: [{ label: 'Select business size', cards: null }]
         }
       };
 

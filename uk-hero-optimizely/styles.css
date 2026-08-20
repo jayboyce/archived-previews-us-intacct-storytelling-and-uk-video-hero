@@ -1,0 +1,703 @@
+/* GENERATED FILE — do not edit.
+   Built by uk-hero-optimizely/build-css.mjs from custom-overrides.css.
+   Every rule is scoped to .uk-hero-root.
+   Edit the source, then re-run: node uk-hero-optimizely/build-css.mjs
+*/
+/* ============================================================
+   UK video hero — source CSS.
+   Scoped to .uk-hero-root at build time by build-css.mjs.
+
+   NOT declared here, deliberately (the sage.com bundle provides
+   all of them, and declaring them pins values that should stay
+   responsive):
+     @font-face, font-family, base font-size, line-height,
+     base color, box-sizing, form-control fonts, focus rings.
+
+   The one focus-related rule is the body.using-kbd gate, which
+   reuses the host's own ring rather than defining a new one.
+   ============================================================ */
+
+/* Custom tokens ONLY where the bundle has no equivalent:
+   heading scale, layout width/gutter, hero geometry. */
+.uk-hero-root {
+  /* [OPT-CHANGE 10] h1 up one step on the bundle's own scale (50 -> 56).
+     The title measure widens with it (see .uk-hero__title): at 56px the old
+     640px measure forced the headline onto four lines, breaking the intended
+     "software, for / every stage of business" split. */
+  --uk-hero-h1: 56px;
+  --uk-hero-body: 18px;
+  --uk-hero-max: 1280px;
+  --uk-hero-gutter: 40px;
+  /* Hero geometry. The video BLEEDS to the right viewport edge and spans
+     --uk-hero-video-width of it. Its height is the natural 16:9 height of that
+     width, capped at --uk-hero-height-max so the hero cannot grow unbounded on
+     wide screens; past the cap the frame crops, top-anchored (see
+     object-position) so heads stay safe and the desk action stays in.
+     360px sits 25px above live sage.com's 335px hero band. Live has no video in
+     its hero — matching 335 exactly cropped ~62% of the frame at 2560px and cut
+     the desk action out entirely. */
+  --uk-hero-video-width: 0.62;
+  --uk-hero-video-w: calc(100vw * var(--uk-hero-video-width));
+  --uk-hero-video-h: calc(var(--uk-hero-video-w) * 9 / 16);
+  --uk-hero-height-max: 483px;
+  --uk-hero-height: min(var(--uk-hero-video-h), var(--uk-hero-height-max));
+
+  /* [OPT-CHANGE 9] Card-row overlap, expressed as TWO values because they do
+     different jobs and are not interchangeable:
+
+       --uk-hero-overhang  how far the media panel runs PAST the hero shell.
+       --uk-sections-pull  how far the sections below are pulled UP.
+
+     They were originally one value. That only works while the hero is as tall
+     as the video band; here the shell is sized by its copy, so pulling the
+     sections up by the full overhang lands the pill on top of the subtitle.
+     The pull is therefore small (just enough to close the gap under the copy)
+     and the overhang is large (enough that the panel still reaches behind the
+     card row). Measured at 1440x790: 34px from subtitle to pill, 116px of
+     footage behind the cards. */
+  --uk-hero-overhang: 240px;
+  --uk-sections-pull: 20px;
+
+  /* [OPT-CHANGE 15] Horizontal offset for the scrim's left ramp: higher pulls
+     the fade further left, 0 restores the unshifted position. Expressed in vw,
+     not px, because the room available scales with the viewport.
+
+     HARD CEILING 5vw. The solid-black stop (43%) must stay at or right of the
+     video's left edge, or the fade starts before the footage does and the panel
+     seam shows. The video's left edge is at 38% of the viewport and the solid
+     stop at 43%, so the slack is a constant 5% of width at EVERY size — the
+     limit is a ratio, not a pixel value. 4.5vw leaves 0.5vw of margin (9px at
+     1728, 5px at 1025) for rounding and subpixel layout.
+
+     Do NOT convert this to px: 90px looks right at 1728 but overshoots the
+     51px of room available at 1025, and the seam reappears. */
+  --uk-hero-scrim-shift: 4.5vw;
+
+  /* [OPT-CHANGE 11] Micro-UI image width inside its card, as a fraction of the
+     card's content box. 0.95 renders it 5% narrower than full bleed: at full
+     width the UI read as oversized against the card's type. The inset comes
+     off the RIGHT only (see .uk-card__media-img) so the image's left edge
+     stays flush with the copy beneath it. */
+  --uk-card-media-scale: 0.95;
+
+  /* [OPT-CHANGE 12] Short-viewport compression factor — see the max-height
+     block near the end of this file. 1 = no compression, so every calc()
+     that reads it resolves to its full desktop value here. */
+  --uk-fit: 1;
+}
+.uk-hero-root .uk-hero {
+  position: relative;
+  background: #000;
+  /* Padding trimmed so the copy block (~274px on a standard laptop) fits inside
+     the band. Stock 64/32 pushed the shell past the video's height. */
+  /* [OPT-CHANGE 9] Floored with max() so the compression factor can tighten
+     the hero's frame but never past the point where the copy block reads as
+     jammed against the viewport edge or the pill below it. */
+  padding-top: max(28px, calc(40px * var(--uk-fit)));
+  padding-bottom: max(28px, calc(32px * var(--uk-fit)));
+  /* [OPT-CHANGE 9] The shell is sized by its COPY, not by the video band.
+     The old fixed height pinned it to the band, which is exactly what the
+     overlap breaks: the media panel now runs PAST the hero and the card row
+     sits on top of it. overflow stays visible so the panel can escape. */
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: visible;
+  z-index: 0;
+}
+
+/* The video's hard left edge is not visible: the scrim below is full-bleed and
+   holds solid black past that edge, burying the seam inside the fade. The panel
+   bleeds to the right viewport edge. Do NOT give this an explicit height that
+   disagrees with --uk-hero-height: the scrim derives its height from the same
+   token, and any mismatch leaves the scrim's dark fade off the video's bottom
+   edge (it then appears to vanish on some widths). */
+.uk-hero-root .uk-hero__bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--uk-hero-video-w);
+  /* [OPT-CHANGE 9] Extends past the hero by --uk-hero-overhang so the footage
+     runs behind the pill and the top of the card row. */
+  height: calc(var(--uk-hero-height) + var(--uk-hero-overhang));
+  overflow: hidden;
+  z-index: 0;
+}
+.uk-hero-root .uk-hero__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right top;   /* subjects right, away from the copy */
+  display: block;
+  background: #1c2b28;          /* fallback tone before the video paints */
+}
+
+/* Full-bleed (spans the whole hero, not just the video panel) so the
+   horizontal fade can cross the video's left edge and hide the seam.
+   The black hold must clear the panel's left edge: the panel starts at
+   (100% - --uk-hero-video-width), i.e. 38% of the viewport, so black runs to
+   43%. If --uk-hero-video-width changes, move this stop with it. */
+.uk-hero-root .uk-hero__scrim {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  /* Same tokens as the panel — the two must end on the same y at every width,
+     overhang included, or the fade lands off the video's bottom edge. */
+  height: calc(var(--uk-hero-height) + var(--uk-hero-overhang));
+  z-index: 0;
+  background:
+    /* [OPT-CHANGE 15] Vertical fade, re-derived when the panel grew from the
+       video band alone to band + overhang. The tuned shape is unchanged; the
+       stops moved up to keep it in the same PIXEL place. It MUST reach solid
+       black by 90%: the frame is cropped at the bottom, and the panel's lower
+       edge now sits beside the cards, where a soft edge reads as a seam. */
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 52%,
+      rgba(0, 0, 0, 0.18) 62%,
+      rgba(0, 0, 0, 0.52) 72%,
+      rgba(0, 0, 0, 0.86) 82%,
+      #000 90%,
+      #000 100%
+    ),
+    /* [OPT-CHANGE 15] Solid black over the copy, holding past the video's 38%
+       left edge, then easing to clear over the imagery — buries the panel seam.
+       --uk-hero-scrim-shift slides the whole ramp horizontally, applied via
+       calc() rather than folded into the percentages so it stays a true offset
+       at every width. */
+    linear-gradient(
+      100deg,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) calc(43% - var(--uk-hero-scrim-shift)),
+      rgba(0, 0, 0, 0.86) calc(54% - var(--uk-hero-scrim-shift)),
+      rgba(0, 0, 0, 0.6) calc(66% - var(--uk-hero-scrim-shift)),
+      rgba(0, 0, 0, 0.34) calc(78% - var(--uk-hero-scrim-shift)),
+      rgba(0, 0, 0, 0.15) calc(90% - var(--uk-hero-scrim-shift)),
+      rgba(0, 0, 0, 0.05) 100%
+    );
+}
+
+/* Layout width. Named uk-hero__container rather than reusing the
+   bundle's .container so it cannot be affected by host changes. */
+.uk-hero-root .uk-hero__content {
+  position: relative;
+  z-index: 1;
+  padding-top: 24px;
+  width: 100%;
+  max-width: var(--uk-hero-max);
+  margin-inline: auto;
+  padding-inline: var(--uk-hero-gutter);
+}
+
+/* Matches the live .hero-subtitle-container on sage.com/en-gb:
+   Sage Text 16px/500, 22.4px line-height, rgba(255,255,255,.9). */
+.uk-hero-root .uk-hero__eyebrow {
+  display: flex;
+  align-items: center;
+  /* Zero the UA's paragraph margins, then set the bottom gap explicitly.
+     Floored: the three lines of hero type read as one block and the gaps
+     between them must not collapse under compression. */
+  margin: 0;
+  margin-bottom: max(12px, calc(16px * var(--uk-fit)));
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22.4px;
+  /* Reset the negative tracking the bundle applies to headings, which
+     otherwise cramps the eyebrow horizontally. */
+  letter-spacing: normal;
+  word-spacing: normal;
+}
+.uk-hero-root .uk-hero__eyebrow-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  flex: none;
+  vertical-align: middle;
+}
+.uk-hero-root .uk-hero__title {
+  color: #fff;
+  /* [OPT-CHANGE 10] 700, not 640: at the larger 56px h1 the old measure forced
+     the headline onto four lines and broke the intended two-line split. Stays
+     well clear of the footage — the video's left edge is ~513px from the
+     container edge at 1728. */
+  max-width: 700px;
+  margin: 0;
+  font-weight: 900;
+  font-size: var(--uk-hero-h1);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+.uk-hero-root .uk-hero__headline { display: block; }
+
+/* @sage/atomic-ui `gradients.ai` token — green → blue → purple,
+   clipped to the text. -webkit-* first for Safari/Chrome. */
+.uk-hero-root .uk-hero__ai {
+  background: linear-gradient(90deg, #00d639 0%, #11afff 50%, #8f49fe 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.uk-hero-root .uk-hero__subtitle {
+  /* Floored so the gap under the headline cannot collapse when compressed. */
+  margin-top: max(20px, calc(32px * var(--uk-fit)));
+  margin-bottom: 0;
+  /* [OPT-CHANGE 13] 440, not 520: at the wider measure this sentence set
+     512/267px — line one ran full and line two trailed well short. 440 sets
+     419/360 on the same two lines, an even rag. Measured: 460 and 420 give the
+     identical break; at 400 it drops to three lines with a two-word orphan. */
+  max-width: 440px;
+  font-size: var(--uk-hero-body);
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.5;
+}
+
+/* Pause/play (WCAG 2.2.2). The button itself is the bundle's
+   .lottie-control — size, shape, colour, icon and hover all come from
+   main.css, including its own `min-height/min-width: revert` which
+   neutralises the generic button rules without !important. This only
+   parks the control in the hero's top-right. */
+.uk-hero-root .uk-hero__video-controls {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  z-index: 3;
+}
+
+/* [OPT-CHANGE 2] Focus ring (WCAG 2.4.7). NOT a new ring — these are the host bundle's
+   exact values (`.using-kbd button:focus`, main.css: 2px #1b1b1b inner,
+   4px #ffb500 outer, no blur). It has to be restated here because the
+   bundle's own .lottie-control rules are more specific
+   (.lottie-container .lottie-controls .lottie-control = 0,3,0) than its
+   focus rule (.using-kbd button:focus = 0,2,1), so the ring never paints
+   on this control. Verified: without this, focus is invisible.
+   The body.using-kbd gate is shipped in experience.js — the bundle's JS
+   cannot be assumed to run against injected content. */
+body.using-kbd .uk-hero-root .uk-hero__video-controls .lottie-control:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #1b1b1b, 0 0 0 4px #ffb500;
+}
+
+/* ============================================================
+   [OPT-CHANGE 9] Tabset + card row
+   ============================================================ */
+
+/* The sections after the hero are pulled UP by the overhang so they sit on
+   the video panel, which extends by the same amount. The wrapper needs its
+   own stacking context above the hero's media or the footage paints over
+   the pill and the cards. */
+.uk-hero-root .uk-sections {
+  position: relative;
+  z-index: 1;
+  margin-top: calc(var(--uk-sections-pull) * -1);
+  background: transparent;
+}
+
+/* Page measure for the tabset, matching the hero's own container. */
+.uk-hero-root .uk-tabs-container {
+  width: 92%;
+  max-width: var(--uk-hero-max);
+  margin-inline: auto;
+}
+
+/* Gap between the pill and the card row. The tabset ships its own padding
+   in the host bundle; this sets the value explicitly so the two bands read
+   as separate without depending on that. */
+.uk-hero-root .tab-content-wrapper-outer {
+  padding-top: 24px;
+}
+
+/* Panels: only the selected one renders. `hidden` is also set in markup so
+   the panel is hidden from assistive tech, not just visually. */
+.uk-hero-root .score-tab-panel { display: none; }
+.uk-hero-root .score-tab-panel.active { display: block; }
+
+/* Card row. */
+.uk-hero-root .score-flex-box.col-3 {
+  display: flex;
+  gap: 24px;
+  align-items: stretch;
+}
+.uk-hero-root .score-flex-box.col-3 > .flex-item {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* The card's inner chain must be a flex column for the CTA-alignment rule
+   below to resolve against the card's full height rather than its content
+   height. */
+.uk-hero-root .score-flex-box.col-3 > .flex-item, .uk-hero-root .score-flex-box.col-3 .score-style-box.all-corners-sm, .uk-hero-root .score-flex-box.col-3 .score-style-box.padding-none, .uk-hero-root .score-flex-box.col-3 .score-highlight, .uk-hero-root .score-flex-box.col-3 .caption {
+  display: flex;
+  flex-direction: column;
+}
+.uk-hero-root .score-flex-box.col-3 .score-style-box.all-corners-sm, .uk-hero-root .score-flex-box.col-3 .score-style-box.padding-none, .uk-hero-root .score-flex-box.col-3 .score-highlight, .uk-hero-root .score-flex-box.col-3 .caption {
+  flex: 1 1 auto;
+}
+
+/* The card frame. Vertical padding is floored so the compression factor can
+   tighten it but never past the point where the micro-UI image sits jammed
+   against the card's top edge. Horizontal padding is NOT scaled — the text
+   measure, and therefore the line breaks, must not move. */
+.uk-hero-root .score-flex-box.col-3 .score-style-box.all-corners-sm {
+  padding: max(28px, calc(40px * var(--uk-fit))) 32px;
+  border-radius: 32px;
+}
+
+/* Pushes the CTA to the bottom of its column. Without it the card with the
+   SHORTEST copy ends its content early and the leftover shows as a gap
+   BELOW its button — 44px against the other cards' 28px — which reads as
+   mismatched padding. This puts the slack above the button instead, so every
+   card's CTA sits the same distance off its bottom edge and the row's
+   buttons stay aligned. */
+.uk-hero-root .score-flex-box.col-3 .score-call-to-action {
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+/* Micro-UI image. Width scales by --uk-card-media-scale; height follows from
+   the SVG's own aspect ratio so the depicted UI is never distorted. The inset
+   comes off the RIGHT edge only, keeping the image's left edge flush with the
+   eyebrow, heading, body and CTA beneath it. */
+.uk-hero-root .uk-card__media {
+  flex: 0 0 auto;
+  margin-bottom: max(12px, calc(24px * var(--uk-fit)));
+  /* The bundle's .score-center-text centres its contents, which would float
+     the narrower image right of the copy column. */
+  text-align: left;
+}
+.uk-hero-root .uk-card__media-img {
+  display: block;
+  width: calc(100% * var(--uk-card-media-scale));
+  height: auto;
+  margin-inline: 0 auto;
+}
+
+/* ============================================================
+   [OPT-CHANGE 12] Short-viewport compression
+   Every other breakpoint here keys off WIDTH, but a 13" laptop reports the
+   same 1440 CSS px as a large external display — only its HEIGHT differs.
+   Uncompressed, the card row's CTAs fall below the fold on such a screen.
+
+   --uk-fit is a single continuous factor derived from 100vh. Spacing values
+   above read it as `calc(<full value> * var(--uk-fit))`, floored with max()
+   where the space must not collapse, so the composition tightens
+   proportionally instead of one element absorbing the whole reduction.
+
+   It defaults to 1, so every calc() resolves to its full desktop value and
+   taller screens are untouched by this block.
+   ============================================================ */
+@media (min-width: 1025px) and (max-height: 940px) {
+.uk-hero-root {
+    --uk-fit: clamp(0.24, calc((100vh - 640px) / 500px * 0.72 + 0.24), 1);
+    --uk-hero-h1: 44px;
+    /* Trims footage hidden behind the card row (204px -> ~112px at 1440x790)
+       while keeping the overlap the composition depends on. */
+    --uk-hero-height-max: 400px;
+  }
+
+  /* Two-thirds of the card's height is text, so the remaining space comes
+     from type. Both steps land on sizes the bundle already uses. */
+.uk-hero-root .score-flex-box.col-3 .inner-heading {
+    font-size: 20px;
+    line-height: 23px;
+  }
+.uk-hero-root .score-flex-box.col-3 .score-highlight-body, .uk-hero-root .score-flex-box.col-3 .score-highlight-body p {
+    font-size: 14px;
+    line-height: 20.3px;
+  }
+.uk-hero-root .score-flex-box.col-3 .score-highlight-header { margin-bottom: 8px; }
+.uk-hero-root .score-flex-box.col-3 .score-highlight-body p { margin-bottom: 8px; }
+.uk-hero-root .tab-content-wrapper-outer { padding-top: 16px; }
+}
+@media (min-width: 1025px) and (max-height: 780px) {
+.uk-hero-root { --uk-hero-h1: 40px; }
+}
+
+/* Responsive h1 scale, matching the bundle's own steps. */
+@media (max-width: 1200px) {
+.uk-hero-root { --uk-hero-h1: 44px; } }
+@media (max-width: 992px) {
+.uk-hero-root { --uk-hero-h1: 46px; } }
+
+/* Mobile: flat scrim, shorter band. The subtitle goes to solid white
+   for AA contrast over a worst-case bright video frame. */
+/* [OPT-CHANGE 7] Tablet + mobile layout starts at 1024px, not 720px.
+   The desktop layout puts the copy BESIDE the video and relies on the scrim's
+   horizontal fade to hide the panel's left edge. As the viewport narrows that
+   edge moves left, so by ~1024px the headline overlaps the footage and its
+   contrast depends on whichever frame is playing (the café scene is bright) —
+   a WCAG 1.4.3 risk, since contrast must hold against the WORST frame. From
+   1024px down the video goes full-bleed behind the copy with a flat bottom-up
+   scrim that darkens the band uniformly. */
+@media (max-width: 1024px) {
+.uk-hero-root {
+    /* Tablet type scale; the ≤720px block drops these to the phone values. */
+    --uk-hero-h1: 40px;
+    --uk-hero-gutter: 32px;
+    --uk-hero-height: 400px;
+  }
+  /* Stacked layout puts copy OVER the video, so the shell must grow to fit the
+     copy — a fixed height clips it. Release the desktop `height`. */
+.uk-hero-root .uk-hero { height: auto; min-height: 400px; }
+  /* [OPT-CHANGE 3] Full-bleed below 1024px. With the panel inset, its hard left
+     edge runs vertically through the headline and copy, and the flat scrim here
+     has no horizontal fade to bury it — so the seam shows straight down the
+     text. width:auto releases the desktop fixed width. */
+.uk-hero-root .uk-hero__bg { width: auto; left: 0; right: 0; }
+.uk-hero-root .uk-hero__scrim {
+    background:
+      linear-gradient(
+        to top,
+        #000 0%,
+        rgba(0, 0, 0, 0.68) 24%,
+        rgba(0, 0, 0, 0.42) 48%,
+        rgba(0, 0, 0, 0.14) 72%,
+        rgba(0, 0, 0, 0) 100%
+      ),
+      rgba(0, 0, 0, 0.6);
+  }
+.uk-hero-root .uk-hero__subtitle { color: #fff; }
+}
+
+/* Phone (≤720px): phone type scale. Layout is already stacked by the block
+   above; only the type and gutter step down here. */
+@media (max-width: 720px) {
+.uk-hero-root {
+    --uk-hero-h1: 34px;
+    --uk-hero-gutter: 20px;
+  }
+.uk-hero-root .uk-hero { padding-top: 72px; }
+}
+
+/* ============================================================
+   [OPT-CHANGE 16] PRODUCT SELECTOR
+   Ported from the live GWO-4624 experiment. Every deviation from
+   it is listed in reference/uk-hero-vs-gwo4624.md.
+
+   NOT declared here: font-family. GWO-4624 inherits Sage Text
+   from the sage.com bundle and so does this (spec rule 9 — the
+   bundle owns base type, and pinning it creates conflicts).
+   ============================================================ */
+.uk-hero-root .opt-gwo-controls {
+  display: flex;
+  /* Live GWO-4624 centres this row. LEFT-aligned here so the first word lines
+     up with the eyebrow, headline and subtitle above it, all of which sit on
+     the hero's own left edge. Centred, it sat ~140px right of that edge and
+     read as a detached element rather than part of the copy block. */
+  justify-content: flex-start;
+  align-items: center;
+  /* Live uses 16px, sized against its 24px labels. With the type scaled down
+     the same gap left the controls floating away from the words they belong
+     to; 10px keeps each attached to its phrase. */
+  gap: 10px;
+  /* Live: `margin: 0 auto 40px`. The bottom margin is dropped — the
+     selector-to-card gap here is owned by the tab pane's padding, because the
+     video panel overhangs into this area and the spacing is tuned against
+     that overlap. */
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+.uk-hero-root .opt-gwo-label {
+  color: #fff;
+  /* Live sets 24px. Scaled down with the controls: at 24px the label competed
+     with the h1 two lines above it and the row read as a second headline
+     rather than as a control. */
+  font-size: 19px;
+  font-weight: 700;
+}
+.uk-hero-root .opt-select-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.uk-hero-root .opt-select-wrap::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #fff;
+  transform: translateY(-35%);
+  pointer-events: none;
+}
+.uk-hero-root .opt-gwo-select {
+  appearance: none;
+  -webkit-appearance: none;
+  /* Live uses `min-width: 220px` with `12px 48px 12px 18px`. Both relaxed: the
+     widest product label measures 128px, so the 220px floor padded the control
+     out with ~90px of empty green, and 48px of right padding for a 12px
+     chevron left a visible gap. 34px still clears it (18px inset + 12px
+     glyph). Vertical padding sets the height: 12px gave 53px (live), 8px gives
+     ~45px against the smaller type. */
+  min-width: 0;
+  padding: 8px 34px 8px 16px;
+  border: 1px solid #008146;
+  border-radius: 999px;
+  background: #008146;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* Without this the options render white-on-white in Chrome, because the
+   select's own colour is inherited. Same as live. */
+.uk-hero-root .opt-gwo-select option {
+  background-color: #fff;
+  color: #000;
+}
+@media (max-width: 1199px) {
+  /* CENTRED below 1200px, unlike the base row. The cards become a centred
+     single-card carousel here, and a left-aligned control above a centred card
+     reads as two unrelated blocks. Width matches the carousel card so the
+     selector and the card are the same box, edge to edge. */
+.uk-hero-root .opt-gwo-controls {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 450px;
+    margin: 0 auto;
+  }
+.uk-hero-root .opt-gwo-label { font-size: 17px; }
+.uk-hero-root .opt-select-wrap, .uk-hero-root .opt-gwo-select {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+@media (max-width: 767px) {
+.uk-hero-root .opt-gwo-controls { max-width: 348px; }
+}
+
+/* ============================================================
+   [OPT-CHANGE 17] CARD CAROUSEL (below 1200px)
+   Three fixes that GWO-4624's CSS alone does not give you. Each
+   was a real defect, not a precaution.
+   ============================================================ */
+@media (max-width: 1199px) {
+.uk-hero-root .score-flex-box.col-3 {
+    display: block;
+    /* FIX 1. The desktop 3-up row carries `margin: 0 -48px` — a negative
+       gutter so the cards sit flush to the container edges. Slick MEASURES
+       this element to size its slides and its dot row, so the negative margin
+       made the slides ~916px (not 450px) and pushed the dots off the right
+       edge of the viewport. */
+    margin-left: auto !important;
+    margin-right: auto !important;
+    max-width: 450px;
+  }
+
+  /* FIX 2. Cap the ROW (above), not the card. Slick derives slide width from
+     the row, so the card just fills its slide. Pinning the card to a fixed
+     width instead made it 16px WIDER than the slide slick had built and shoved
+     it 80px off-centre. */
+.uk-hero-root .score-flex-box.col-3 .flex-item {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+.uk-hero-root .score-flex-box.col-3.slick-initialized .flex-item {
+    height: 100%;
+    padding: 0 8px;
+    box-sizing: border-box;
+  }
+.uk-hero-root .score-flex-box.col-3.slick-initialized .slick-track {
+    display: flex !important;
+    align-items: stretch;
+  }
+.uk-hero-root .score-flex-box.col-3.slick-initialized .slick-slide {
+    height: auto;
+    display: flex !important;
+    justify-content: center !important;
+  }
+.uk-hero-root .score-flex-box.col-3.slick-initialized .slick-slide > div { height: 100%; }
+
+  /* FIX 3. The bundle's .slick-dots is absolutely centred
+     (left:50% + translateX(-50%)). That survives into this static dot row and
+     drags it off-screen, so both are reset. Dot geometry below matches live
+     GWO-4624. */
+.uk-hero-root .slick-dots {
+    position: relative !important;
+    left: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin: 0 0 16px !important;
+    padding: 0 !important;
+    list-style: none !important;
+  }
+.uk-hero-root .slick-dots li {
+    display: block !important;
+    width: auto !important;
+    height: 16px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+.uk-hero-root .slick-dots li button {
+    display: block !important;
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+    min-height: 16px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: #fff !important;
+    opacity: 1 !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    text-indent: -9999px !important;
+    overflow: hidden !important;
+    cursor: pointer !important;
+  }
+.uk-hero-root .slick-dots li button::before { display: none !important; content: "" !important; }
+.uk-hero-root .slick-dots li.slick-active button {
+    width: 32px !important;
+    min-width: 32px !important;
+    background: #00d639 !important;
+  }
+}
+@media (max-width: 767px) {
+.uk-hero-root .score-flex-box.col-3 { max-width: 348px; }
+.uk-hero-root .slick-dots li { height: 8px !important; }
+.uk-hero-root .slick-dots li button {
+    width: 8px !important;
+    height: 8px !important;
+    min-width: 8px !important;
+    min-height: 8px !important;
+  }
+.uk-hero-root .slick-dots li.slick-active button { width: 16px !important; min-width: 16px !important; }
+}
+.uk-hero-root /* ============================================================
+   [OPT-CHANGE 19] `hidden` must win over our own display rules.
+
+   The card row sets `display: flex` on .flex-item (twice: once for the
+   equal-width columns, .uk-hero-root once for the flex column the CTA-alignment rule
+   resolves against). Both are class selectors — specificity 0, .uk-hero-root 3, .uk-hero-root 0 — so they
+   beat the user-agent's `[hidden] { display: none }`, which is 0,1,0.
+
+   The result was that a card carrying `hidden` still rendered. Live GWO-4624
+   never shows more than three cards at once; ours showed five, because the two
+   "Accountants in practice" cards are `defaultHidden` and were painting anyway.
+
+   This is NOT the sage.com bundle overriding us — it is our own CSS overriding
+   the platform. It must therefore be fixed here rather than worked around in
+   the JS, and it applies on the real page just as it does in preview.
+
+   Placed last so it follows every display declaration above, and marked
+   !important because the carousel rules below 1200px are themselves
+   !important (they have to out-rank the bundle's slick styling).
+   ============================================================ */
+.uk-hero-root .score-flex-box .flex-item[hidden], .uk-hero-root .flex-item[hidden] {
+  display: none !important;
+}
