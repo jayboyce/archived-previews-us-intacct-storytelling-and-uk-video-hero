@@ -701,3 +701,25 @@ body.using-kbd .uk-hero-root .uk-hero__video-controls .lottie-control:focus {
 .uk-hero-root .score-flex-box .flex-item[hidden], .uk-hero-root .flex-item[hidden] {
   display: none !important;
 }
+.uk-hero-root /* ============================================================
+   [OPT-CHANGE 20] Inactive panels must be OUT of the tab order.
+
+   WCAG 2.4.3 (Focus Order) / 2.1.1 (Keyboard). An inactive panel carries
+   `hidden`, .uk-hero-root and this file sets `.score-tab-panel { display: none }` — but the
+   sage.com bundle styles the same element as `.tab-pane.fade`, and its rules
+   win: the panel computed to `display: block` with `visibility: hidden;
+   opacity: 0`. Invisible, but still laid out — so every "Discover …" link in
+   every inactive panel stayed keyboard-focusable. Tabbing through the hero on
+   the ERP product reached Sole Trader, Sage People and both accountant CTAs.
+
+   Same class of defect as OPT-CHANGE 19: our own or the host's display rule
+   outranking a visibility mechanism. Fixed with an attribute selector plus
+   !important so it beats the bundle's `.tab-pane` chain regardless of order.
+
+   `content-visibility: hidden` is deliberately NOT used — it would work, but
+   `display: none` is what the rest of this file already relies on and is
+   understood identically by every assistive technology.
+   ============================================================ */
+.uk-hero-root .score-tab-panel[hidden], .uk-hero-root .tab-pane[hidden] {
+  display: none !important;
+}
