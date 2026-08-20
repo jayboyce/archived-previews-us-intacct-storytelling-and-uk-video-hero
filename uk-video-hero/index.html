@@ -128,8 +128,12 @@
          address the overall section height separately. */
       padding-top: 40px;
       /* [v2 SKETCH] The pill sits directly under the hero copy now, so this
-         padding IS the copy-to-pill gap. Zero was too tight at 26px. */
-      padding-bottom: 32px;
+         padding IS the copy-to-pill gap. Zero was too tight at 26px.
+         Raised 32 -> 52 to open the subtitle-to-selector gap from 48px to 68px:
+         the selector was reading as part of the copy block rather than as the
+         control it is. (Total gap = this padding + the subtitle's own 16px
+         margin-bottom.) */
+      padding-bottom: 52px;
       /* [v2 OVERLAP] The hero no longer ends at the video's bottom edge. The
          media panel now extends past the hero's own content and sits BEHIND the
          tabset and card row that follow, so the shell is sized by its copy and
@@ -308,7 +312,11 @@
       margin: 0 0 16px;
       color: rgba(255, 255, 255, 0.9);
       font-family: "Sage Text", "Helvetica Neue", Roboto, "Segoe UI", Arial, sans-serif;
-      font-weight: 500;
+      /* 400, matching the subtitle below the headline. Live sage.com sets 500
+         here, but against this hero's copy that reads as a heading in its own
+         right; the eyebrow is supporting text and should sit at the same
+         weight as the body it introduces. */
+      font-weight: 400;
       font-size: 16px;
       line-height: 22.4px;
       /* Reset the negative tracking sage-main.css applies to headings, which
@@ -429,6 +437,476 @@
          the two sections that overlap. Everything below keeps the black.
        - z-index/position: the wrapper needs its own stacking context above the
          hero's media, or the video paints over the pill and the cards.       */
+    /* ============================================================
+       LIVE-SITE CHROME — static reference only. See the markup comment.
+       Values measured from sage.com/en-gb at 1440px, not estimated:
+         promo strip  54px tall, 8px 0 padding, Sage Ai gradient
+         header       60px tall, #000
+         container    max-width 1440px, centred (58px inset at 1440)
+       ============================================================ */
+    .live-promo {
+      /* The live gradient's exact stops. */
+      background: linear-gradient(90deg,
+        #00d639 0%, #11afff 51.22%, #8f49fe 100%);
+      padding: 8px 0;
+    }
+    .live-promo__inner {
+      max-width: 1440px;
+      margin-inline: auto;
+      padding-inline: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 38px;
+    }
+    .live-promo__text {
+      font-family: var(--font-text);
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 27.2px;
+      color: rgba(0, 0, 0, 0.9);
+      text-decoration: underline;
+    }
+    /* Live uses a Sage-UI-Icons glyph here. That font is not in this
+       prototype's local asset set, so the chevron is drawn as an inline SVG
+       sized to match the glyph's rendered 17x18 box. */
+    .live-promo__chevron {
+      width: 17px;
+      height: 18px;
+      flex: none;
+      color: rgba(0, 0, 0, 0.9);
+    }
+
+    .live-nav {
+      background: #000;
+      height: 60px;
+    }
+    .live-nav__inner {
+      max-width: 1440px;
+      margin-inline: auto;
+      padding-inline: 58px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      /* Logo (57px at x=58) to first nav item at x=154 => 39px. */
+      gap: 39px;
+    }
+    .live-nav__logo {
+      width: 57px;
+      height: 32px;
+      flex: none;
+      display: block;
+    }
+    .live-nav__links {
+      display: flex;
+      align-items: center;
+      /* 40px. Measured as the gap between the live nav items' BOX edges
+         (39.7 / 39.8 / 40.6 across the clean pairs), not inferred from their
+         left positions — the label widths themselves are already identical to
+         live, so the gap was the only variable. */
+      gap: 40px;
+    }
+    .live-nav__links span {
+      font-family: var(--font-text);
+      font-size: 16px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+      white-space: nowrap;
+    }
+    .live-nav__actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      /* Live: search control occupies a 32px box starting at x=1198; Login
+         starts at 1286. That is a 56px gap between the two boxes. */
+      gap: 56px;
+    }
+    .live-nav__search {
+      /* 32px footprint to match the live control's box; the drawn glyph is
+         inset within it via padding so the icon itself stays 22px. */
+      width: 32px;
+      height: 32px;
+      padding: 5px;
+      box-sizing: border-box;
+      color: #fff;
+      flex: none;
+    }
+    .live-nav__login {
+      font-family: var(--font-text);
+      font-size: 16px;
+      font-weight: 500;
+      color: #fff;
+      border: 2px solid #fff;
+      border-radius: 24px;
+      /* Measured 96x32 on live, including the border box. */
+      min-width: 96px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding-inline: 16px;
+      white-space: nowrap;
+    }
+
+    /* ============================================================
+       PRODUCT SELECTOR — CSS ported VERBATIM from sage.com's live Optimizely
+       experiment GWO-4624 (captured from the running experiment, not
+       reconstructed). Values are exactly as live: #008146 pill, 999px radius,
+       220px min-width, 12px 48px 12px 18px padding, 24px/700 labels, and the
+       chevron as a pure CSS triangle rather than an icon font.
+
+       Only two deliberate departures, both noted at the rule:
+         - selectors renamed #opt-GWO-4624-* -> .opt-gwo-* so a real GWO-4624
+           run on this page cannot collide with ours
+         - the card-grid half of the experiment is NOT ported; our own card
+           spacing and images are kept, per the brief
+       ============================================================ */
+    /* The pill row is replaced by the selector, so it is removed from view
+       entirely. Driving the bundle's TabSet by clicking these buttons was
+       tried and abandoned: the module does not act on synthetic clicks here,
+       so the selector does the switching itself (see the script at the end of
+       the file) and the bundle's tab CSS is neutralised below. */
+    /* Specificity mirrors the bundle's own rule (.score-tab.button-tabset
+       .nav-tabs-wrapper-outer = 0,3,0). A .uk-sections-prefixed selector is
+       only 0,2,0 and silently loses to it — the same trap documented for the
+       gradient border rule further up this file. */
+    .uk-sections .score-tab.button-tabset .nav-tabs-wrapper-outer,
+    .uk-sections .score-tab.large-button-tabset .nav-tabs-wrapper-outer {
+      display: none;
+    }
+
+    /* The bundle keys panel visibility off .active with rules more specific
+       than a plain .tab-pane selector, and its `.fade { opacity: 0 }` sits on
+       top of that. Since the selector now owns the switching, both are
+       overridden here at matching specificity: only the panel the selector
+       chose is laid out, and it is fully opaque with no fade to resolve. */
+    .uk-sections .score-tab.button-tabset .tab-content > .tab-pane {
+      display: none;
+      opacity: 0;
+      height: 0;
+    }
+    .uk-sections .score-tab.button-tabset .tab-content > .tab-pane.active {
+      display: block;
+      opacity: 1;
+      height: auto;
+      visibility: visible;
+      transition: none;
+    }
+
+    .opt-gwo-controls {
+      display: flex;
+      /* Live GWO-4624 centres this row (`justify-content: center`). Here it is
+         left-aligned instead, so the control's first word lines up with the
+         eyebrow, headline and subtitle above it — all of which sit on the
+         hero's own left edge. Centring left it 140px right of that edge and
+         read as a detached element rather than part of the copy block. */
+      justify-content: flex-start;
+      align-items: center;
+      /* Live uses 16px, sized against its 24px labels. With the type scaled
+         down the same gap left the pills floating away from the words they
+         belong to; 10px keeps each pill visually attached to its phrase. */
+      gap: 10px;
+      /* Live: `margin: 0 auto 40px`. The bottom margin is dropped here — this
+         page's pill-to-card gap is owned by .tab-content-wrapper-outer's
+         pull-up, which is tuned against the video overlap. */
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+    .opt-gwo-label {
+      color: #fff;
+      /* Live GWO-4624 sets 24px. Scaled down here with the pills: at 24px the
+         label competes with the 44px h1 two lines above it, and the whole row
+         read as a second headline rather than a control. 19px keeps it clearly
+         above the 18px body copy without that. */
+      font-size: 19px;
+      font-weight: 700;
+      /* Live inherits Sage Text from the page; stated explicitly because this
+         prototype's base font is Sage UI. */
+      font-family: var(--font-text);
+    }
+    .opt-select-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+    .opt-select-wrap::after {
+      content: "";
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid #fff;
+      transform: translateY(-35%);
+      pointer-events: none;
+    }
+    .opt-gwo-select {
+      appearance: none;
+      -webkit-appearance: none;
+      /* Live GWO-4624 uses `min-width: 220px` with `12px 48px 12px 18px`.
+         Both are relaxed here: the widest product label measures 128px, so the
+         220px floor was padding the pill out by ~90px of empty green, and 48px
+         of right padding for a 12px chevron left a visible gap. Dropping the
+         floor lets each pill size to its own content; 36px right still clears
+         the chevron (18px inset + 12px glyph). */
+      min-width: 0;
+      /* Vertical padding is what sets the pill's height: 12px gave 53px (live),
+         8px gives ~45px against the smaller type below. */
+      padding: 8px 34px 8px 16px;
+      border: 1px solid #008146;
+      border-radius: 999px;
+      background: #008146;
+      color: #fff;
+      font-weight: 700;
+      /* Live inherits these two; restated for the same reason as the label.
+         16px rather than live's 17px, in proportion with the smaller label. */
+      font-family: var(--font-text);
+      font-size: 16px;
+    }
+    /* The dropdown list itself. Without this the options render white-on-white
+       in Chrome, because the select's own colour is inherited. */
+    .opt-gwo-select option {
+      background-color: #fff;
+      color: #000;
+    }
+
+    /* ---- [LIVE-MATCH] Selector stacks below 1200px ----------------------
+       Live GWO-4624 stops being an inline row at max-width:1199px and becomes
+       a column: label above each full-width select. Captured from the running
+       experiment — see uk-hero-optimizely/reference/gwo-4624-live.css. Our
+       port originally had NO media query here at all, so the row stayed inline
+       at every width and merely wrapped, which is the mismatch this fixes.
+
+       Live's column is centred at `max-width: 450px` (348px under 768px).
+       Kept LEFT-ALIGNED here, and narrower, for the same reason the base row
+       is left-aligned: the control belongs to the hero copy block above it,
+       which sits on the hero's own left edge. Centring a 450px column under
+       left-aligned copy reads as a detached element.
+
+       The label is a flex item, so `align-items: stretch` would make each
+       select fill the column; the widths below are set explicitly instead so
+       the pills stay proportionate to our smaller type. */
+    @media (max-width: 1199px) {
+      .opt-gwo-controls {
+        flex-direction: column;
+        align-items: stretch;
+        /* CENTRED here, unlike the base row. The base row is left-aligned so it
+           lines up with the hero copy above it — but below 1200px the cards
+           become a centred carousel, and a left-aligned selector above a
+           centred card read as two unrelated blocks. Matching live's centring
+           at this breakpoint puts the control back on the same axis as the
+           thing it drives.
+
+           450px, not live's 450px-by-coincidence: it is the carousel card's
+           width at this breakpoint, so the selector and the card below it are
+           the same box, edge to edge. The 767px block narrows both to 348px. */
+        max-width: 450px;
+        margin: 0 auto;
+        /* Live uses 16px between the stacked rows. Ours stays at the tighter
+           10px set on the base rule, in proportion with the smaller type. */
+      }
+      .opt-gwo-label {
+        /* Live drops 24px -> 20px here. Ours is already scaled down, so it
+           steps 19px -> 17px by the same proportion. */
+        font-size: 17px;
+      }
+      .opt-select-wrap,
+      .opt-gwo-select {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+    }
+    /* Live narrows the stack again at 768px (450 -> 348). Same step here, and
+       348 matches the carousel card's width at this breakpoint so the selector
+       and the card stay the same box. */
+    @media (max-width: 767px) {
+      .opt-gwo-controls { max-width: 348px; }
+    }
+
+    /* ---- [LIVE-MATCH] Card carousel below 1200px ------------------------
+       Ported from the captured GWO-4624 rules (see
+       uk-hero-optimizely/reference/gwo-4624-live.css). Live shows ONE card at
+       a time below 1200px with dots underneath: 450px wide from 768-1199px,
+       348px (or the viewport less 32px) below 768px.
+
+       These are scoped to .uk-sections so they cannot reach the page's other
+       carousels, and they only bite once slick has added .slick-initialized —
+       before that the row stays a plain centred flex row, which is also what
+       live does for a single un-carouselled card. */
+    @media (max-width: 1199px) {
+      .uk-sections .score-flex-box.col-3 {
+        display: block;
+        /* The desktop 3-up row carries `margin: 0 -48px` — a negative gutter
+           that pulls it wider than its parent so the three cards can sit flush
+           to the container edges. Under the carousel that is actively harmful:
+           slick measures THIS element to size its slides and its dot row, so
+           the negative margin made the slides ~916px (not 450px) and pushed the
+           dots off the right edge of the viewport. Reset it here. */
+        margin-left: auto !important;
+        margin-right: auto !important;
+        /* Slick sizes each slide as (row width / slidesToShow), so the ROW is
+           what governs the card width — not the .flex-item rules further down.
+           At 836px wide it produced 820px slides and the single card sat
+           off-centre inside one. Constraining the row to the card width makes
+           slide == card, which is what live does by putting its carousel in a
+           fixed-width container. */
+        max-width: 450px !important;
+      }
+      .uk-sections .score-flex-box.col-3:not(.slick-initialized) {
+        display: flex;
+        justify-content: center;
+      }
+      .uk-sections .score-flex-box.col-3.slick-initialized,
+      .uk-sections .score-flex-box.col-3.slick-initialized .slick-list {
+        overflow: hidden;
+      }
+      .uk-sections .score-flex-box.col-3.slick-initialized .slick-track {
+        display: flex !important;
+        align-items: stretch;
+      }
+      .uk-sections .score-flex-box.col-3.slick-initialized .slick-slide {
+        height: auto;
+        display: flex !important;
+        justify-content: center !important;
+      }
+      /* Slick writes an inline width onto every .slick-slide from its own
+         measurement of the track, and an inline style beats any rule here — so
+         the slide box is left as slick sizes it and the CARD inside is centred
+         within it instead. `margin: 0 auto` on the wrapper is what actually
+         puts the card in the middle of the viewport; without it the card sat
+         hard against the slide's left edge. */
+      .uk-sections .score-flex-box.col-3.slick-initialized .slick-slide > div {
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+      .uk-sections .score-flex-box.col-3.slick-initialized .slick-slide > div {
+        height: 100%;
+      }
+      /* The card's own width rules from the desktop 3-up row would fight the
+         carousel's fixed slide width, so they are overridden here. */
+      .uk-sections .score-flex-box.col-3.slick-initialized > .flex-item,
+      .uk-sections .score-flex-box.col-3.slick-initialized .flex-item {
+        height: 100%;
+        padding: 0 8px;
+        box-sizing: border-box;
+      }
+
+      /* Pagination dots. Live's are 16px white pills, the active one a 32px
+         green capsule. */
+      .uk-sections .score-flex-box.col-3 ~ .slick-dots,
+      .uk-sections .slick-dots {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 8px !important;
+        width: 100% !important;
+        margin: 16px 0 0 !important;
+        padding: 0 !important;
+        list-style: none !important;
+        position: relative !important;
+        bottom: auto !important;
+        /* The bundle's own slick-dots rule sets `left` (measured at 418px here,
+           half the row width) to centre an absolutely-positioned dot row. Once
+           this is `position: relative` that same offset just shoves the dots
+           bodily to the right, off the viewport edge. Reset both. */
+        left: auto !important;
+        right: auto !important;
+        /* The bundle pairs that `left` with `transform: translateX(-50%)` to
+           centre an absolutely-positioned dot row. With `left` neutralised the
+           transform survives on its own and drags the dots half their width to
+           the left (-167.5px at 375px wide, putting them off the left edge).
+           This row is a normal flex child now, so no transform is wanted. */
+        transform: none !important;
+      }
+      .uk-sections .slick-dots li {
+        display: block !important;
+        width: auto !important;
+        height: 16px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .uk-sections .slick-dots li button {
+        display: block !important;
+        width: 16px !important;
+        height: 16px !important;
+        min-width: 16px !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 999px !important;
+        background: #fff !important;
+        opacity: 1 !important;
+        font-size: 0 !important;
+        line-height: 0 !important;
+        text-indent: -9999px !important;
+        overflow: hidden !important;
+        cursor: pointer !important;
+      }
+      .uk-sections .slick-dots li button::before {
+        display: none !important;
+        content: "" !important;
+      }
+      .uk-sections .slick-dots li.slick-active button {
+        width: 32px !important;
+        min-width: 32px !important;
+        background: var(--green, #00D639) !important;
+      }
+    }
+    /* Live applies these widths to BOTH the carousel and the un-carouselled
+       single card (`:not(.slick-initialized)` and `.slick-initialized` alike),
+       so a size filter that leaves one card still renders it at full width
+       rather than at the desktop 3-up width. */
+    @media (max-width: 1199px) and (min-width: 768px) {
+      /* The ROW is capped to 450px above, and slick sizes each slide from the
+         row — so the card just fills its slide. An earlier version pinned the
+         card to `flex: 0 0 450px`, which made it 16px WIDER than the 434px
+         slide slick had built and pushed it 80px off-centre. Let the slide
+         govern; only the un-carouselled single card needs an explicit width. */
+      .uk-sections .score-flex-box.col-3 > .flex-item,
+      .uk-sections .score-flex-box.col-3 .flex-item {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 1 1 auto !important;
+      }
+      /* No carousel (a size filter left one card): the row is still capped to
+         450px, so filling it gives the same width the carousel would. */
+      .uk-sections .score-flex-box.col-3:not(.slick-initialized) > .flex-item {
+        width: 100% !important;
+        max-width: 450px !important;
+      }
+    }
+    @media (max-width: 767px) {
+      /* Same as the band above: the row is capped (348px here) and the slide
+         is sized from it, so the card fills its slide rather than being pinned
+         to a width that would overflow it. */
+      .uk-sections .score-flex-box.col-3 > .flex-item,
+      .uk-sections .score-flex-box.col-3 .flex-item {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 1 1 auto !important;
+      }
+      /* Row cap matches the card width at this breakpoint (see the 450px cap
+         above): slick derives the slide width from the row. */
+      .uk-sections .score-flex-box.col-3 {
+        max-width: 348px !important;
+      }
+      .uk-sections .slick-dots li { height: 8px !important; }
+      .uk-sections .slick-dots li button {
+        width: 8px !important;
+        height: 8px !important;
+        min-width: 8px !important;
+      }
+      .uk-sections .slick-dots li.slick-active button {
+        width: 16px !important;
+        min-width: 16px !important;
+      }
+    }
+
     .uk-sections {
       position: relative;
       z-index: 1;
@@ -543,11 +1021,35 @@
        gap lands at ~24px. */
     .uk-sections .tab-content-wrapper-outer {
       padding-top: 0;
-      /* [v2 SKETCH] Tighter than stock after the hero shell was unpinned from
-         the video band. -46px puts the visual gap (pill bottom -> card top) at
-         36px; it was 22px at -60px. Note the tabset wrapper extends ~42px below
-         the pill's visible edge, so this margin is NOT the gap itself. */
-      margin-top: -46px;
+      /* Was -46px, which assumed the pill tabset's wrapper extended ~42px below
+         the pill's visible edge. The GWO-4624 selector that replaced it has no
+         such overhang — its box IS its visible edge — so the same pull-up
+         dragged the cards over the control. 0 here, and the gap is set once by
+         the pane's own padding-top (see below), which is the only spacing that
+         actually moves the cards. */
+      margin-top: 0;
+    }
+
+    /* Gap between the selector and the card row. GWO-4624 uses 40px below its
+       own controls (`margin: 0 auto 40px`), and that was the starting value;
+       applied here as the pane's padding because that is what the bundle
+       already uses to space panel content, and it is the value the cards
+       actually respond to. Tightened to 24px — with the selector now sitting
+       further from the copy above it, 40px below left the control floating
+       between two large gaps instead of grouping with the cards it drives.
+       24px matches what the short-screen branch below already used.
+
+       Specificity note: the bundle sets this on
+       `.score-tab.button-tabset .tab-pane.active` (0,3,1) inside a
+       `min-width: 1080px` query. A plain
+       `.uk-sections .tab-content-wrapper-outer .tab-pane` (0,2,1) LOSES to it,
+       so the desktop gap silently stayed at the bundle's 40px. The selector
+       below matches the bundle's own shape — still scoped under .uk-sections
+       so it cannot leak to any other tabset on the page. */
+    .uk-sections .score-tab.button-tabset .tab-pane.active,
+    .uk-sections .score-tab.large-button-tabset .tab-pane.active,
+    .uk-sections .tab-content-wrapper-outer .tab-pane {
+      padding-top: 24px;
     }
 
     /* ---- Responsive h1 scale (matches the sage bundle: 34→46→44→50) ---- */
@@ -629,7 +1131,10 @@
          need to stay two clearly separate bands. -28px holds the visible gap
          at ~32px. This is a place the layout REFUSES to give up space, so the
          savings are taken from the card's internals instead. */
-      .uk-sections .tab-content-wrapper-outer { margin-top: -28px; }
+      /* Same correction as the base rule: no tabset overhang to absorb. The
+         short-screen tightening now comes off the pane's padding instead. */
+      .uk-sections .tab-content-wrapper-outer { margin-top: 0; }
+      .uk-sections .tab-content-wrapper-outer .tab-pane { padding-top: 24px; }
 
 
 
@@ -733,7 +1238,12 @@
          but never past the point where the block reads as jammed. */
       .ns-hero {
         padding-top: max(28px, calc(40px * var(--vfit, 1)));
-        padding-bottom: max(28px, calc(32px * var(--vfit, 1)));
+        /* Base and floor both +20 (32->52, 28->48) to open the subtitle-to-
+           selector gap: the selector was reading as part of the copy block
+           rather than as the control it is. Raising the floor too is what makes
+           the change hold on short screens, where --vfit compresses this to the
+           floor and the base is never reached. */
+        padding-bottom: max(48px, calc(52px * var(--vfit, 1)));
       }
       .ns-hero__content { padding-top: max(16px, calc(24px * var(--vfit, 1))); }
       /* The three lines of hero type — eyebrow, headline, subtitle — read as
@@ -921,6 +1431,46 @@
   </style>
 </head>
 <body>
+  <!-- ============================================================
+       LIVE-SITE CHROME — static reference only.
+       A visual copy of sage.com/en-gb's promo strip and global nav, so this
+       page can be compared 1:1 against the live site. Deliberately INERT:
+       no dropdowns, no search, no sticky behaviour, links go nowhere. It is
+       NOT part of the deliverable and is not ported to the Optimizely bundle,
+       which injects into the real page and inherits the real chrome.
+       ============================================================ -->
+  <div class="live-promo">
+    <div class="live-promo__inner">
+      <span class="live-promo__text">Late to submission? You can still send your MTD quarterly update for free</span>
+      <svg class="live-promo__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <header class="live-nav">
+    <div class="live-nav__inner">
+      <img class="live-nav__logo" src="assets/img/sage-nav-logo.svg" alt="Sage">
+      <nav class="live-nav__links">
+        <span>Products &amp; Solutions</span>
+        <span>Making Tax Digital</span>
+        <span>Accountants</span>
+        <span>Partners</span>
+        <span>Blog</span>
+        <span>Support</span>
+      </nav>
+      <div class="live-nav__actions">
+        <svg class="live-nav__search" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M16.5 16.5L21 21" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="live-nav__login">Login</span>
+      </div>
+    </div>
+  </header>
+
   <section class="ns-hero">
     <div class="ns-hero__bg">
       <video
@@ -979,44 +1529,97 @@
 <div class="container score-page-layout-column1 " id="1column-4767cf6e282d4c628c03e498f2e9402b-0">
     <div class="score-column1 ">
         <div class="score-center">
-            <div class="score-tab button-tabset ai-gradient sage-ai" data-tabset-name="" data-ux-module="score_bootstrap/Components/TabSet" data-ux-state="loaded" id="8bd34141-f72e-4013-928a-7a4584a6fb25">        <div class="nav-tabs-wrapper-outer no-slick">
+            <!-- ============================================================
+                 PRODUCT SELECTOR — ported from sage.com's live Optimizely
+                 experiment GWO-4624, which is currently A/B-tested against the
+                 pill tabset this replaces. CSS is verbatim from that experiment
+                 (see .opt-gwo-* rules); only the ID prefix is namespaced so it
+                 cannot collide if the real experiment ever runs on this page.
+
+                 Native <select>, exactly as live: no custom dropdown, so it
+                 gets the platform's own keyboard and screen-reader handling
+                 for free. Each <option> value IS the panel id it reveals, so
+                 the selector drives the SAME panels the tabset drove.
+
+                 Live's second select ("business size") is NOT ported: it
+                 filters within a product, and our panels have no equivalent
+                 per-size card sets. Adding it would mean inventing that data.
+                 ============================================================ -->
+            <div class="score-tab button-tabset ai-gradient sage-ai" data-tabset-name="" data-ux-module="score_bootstrap/Components/TabSet" data-ux-state="loaded" id="8bd34141-f72e-4013-928a-7a4584a6fb25">
+            <!-- The original pill row, RETAINED but visually hidden. The
+                 bundle's TabSet binds to these buttons and owns the panel
+                 switching; the selector above clicks them. Removing them
+                 leaves the module with nothing to drive and the panels
+                 stuck at opacity 0. -->
+        <div class="nav-tabs-wrapper-outer no-slick" aria-hidden="true">
             <div class="nav-tabs-wrapper-inner">
                 <div class="nav nav-tabs" role="tablist"><span class="nav-tab active"><button href="#tab-a234e830-4aec-4fb3-840b-9e08a3bd89bb" aria-controls="tab-a234e830-4aec-4fb3-840b-9e08a3bd89bb" role="tab" data-toggle="tab" data-anchorable="false" data-panel-name="" data-event-messages="" class="nav-tab-btn" id="tab-a234e830-4aec-4fb3-840b-9e08a3bd89bb-tab" aria-selected="true" tabindex="0"><div>Accounting</div></button><div class="tab-underline-bar"></div><div class="tab-shadow"></div><div class="tab-active-bar" style="width: calc(20%); left: 0px;"></div></span><span class=" nav-tab"><button href="#tab-ee051fb5-dc95-490b-91d2-47d3411bb032" aria-controls="tab-ee051fb5-dc95-490b-91d2-47d3411bb032" role="tab" data-toggle="tab" data-anchorable="false" data-panel-name="" data-event-messages="" class="nav-tab-btn" id="tab-ee051fb5-dc95-490b-91d2-47d3411bb032-tab" aria-selected="false" tabindex="0"><div>Payroll &amp; HR</div></button></span><span class=" nav-tab"><button href="#tab-f9879329-a2d3-4a3b-a18c-16d5c1c28964" aria-controls="tab-f9879329-a2d3-4a3b-a18c-16d5c1c28964" role="tab" data-toggle="tab" data-anchorable="false" data-panel-name="" data-event-messages="" class="nav-tab-btn" id="tab-f9879329-a2d3-4a3b-a18c-16d5c1c28964-tab" aria-selected="false" tabindex="0"><div>Accountants</div></button></span><span class=" nav-tab"><button href="#tab-1f336887-464f-4d7b-abb2-770a8032256c" aria-controls="tab-1f336887-464f-4d7b-abb2-770a8032256c" role="tab" data-toggle="tab" data-anchorable="false" data-panel-name="" data-event-messages="" class="nav-tab-btn" id="tab-1f336887-464f-4d7b-abb2-770a8032256c-tab" aria-selected="false" tabindex="0"><div>ERP</div></button></span><span class="nav-tab gradient-sage-ai"><button href="#tab-47d796e1-884f-40a6-b5cd-d9d112fe14bd" aria-controls="tab-47d796e1-884f-40a6-b5cd-d9d112fe14bd" role="tab" data-toggle="tab" data-anchorable="false" data-panel-name="" data-event-messages="" class="nav-tab-btn" id="tab-47d796e1-884f-40a6-b5cd-d9d112fe14bd-tab" aria-selected="false" tabindex="0"><div>Explore Sage Ai</div></button></span></div>
             </div>
         </div>
+              <div class="opt-gwo-controls">
+                <label class="opt-gwo-label" for="opt-gwo-product">I am interested in</label>
+                <span class="opt-select-wrap">
+                  <select id="opt-gwo-product" class="opt-gwo-select">
+            <option value="tab-a234e830-4aec-4fb3-840b-9e08a3bd89bb" selected>Accounting</option>
+            <option value="tab-ee051fb5-dc95-490b-91d2-47d3411bb032">Payroll & HR</option>
+            <option value="tab-f9879329-a2d3-4a3b-a18c-16d5c1c28964">Accountants</option>
+            <option value="tab-1f336887-464f-4d7b-abb2-770a8032256c">ERP</option>
+            <option value="tab-47d796e1-884f-40a6-b5cd-d9d112fe14bd">Explore Sage Ai</option>
+                  </select>
+                </span>
+                <label class="opt-gwo-label" for="opt-gwo-size">software, for a business of</label>
+                <span class="opt-select-wrap">
+                  <!-- Options are rebuilt per product by the script at the end
+                       of the file — the size bands differ by product (ERP uses
+                       10-49 / 50+, Payroll uses 1-150 / 151-249 / 250+), exactly
+                       as the live experiment does. -->
+                  <select id="opt-gwo-size" class="opt-gwo-select"></select>
+                </span>
+              </div>
         <div class="tab-content-wrapper-outer">
             <div class="tab-content-wrapper-inner">
                 <div class="tab-content">
                     <div class="tab-pane fade score-tab-panel active animations-off" data-anchorable="False" data-event-messages="" data-panel-name="" data-title="Accounting" data-ux-module="score_bootstrap/Components/TabPanel" data-ux-state="loaded" id="tab-a234e830-4aec-4fb3-840b-9e08a3bd89bb" vbpg="0" aria-labelledby="tab-a234e830-4aec-4fb3-840b-9e08a3bd89bb-tab" role="tabpanel" data-tracking="body_selection"><div class="score-flex-box col-3" data-ux-module="SageDotCom/Components/FlexBox"><div class="flex-item " id="flexitem-27c7883299e647e2b51b9f50e3b10277-1">
         <div class="score-style-box all-corners-sm padding-sm theme-light" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" style="background-color:#F2F5F6;" id="stylebox-b787776507e2477fbe23ee958b7f32e2-0"><div class="score-center-text ns-card__media">
-<svg class="ns-card__media-img" role="img" aria-label="Sage Sole Trader interface showing a sales invoice" viewBox="0 0 365 203" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_17_656)">
-<g filter="url(#filter0_d_17_656)">
-<path d="M4 10C4 4.47715 8.47715 0 14 0H321C326.523 0 331 4.47715 331 10V161C331 177.569 317.569 191 301 191H14C8.47716 191 4 186.523 4 181V10Z" fill="white" stroke="#E2E2E2" stroke-width="0.760539"/>
-<rect x="13" y="43" width="308" height="126" rx="13" fill="#F2F5F6"/>
-<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.72" font-weight="bold" letter-spacing="0em"><tspan x="21.4023" y="31.6259">Self Assessment Tax Returns</tspan></text>
-<rect x="21" y="52" width="285" height="107" rx="3" fill="#00D639"/>
-<rect x="75" y="53" width="230" height="105" rx="2" fill="white"/>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Open Sans" font-size="14" letter-spacing="0px"><tspan x="87.9792" y="113.789">Submitted 1 January&#x2028;</tspan><tspan x="87.9792" y="133.189">at 2:13pm by Alice Ferns</tspan></text>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Lato" font-size="15.1485" font-weight="bold" letter-spacing="0px"><tspan x="87.9792" y="87.5295">Submitted to HMRC</tspan></text>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M38.6916 108.857L35.4058 112.143L43.6202 120.358L61.6921 102.286L58.4063 99L43.6202 113.786L38.6916 108.857Z" fill="white"/>
+<svg class="ns-card__media-img" role="img" aria-label="Sage Sole Trader interface showing a sales invoice" viewBox="0 0 365 166" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_18_396)">
+<g filter="url(#filter0_d_18_396)">
+<path d="M4 15C4 7.26801 10.268 1 18 1H317C324.732 1 331 7.26801 331 15V142C331 149.732 324.732 156 317 156H18C10.268 156 4 149.732 4 142V15Z" fill="white" stroke="#C6C6C6" stroke-width="0.760539"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.72" font-weight="bold" letter-spacing="0em"><tspan x="21.4023" y="31.2447">Self Assessment Tax Returns</tspan></text>
+<rect x="21" y="48.0566" width="286" height="88" rx="3" fill="#00D639"/>
+<rect x="75" y="50.0566" width="230" height="84" rx="2" fill="white"/>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Open Sans" font-size="14" letter-spacing="0px"><tspan x="87.9792" y="98.5208">Submitted 1 January&#x2028;</tspan><tspan x="87.9792" y="117.921">at 2:13pm by Alice Ferns</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Lato" font-size="15.1485" font-weight="bold" letter-spacing="0px"><tspan x="87.9792" y="75.9191">Submitted to HMRC</tspan></text>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M38.6913 91.914L35.4055 95.1998L43.62 103.414L61.6919 85.3424L58.4061 82.0566L43.62 96.8427L38.6913 91.914Z" fill="white"/>
 </g>
-<path d="M263.001 147.519C263.067 137.477 266.104 127.678 271.731 119.359C277.358 111.041 285.322 104.575 294.619 100.777C303.916 96.9786 314.13 96.0186 323.972 98.0178C333.814 100.017 342.843 104.886 349.922 112.01C357 119.135 361.81 128.195 363.746 138.05C365.681 147.905 364.655 158.112 360.797 167.384C356.939 176.657 350.421 184.579 342.067 190.152C333.712 195.725 323.894 198.699 313.851 198.699C307.145 198.699 300.506 197.373 294.315 194.797C288.124 192.221 282.504 188.446 277.778 183.689C273.051 178.932 269.313 173.288 266.777 167.08C264.241 160.873 262.958 154.225 263.001 147.519Z" fill="#212121"/>
-<path d="M334.53 168.819H293.239C291.82 168.819 290.658 167.658 290.658 166.238C290.658 164.819 291.82 163.658 293.239 163.658H303.562V135.528C301.368 135.528 299.175 136.173 297.239 137.335C291.174 141.464 293.11 149.722 293.11 150.109L294.4 158.109C294.529 159.013 294.271 159.916 293.497 160.561C292.723 161.206 291.82 161.335 290.916 160.948C290.013 160.561 289.368 159.916 289.239 158.883L287.948 151.141C287.819 150.883 285.11 139.141 294.271 133.076C299.433 130.109 305.626 129.464 311.175 131.528V127.528H308.594C307.175 127.528 306.013 126.367 306.013 124.947C306.013 123.528 307.175 122.367 308.594 122.367H311.175V119.786C311.175 118.367 312.336 117.205 313.755 117.205C315.175 117.205 316.336 118.367 316.336 119.786V122.367H318.917C320.336 122.367 321.498 123.528 321.498 124.947C321.498 126.367 320.336 127.528 318.917 127.528H316.336V131.528C321.885 129.464 328.078 130.109 333.24 133.076C342.401 139.141 339.562 150.883 339.433 151.399L338.143 159.013C338.014 159.916 337.369 160.69 336.466 161.077C335.562 161.335 334.659 161.206 333.885 160.69C333.111 160.045 332.853 159.142 332.982 158.238L334.272 150.496C334.401 149.98 336.337 141.593 330.272 137.593C328.336 136.431 326.143 135.786 323.949 135.786V163.658H334.272C335.691 163.658 336.853 164.819 336.853 166.238C336.853 167.658 335.949 168.819 334.53 168.819ZM308.723 163.658H319.046V136.173C317.627 136.56 316.336 136.948 315.046 137.593C314.788 137.722 314.53 137.851 314.143 137.851C313.885 137.851 313.497 137.851 313.239 137.851C312.981 137.851 312.852 137.722 312.594 137.593C311.304 136.948 310.013 136.56 308.594 136.173V163.658H308.723Z" fill="#00D639"/>
+<g filter="url(#filter1_d_18_396)">
+<path d="M277.001 126.263C277.048 119.054 279.228 112.021 283.267 106.049C287.306 100.078 293.023 95.4369 299.696 92.7106C306.37 89.9843 313.701 89.2952 320.766 90.7302C327.83 92.1653 334.312 95.6601 339.393 100.774C344.474 105.888 347.927 112.392 349.316 119.466C350.705 126.539 349.969 133.866 347.199 140.522C344.43 147.178 339.751 152.864 333.754 156.864C327.757 160.865 320.71 163 313.501 163C308.688 163 303.922 162.048 299.478 160.199C295.034 158.35 291 155.64 287.607 152.225C284.215 148.811 281.531 144.759 279.711 140.303C277.891 135.848 276.97 131.076 277.001 126.263Z" fill="white" stroke="#E2E2E2" stroke-width="0.760539"/>
+<path d="M328.345 142.499H298.706C297.687 142.499 296.853 141.665 296.853 140.646C296.853 139.628 297.687 138.794 298.706 138.794H306.116V118.602C304.541 118.602 302.967 119.066 301.577 119.899C297.224 122.863 298.613 128.791 298.613 129.069L299.54 134.811C299.632 135.46 299.447 136.108 298.891 136.571C298.335 137.034 297.687 137.127 297.039 136.849C296.39 136.571 295.927 136.108 295.835 135.367L294.908 129.81C294.816 129.624 292.871 121.196 299.447 116.843C303.152 114.712 307.598 114.249 311.58 115.731V112.86H309.728C308.709 112.86 307.876 112.026 307.876 111.007C307.876 109.989 308.709 109.155 309.728 109.155H311.58V107.303C311.58 106.284 312.414 105.45 313.433 105.45C314.452 105.45 315.285 106.284 315.285 107.303V109.155H317.138C318.157 109.155 318.99 109.989 318.99 111.007C318.99 112.026 318.157 112.86 317.138 112.86H315.285V115.731C319.268 114.249 323.714 114.712 327.419 116.843C333.995 121.196 331.957 129.624 331.865 129.995L330.938 135.46C330.846 136.108 330.383 136.664 329.734 136.942C329.086 137.127 328.438 137.034 327.882 136.664C327.326 136.201 327.141 135.552 327.233 134.904L328.16 129.347C328.252 128.976 329.642 122.956 325.288 120.084C323.899 119.251 322.325 118.788 320.75 118.788V138.794H328.16C329.179 138.794 330.012 139.628 330.012 140.646C330.012 141.665 329.364 142.499 328.345 142.499ZM309.821 138.794H317.23V119.066C316.211 119.343 315.285 119.621 314.359 120.084C314.174 120.177 313.989 120.27 313.711 120.27C313.525 120.27 313.248 120.27 313.062 120.27C312.877 120.27 312.784 120.177 312.599 120.084C311.673 119.621 310.747 119.343 309.728 119.066V138.794H309.821Z" fill="#00D639"/>
+</g>
 </g>
 <defs>
-<filter id="filter0_d_17_656" x="-0.380249" y="-2.38025" width="335.76" height="199.76" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<filter id="filter0_d_18_396" x="-0.380371" y="-1.38025" width="335.761" height="163.76" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
 <feOffset dy="2"/>
 <feGaussianBlur stdDeviation="2"/>
 <feComposite in2="hardAlpha" operator="out"/>
 <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_17_656"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_17_656" result="shape"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_18_396"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_18_396" result="shape"/>
 </filter>
-<clipPath id="clip0_17_656">
-<rect width="365" height="203" fill="white"/>
+<filter id="filter1_d_18_396" x="274.62" y="89.6195" width="77.7607" height="77.7605" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="2"/>
+<feGaussianBlur stdDeviation="1"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_18_396"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_18_396" result="shape"/>
+</filter>
+<clipPath id="clip0_18_396">
+<rect width="365" height="166" fill="white"/>
 </clipPath>
 </defs>
 </svg>
@@ -1042,86 +1645,72 @@
 </div>
     </div><div class="flex-item " id="flexitem-047ccec938f14bc58b154e9848348a63-1">
         <div class="score-style-box all-corners-sm padding-sm theme-light" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" style="background-color:#F2F5F6;" id="stylebox-8e576cdb51584519bbd27f9b22caaaac-0"><div class="score-center-text ns-card__media">
-<svg class="ns-card__media-img" role="img" aria-label="Sage Accounting interface showing invoice status and amounts" viewBox="0 0 365 203" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_17_607)">
-<g filter="url(#filter0_d_17_607)">
-<path d="M2 10.903C2 4.88145 7.45874 0 14.1924 0H318.808C325.541 0 331 4.88145 331 10.903V175.097C331 181.118 325.541 186 318.808 186H14.1924C7.45874 186 2 181.118 2 175.097V10.903Z" fill="white"/>
-<path d="M2 10.903C2 4.88145 7.45874 0 14.1924 0H318.808C325.541 0 331 4.88145 331 10.903V175.097C331 181.118 325.541 186 318.808 186H14.1924C7.45874 186 2 181.118 2 175.097V10.903Z" stroke="#E2E2E2" stroke-width="0.760539"/>
-</g>
-<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.1714" font-weight="bold" letter-spacing="0em"><tspan x="19.4025" y="28.8988">Sales Invoice</tspan></text>
-<path d="M287.801 42.4H25.5197C21.6574 42.4 18.5264 45.531 18.5264 49.3934V164.197C18.5264 168.059 21.6574 171.19 25.5197 171.19H287.801C291.663 171.19 294.794 168.059 294.794 164.197V49.3934C294.794 45.531 291.663 42.4 287.801 42.4Z" fill="white" stroke="#E2E2E2" stroke-width="0.705876"/>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="14.1918" font-weight="bold" letter-spacing="0em"><tspan x="44.0021" y="152.279">&#xa3;168.00</tspan></text>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.547" letter-spacing="0em"><tspan x="267.491" y="186.095">&#xa3;0.00</tspan></text>
+<svg class="ns-card__media-img" role="img" aria-label="Sage Accounting interface showing invoice status and amounts" viewBox="0 0 365 166" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_18_347)">
+<path d="M3 15C3 7.26801 9.26801 1 17 1H316C323.732 1 330 7.26801 330 15V142C330 149.732 323.732 156 316 156H17C9.26802 156 3 149.732 3 142V15Z" fill="white" stroke="#C6C6C6" stroke-width="0.760539"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.1714" font-weight="bold" letter-spacing="0em"><tspan x="19.4026" y="28.8988">Sales Invoice</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="13.7141" font-weight="bold" letter-spacing="0em"><tspan x="43" y="125.684">&#xa3;168.00</tspan></text>
 <text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.92819" letter-spacing="0em"><tspan x="213.029" y="162.753">Amount Outstanding</tspan></text>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.51505" font-weight="500" letter-spacing="0em"><tspan x="44.0021" y="132.006">Amount Paid</tspan></text>
-<path d="M18 49.7006C18 45.4477 21.2948 42 25.3593 42H287.641C291.705 42 295 45.4477 295 49.7006V114H18V49.7006Z" fill="#F2F5F6"/>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.93425" font-weight="500" letter-spacing="0em"><tspan x="43.2721" y="92.3751">Created</tspan></text>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.93425" font-weight="500" letter-spacing="0em"><tspan x="115.228" y="92.3751">Sent</tspan></text>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.93425" font-weight="500" letter-spacing="0em"><tspan x="174.377" y="92.6612">Viewed</tspan></text>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.93425" font-weight="500" letter-spacing="0em"><tspan x="244.722" y="92.6612">Paid</tspan></text>
-<path d="M267.165 65.4792H49.626V67.9482H267.165V65.4792Z" fill="#CCD6DB"/>
-<path d="M73.7987 54.9866H49.6277V77.2072H73.7987V54.9866Z" fill="#F2F5F6"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M56.0762 66.3572C55.6369 65.9593 54.9385 65.9543 54.5002 66.3315L53.2584 67.5592C52.8137 67.9418 52.8117 68.5609 53.2396 68.954L57.5192 72.7689C57.9544 73.1685 58.6534 73.1757 59.0966 72.7995C59.0966 72.7995 70.1062 62.8075 70.1252 62.7871C70.467 62.4185 70.4631 61.8843 70.113 61.5286C70.0907 61.506 68.8855 60.2991 68.8855 60.2991C68.4554 59.9376 67.7397 59.9466 67.3114 60.3399L58.4044 68.5836L56.0762 66.3572Z" fill="#00A159"/>
-<path d="M138.255 54.9866H114.083V77.2072H138.255V54.9866Z" fill="#F2F5F6"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M120.533 66.3572C120.094 65.9592 119.396 65.9544 118.957 66.3316L117.716 67.5591C117.271 67.9419 117.269 68.5608 117.697 68.954L121.976 72.7689C122.412 73.1686 123.111 73.1757 123.554 72.7995C123.554 72.7995 134.564 62.8075 134.583 62.7871C134.924 62.4185 134.92 61.8842 134.571 61.5287C134.548 61.506 133.343 60.2992 133.343 60.2992C132.913 59.9376 132.197 59.9465 131.769 60.3399L122.862 68.5835L120.533 66.3572Z" fill="#00A159"/>
-<path d="M202.71 54.9866H178.539V77.2072H202.71V54.9866Z" fill="#F2F5F6"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M184.989 66.3572C184.55 65.9593 183.852 65.9543 183.413 66.3315L182.172 67.5592C181.728 67.9418 181.725 68.5609 182.154 68.954L186.433 72.7689C186.868 73.1685 187.567 73.1757 188.01 72.7995C188.01 72.7995 199.02 62.8075 199.039 62.7871C199.381 62.4185 199.376 61.8843 199.027 61.5286C199.004 61.506 197.799 60.2991 197.799 60.2991C197.369 59.9376 196.654 59.9466 196.225 60.3399L187.318 68.5836L184.989 66.3572Z" fill="#00A159"/>
-<path d="M267.166 54.9866H242.995V77.2072H267.166V54.9866Z" fill="#F2F5F6"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M249.445 66.3572C249.006 65.9593 248.308 65.9543 247.869 66.3315L246.628 67.5592C246.183 67.9418 246.181 68.5609 246.609 68.954L250.889 72.7689C251.323 73.1685 252.022 73.1757 252.466 72.7995C252.466 72.7995 263.475 62.8075 263.494 62.7871C263.836 62.4185 263.832 61.8843 263.482 61.5286C263.459 61.506 262.254 60.2991 262.254 60.2991C261.824 59.9376 261.109 59.9466 260.681 60.3399L251.774 68.5836L249.445 66.3572Z" fill="#00A159"/>
-<path d="M150 129.087C150 118.546 157.858 110 167.551 110H347.449C357.142 110 365 118.546 365 129.087V172.912C365 183.454 357.142 192 347.449 192H167.551C157.858 192 150 183.454 150 172.912V129.087Z" fill="white"/>
-<g filter="url(#filter1_d_17_607)">
-<path d="M352.092 162H174.908C169.436 162 165 166.592 165 172.257V180.743C165 186.408 169.436 191 174.908 191H352.092C357.564 191 362 186.408 362 180.743V172.257C362 166.592 357.564 162 352.092 162Z" fill="white"/>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.97561" font-weight="500" letter-spacing="0em"><tspan x="43" y="109.974">Amount Paid</tspan></text>
+<path d="M18 47.7006C18 43.4477 21.5446 40 25.9172 40H308.083C312.455 40 316 43.4477 316 47.7006V92H18V47.7006Z" fill="#F2F5F6"/>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.13759" font-weight="500" letter-spacing="0em"><tspan x="43" y="80.6119">Created</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.13759" font-weight="500" letter-spacing="0em"><tspan x="117.053" y="80.6119">Sent</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.13759" font-weight="500" letter-spacing="0em"><tspan x="191" y="80.8751">Viewed</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.13759" font-weight="500" letter-spacing="0em"><tspan x="267.589" y="80.8751">Paid</tspan></text>
+<path d="M269.938 58.6512H69.8442V60.9222H269.938V58.6512Z" fill="#CCD6DB"/>
+<path d="M71.0786 49H48.8459V69.4387H71.0786V49Z" fill="#F2F5F6"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M54.7775 59.4588C54.3733 59.0928 53.731 59.0883 53.3278 59.4352L52.1856 60.5644C51.7766 60.9164 51.7748 61.4858 52.1684 61.8474L56.1047 65.3563C56.505 65.7239 57.148 65.7305 57.5556 65.3845C57.5556 65.3845 67.6824 56.1937 67.6998 56.175C68.0142 55.836 68.0106 55.3446 67.6886 55.0175C67.6681 54.9967 66.5595 53.8866 66.5595 53.8866C66.1639 53.554 65.5056 53.5623 65.1117 53.9241L56.919 61.5067L54.7775 59.4588Z" fill="#00A159"/>
+<path d="M138.233 49H116V69.4387H138.233V49Z" fill="#F2F5F6"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M121.932 59.4588C121.529 59.0928 120.886 59.0883 120.483 59.4352L119.341 60.5643C118.932 60.9164 118.93 61.4857 119.324 61.8473L123.26 65.3563C123.66 65.724 124.303 65.7305 124.711 65.3845C124.711 65.3845 134.838 56.1938 134.855 56.175C135.17 55.836 135.166 55.3446 134.844 55.0175C134.823 54.9966 133.715 53.8866 133.715 53.8866C133.319 53.554 132.661 53.5623 132.267 53.9241L124.075 61.5066L121.932 59.4588Z" fill="#00A159"/>
+<path d="M217.061 49H194.828V69.4387H217.061V49Z" fill="#F2F5F6"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M200.761 59.4588C200.357 59.0928 199.715 59.0883 199.311 59.4352L198.169 60.5644C197.761 60.9164 197.758 61.4858 198.153 61.8474L202.088 65.3563C202.489 65.7239 203.132 65.7305 203.54 65.3845C203.54 65.3845 213.666 56.1937 213.684 56.175C213.998 55.836 213.994 55.3446 213.673 55.0175C213.652 54.9967 212.544 53.8866 212.544 53.8866C212.148 53.554 211.49 53.5623 211.095 53.9241L202.903 61.5067L200.761 59.4588Z" fill="#00A159"/>
+<path d="M288.233 49H266V69.4387H288.233V49Z" fill="#F2F5F6"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M271.933 59.4588C271.528 59.0928 270.886 59.0883 270.483 59.4352L269.341 60.5644C268.932 60.9164 268.93 61.4858 269.324 61.8474L273.26 65.3563C273.66 65.7239 274.303 65.7305 274.711 65.3845C274.711 65.3845 284.837 56.1937 284.855 56.175C285.169 55.836 285.166 55.3446 284.844 55.0175C284.823 54.9967 283.715 53.8866 283.715 53.8866C283.319 53.554 282.661 53.5623 282.267 53.9241L274.074 61.5067L271.933 59.4588Z" fill="#00A159"/>
+<path d="M308.457 40H25.5434C21.3773 40 18 43.2011 18 47.1498V133.85C18 137.799 21.3773 141 25.5434 141H308.457C312.623 141 316 137.799 316 133.85V47.1498C316 43.2011 312.623 40 308.457 40Z" stroke="#E2E2E2" stroke-width="0.705876"/>
+<path d="M160 106.42C160 96.8807 167.111 89.1472 175.883 89.1472H338.681C347.453 89.1472 354.563 96.8807 354.563 106.42V146.079C354.563 155.619 347.453 163.353 338.681 163.353H175.883C167.111 163.353 160 155.619 160 146.079V106.42Z" fill="white"/>
+<g filter="url(#filter0_d_18_347)">
+<path d="M342.882 136.204H182.541C177.589 136.204 173.574 140.36 173.574 145.487V153.166C173.574 158.292 177.589 162.448 182.541 162.448H342.882C347.834 162.448 351.849 158.292 351.849 153.166V145.487C351.849 140.36 347.834 136.204 342.882 136.204Z" fill="white"/>
 </g>
-<path d="M150 124.79C150 116.622 156.16 110 163.76 110H351.24C358.84 110 365 116.622 365 124.79V179.21C365 187.378 358.84 194 351.24 194H163.76C156.16 194 150 187.378 150 179.21V124.79Z" fill="white"/>
-<path d="M351.616 109.837H163.384C155.992 109.837 150 116.314 150 124.304V179.371C150 187.36 155.992 193.837 163.384 193.837H351.616C359.008 193.837 365 187.36 365 179.371V124.304C365 116.314 359.008 109.837 351.616 109.837Z" stroke="#E2E2E2" stroke-width="0.898412"/>
-<mask id="mask0_17_607" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="150" y="110" width="215" height="84">
-<path d="M150 124.769C150 116.613 156.16 110 163.76 110H351.24C358.84 110 365 116.613 365 124.769V179.231C365 187.388 358.84 194 351.24 194H163.76C156.16 194 150 187.388 150 179.231V124.769Z" fill="white"/>
+<path d="M160 102.531C160 95.1398 165.575 89.1472 172.452 89.1472H342.111C348.989 89.1472 354.563 95.1398 354.563 102.531V151.779C354.563 159.17 348.989 165.163 342.111 165.163H172.452C165.575 165.163 160 159.17 160 151.779V102.531Z" fill="white"/>
+<path d="M342.452 89H172.111C165.422 89 160 94.8613 160 102.092V151.924C160 159.154 165.422 165.015 172.111 165.015H342.452C349.141 165.015 354.563 159.154 354.563 151.924V102.092C354.563 94.8613 349.141 89 342.452 89Z" stroke="#E2E2E2" stroke-width="0.813015"/>
+<mask id="mask0_18_347" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="160" y="89" width="195" height="77">
+<path d="M160 102.513C160 95.1316 165.575 89.1472 172.452 89.1472H342.111C348.989 89.1472 354.563 95.1316 354.563 102.513V151.797C354.563 159.179 348.989 165.163 342.111 165.163H172.452C165.575 165.163 160 159.179 160 151.797V102.513Z" fill="white"/>
 </mask>
-<g mask="url(#mask0_17_607)">
-<path d="M164.908 194.791C154.616 194.791 146.273 186.448 146.273 176.156V128.635C146.273 118.344 154.616 110 164.908 110C158.733 110 153.727 116.675 153.727 124.908V179.883C153.727 188.117 158.733 194.791 164.908 194.791Z" fill="url(#paint0_linear_17_607)"/>
+<g mask="url(#mask0_18_347)">
+<path d="M173.491 165.878C164.177 165.878 156.627 158.328 156.627 149.014V106.011C156.627 96.6981 164.177 89.1472 173.491 89.1472C167.903 89.1472 163.373 95.1879 163.373 102.638V152.387C163.373 159.839 167.903 165.878 173.491 165.878Z" fill="url(#paint0_linear_18_347)"/>
 </g>
-<mask id="mask1_17_607" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="172" y="121" width="21" height="20">
-<path d="M192.086 121.182H172.635V140.632H192.086V121.182Z" fill="white"/>
+<mask id="mask1_18_347" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="180" y="99" width="19" height="18">
+<path d="M198.085 99.266H180.484V116.867H198.085V99.266Z" fill="white"/>
 </mask>
-<g mask="url(#mask1_17_607)">
-<path d="M189.816 121.182H174.901C174.301 121.182 173.726 121.425 173.3 121.846C172.879 122.272 172.635 122.848 172.635 123.451V138.367C172.635 138.966 172.879 139.542 173.3 139.967C173.726 140.393 174.301 140.632 174.901 140.632H189.816C190.416 140.632 190.991 140.389 191.417 139.967C191.842 139.542 192.082 138.966 192.082 138.367V123.451C192.082 122.851 191.838 122.276 191.417 121.851C190.991 121.425 190.416 121.186 189.816 121.186V121.182Z" fill="white"/>
-<path d="M189.403 130.543L188.549 130.807C188.245 130.9 188.009 131.138 187.916 131.438L187.653 132.294C187.498 132.8 186.782 132.8 186.627 132.294L186.364 131.438C186.271 131.135 186.032 130.9 185.732 130.807L184.877 130.543C184.37 130.389 184.37 129.672 184.877 129.518L185.732 129.254C186.036 129.161 186.271 128.923 186.364 128.623L186.627 127.767C186.782 127.261 187.498 127.261 187.653 127.767L187.916 128.623C188.009 128.926 188.248 129.161 188.549 129.254L189.403 129.518C189.91 129.672 189.91 130.389 189.403 130.543Z" fill="url(#paint1_radial_17_607)"/>
-<path d="M179.371 123.123C181.879 123.123 183.921 124.858 183.965 127.273C183.99 127.953 183.496 128.326 182.956 128.326C182.418 128.326 181.997 127.949 181.972 127.317C181.948 125.955 180.801 124.946 179.347 124.946C177.984 124.946 176.956 125.907 176.956 127.22C176.956 128.65 177.915 129.283 179.909 130.012C182.045 130.786 183.99 131.702 183.99 134.421C183.99 136.791 182.138 138.687 179.557 138.687C176.976 138.687 174.938 136.905 174.938 134.49C174.938 132.99 175.663 131.933 176.368 131.933C176.98 131.933 177.353 132.33 177.353 132.868C177.353 133.339 176.956 133.549 176.956 134.392C176.956 135.892 178.175 136.856 179.557 136.856C181.012 136.856 181.972 135.847 181.972 134.627C181.972 133.128 181.012 132.492 179.018 131.791C176.789 130.993 174.938 130.032 174.938 127.382C174.938 124.991 176.858 123.115 179.371 123.115V123.123Z" fill="url(#paint2_linear_17_607)"/>
+<g mask="url(#mask1_18_347)">
+<path d="M196.032 99.266H182.534C181.991 99.266 181.47 99.4861 181.085 99.8672C180.704 100.253 180.484 100.774 180.484 101.32V114.818C180.484 115.36 180.704 115.881 181.085 116.266C181.47 116.651 181.991 116.868 182.534 116.868H196.032C196.575 116.868 197.095 116.648 197.48 116.266C197.865 115.881 198.081 115.36 198.081 114.818V101.32C198.081 100.777 197.861 100.256 197.48 99.8714C197.095 99.4861 196.575 99.2702 196.032 99.2702V99.266Z" fill="white"/>
+<path d="M195.658 107.737L194.885 107.976C194.61 108.06 194.396 108.276 194.312 108.548L194.074 109.322C193.934 109.78 193.286 109.78 193.146 109.322L192.908 108.548C192.824 108.273 192.607 108.06 192.335 107.976L191.562 107.737C191.104 107.598 191.104 106.949 191.562 106.81L192.335 106.571C192.61 106.487 192.824 106.271 192.908 106L193.146 105.226C193.286 104.768 193.934 104.768 194.074 105.226L194.312 106C194.396 106.275 194.613 106.487 194.885 106.571L195.658 106.81C196.116 106.949 196.116 107.598 195.658 107.737Z" fill="url(#paint1_radial_18_347)"/>
+<path d="M186.579 101.023C188.849 101.023 190.696 102.593 190.737 104.778C190.759 105.394 190.312 105.731 189.824 105.731C189.336 105.731 188.955 105.391 188.933 104.818C188.911 103.586 187.873 102.673 186.557 102.673C185.324 102.673 184.394 103.542 184.394 104.73C184.394 106.025 185.262 106.597 187.066 107.257C188.999 107.957 190.759 108.786 190.759 111.247C190.759 113.392 189.083 115.108 186.748 115.108C184.412 115.108 182.567 113.495 182.567 111.309C182.567 109.952 183.224 108.995 183.861 108.995C184.415 108.995 184.753 109.355 184.753 109.842C184.753 110.268 184.394 110.458 184.394 111.221C184.394 112.578 185.497 113.451 186.748 113.451C188.064 113.451 188.933 112.538 188.933 111.434C188.933 110.077 188.064 109.501 186.26 108.867C184.243 108.145 182.567 107.275 182.567 104.877C182.567 102.713 184.305 101.016 186.579 101.016V101.023Z" fill="url(#paint2_linear_18_347)"/>
 </g>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.7809" font-weight="500" letter-spacing="0em"><tspan x="195.811" y="134.725">Copilot</tspan></text>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="12.5778" font-weight="bold" letter-spacing="0em"><tspan x="172.635" y="158.824">&#xa3;7,795 </tspan></text>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="12.5778" font-weight="bold" letter-spacing="0em"><tspan x="172.635" y="178.081">Cakes </tspan></text>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="12.5778" font-weight="bold" letter-spacing="0em"><tspan x="309.605" y="158.824">Canny</tspan></text>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="12.5778" letter-spacing="0em"><tspan x="218.292" y="158.824">of total sales for </tspan></text>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="12.5778" letter-spacing="0em"><tspan x="212.814" y="178.081">over the last 12 months</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.75618" font-weight="500" letter-spacing="0em"><tspan x="201.457" y="111.64">Copilot</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="11.3822" font-weight="bold" letter-spacing="0em"><tspan x="180.484" y="133.543">&#xa3;7,795 </tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="11.3822" font-weight="bold" letter-spacing="0em"><tspan x="180.484" y="150.97">Cakes </tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="11.3822" font-weight="bold" letter-spacing="0em"><tspan x="304.434" y="133.543">Canny</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="11.3822" letter-spacing="0em"><tspan x="221.801" y="133.543">of total sales for </tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="11.3822" letter-spacing="0em"><tspan x="216.844" y="150.97">over the last 12 months</tspan></text>
 </g>
 <defs>
-<filter id="filter0_d_17_607" x="-2.38025" y="-2.38025" width="337.761" height="194.76" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<filter id="filter0_d_18_347" x="162.513" y="130.674" width="200.397" height="48.3663" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="2"/>
-<feGaussianBlur stdDeviation="2"/>
-<feComposite in2="hardAlpha" operator="out"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_17_607"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_17_607" result="shape"/>
-</filter>
-<filter id="filter1_d_17_607" x="152.777" y="155.888" width="221.447" height="53.4466" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="6.11165"/>
-<feGaussianBlur stdDeviation="6.11165"/>
+<feOffset dy="5.53071"/>
+<feGaussianBlur stdDeviation="5.53071"/>
 <feComposite in2="hardAlpha" operator="out"/>
 <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_17_607"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_17_607" result="shape"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_18_347"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_18_347" result="shape"/>
 </filter>
-<linearGradient id="paint0_linear_17_607" x1="150" y1="194.791" x2="150" y2="110" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint0_linear_18_347" x1="160" y1="165.878" x2="160" y2="89.1472" gradientUnits="userSpaceOnUse">
 <stop stop-color="#8F49FE"/>
 <stop offset="0.512152" stop-color="#0092DB"/>
 <stop offset="1" stop-color="#13A038"/>
 </linearGradient>
-<radialGradient id="paint1_radial_17_607" cx="0" cy="0" r="1" gradientTransform="matrix(3.61808 4.14603 -3.98018 3.47336 184.921 127.439)" gradientUnits="userSpaceOnUse">
+<radialGradient id="paint1_radial_18_347" cx="0" cy="0" r="1" gradientTransform="matrix(3.27417 3.75193 -3.60185 3.1432 191.602 104.929)" gradientUnits="userSpaceOnUse">
 <stop offset="0.34" stop-color="#9D60FF"/>
 <stop offset="0.52" stop-color="#5A99F1"/>
 <stop offset="0.59" stop-color="#32B3E8"/>
@@ -1134,7 +1723,7 @@
 <stop offset="0.88" stop-color="#00D650"/>
 <stop offset="0.9" stop-color="#00D639"/>
 </radialGradient>
-<linearGradient id="paint2_linear_17_607" x1="182.159" y1="123.204" x2="176.923" y2="138.185" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint2_linear_18_347" x1="189.102" y1="101.096" x2="184.364" y2="114.653" gradientUnits="userSpaceOnUse">
 <stop offset="0.27" stop-color="#9D60FF"/>
 <stop offset="0.33" stop-color="#7C78F8"/>
 <stop offset="0.48" stop-color="#29B7E6"/>
@@ -1147,8 +1736,8 @@
 <stop offset="0.65" stop-color="#00D665"/>
 <stop offset="0.66" stop-color="#00D639"/>
 </linearGradient>
-<clipPath id="clip0_17_607">
-<rect width="365" height="203" fill="white"/>
+<clipPath id="clip0_18_347">
+<rect width="365" height="166" fill="white"/>
 </clipPath>
 </defs>
 </svg>
@@ -1174,100 +1763,98 @@
 </div>
     </div><div class="flex-item " id="flexitem-942458e51a2c480baeaff009792c9765-1">
         <div class="score-style-box all-corners-sm padding-sm theme-light" data-ux-module="score_bootstrap/Components/StyleBox" data-ux-state="loaded" style="background-color:#F2F5F6;" id="stylebox-b2212ee0108d4786bf523e61b12e4ae8-0"><div class="score-center-text ns-card__media">
-<svg class="ns-card__media-img" role="img" aria-label="Sage Intacct interface showing a financial dashboard" viewBox="0 0 365 203" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_17_507)">
-<g filter="url(#filter0_d_17_507)">
-<path d="M4 14.8655C4 6.6555 10.6555 0 18.8655 0H316.135C324.345 0 331 6.6555 331 14.8655V170.135C331 178.345 324.345 185 316.135 185H18.8655C10.6555 185 4 178.345 4 170.135V14.8655Z" fill="white"/>
-<path d="M18.8652 0.464844H316.135C324.088 0.46497 330.535 6.91201 330.535 14.8652V170.135C330.535 178.088 324.088 184.535 316.135 184.535H18.8652C10.912 184.535 4.46497 178.088 4.46484 170.135V14.8652C4.46497 6.91201 10.912 0.464977 18.8652 0.464844Z" stroke="#E2E2E2" stroke-width="0.929093"/>
+<svg class="ns-card__media-img" role="img" aria-label="Sage Intacct interface showing a financial dashboard" viewBox="0 0 365 166" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_18_279)">
+<g filter="url(#filter0_d_18_279)">
+<path d="M4 14C4 6.26801 10.268 0 18 0H302C309.732 0 316 6.26801 316 14V143C316 150.732 309.732 157 302 157H18C10.268 157 4 150.732 4 143V14Z" fill="white"/>
+<path d="M18 0.464844H302C309.475 0.464846 315.535 6.52458 315.535 14V143C315.535 150.475 309.475 156.535 302 156.535H18C10.5246 156.535 4.46484 150.475 4.46484 143V14C4.46484 6.52458 10.5246 0.464844 18 0.464844Z" stroke="#C6C6C6" stroke-width="0.929093"/>
 </g>
-<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.7237" font-weight="bold" letter-spacing="0em"><tspan x="21" y="27.4721">CFO Dashboard</tspan></text>
-<rect x="16.4197" y="38.4197" width="150.244" height="41.1283" rx="2.93773" fill="white" stroke="#E2E2E2" stroke-width="0.839352"/>
-<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.39352" letter-spacing="0px"><tspan x="22.7971" y="53.1919">Assets</tspan></text>
-<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.0722" font-weight="bold" letter-spacing="0px"><tspan x="22.7971" y="68.199">&#xa3;14,441K</tspan></text>
-<g clip-path="url(#clip1_17_507)">
-<rect width="7.81085" height="8.27032" transform="translate(72.1545 60.1659)" fill="white"/>
-<line x1="76.044" y1="62.7366" x2="76.044" y2="67.2438" stroke="#00D639" stroke-width="1.34622" stroke-linecap="round"/>
-<path d="M78.587 63.6156L76.2929 61.4015C76.163 61.2761 75.957 61.2761 75.8271 61.4015L73.533 63.6156" stroke="#00D639" stroke-width="1.34779" stroke-linecap="round"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.17" font-weight="bold" letter-spacing="0em"><tspan x="21" y="23.7578">CFO Dashboard</tspan></text>
+<rect x="16.4197" y="32.4197" width="150.244" height="41.1283" rx="2.93773" fill="white" stroke="#E2E2E2" stroke-width="0.839352"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.39352" letter-spacing="0px"><tspan x="22.7971" y="47.1919">Assets</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.0722" font-weight="bold" letter-spacing="0px"><tspan x="22.7971" y="62.199">&#xa3;14,441K</tspan></text>
+<g clip-path="url(#clip1_18_279)">
+<rect width="7.81085" height="8.27032" transform="translate(72.1545 54.1659)" fill="white"/>
+<line x1="76.044" y1="56.7366" x2="76.044" y2="61.2438" stroke="#00D639" stroke-width="1.34622" stroke-linecap="round"/>
+<path d="M78.5872 57.6156L76.293 55.4015C76.1631 55.2761 75.9571 55.2761 75.8272 55.4015L73.5331 57.6156" stroke="#00D639" stroke-width="1.34779" stroke-linecap="round"/>
 </g>
-<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.39352" letter-spacing="0px"><tspan x="98.3386" y="53.1919">Revenue</tspan></text>
-<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.0722" font-weight="bold" letter-spacing="0px"><tspan x="98.3386" y="68.199">&#xa3;74,472K</tspan></text>
-<g clip-path="url(#clip2_17_507)">
-<rect width="7.81085" height="8.27032" transform="translate(147.696 60.1659)" fill="white"/>
-<line x1="151.585" y1="62.7366" x2="151.585" y2="67.2438" stroke="#00D639" stroke-width="1.34622" stroke-linecap="round"/>
-<path d="M154.129 63.6156L151.834 61.4015C151.704 61.2761 151.499 61.2761 151.369 61.4015L149.074 63.6156" stroke="#00D639" stroke-width="1.34779" stroke-linecap="round"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.39352" letter-spacing="0px"><tspan x="98.3386" y="47.1919">Revenue</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.0722" font-weight="bold" letter-spacing="0px"><tspan x="98.3386" y="62.199">&#xa3;74,472K</tspan></text>
+<g clip-path="url(#clip2_18_279)">
+<rect width="7.81085" height="8.27032" transform="translate(147.696 54.1659)" fill="white"/>
+<line x1="151.585" y1="56.7366" x2="151.585" y2="61.2438" stroke="#00D639" stroke-width="1.34622" stroke-linecap="round"/>
+<path d="M154.129 57.6156L151.835 55.4015C151.705 55.2761 151.499 55.2761 151.369 55.4015L149.075 57.6156" stroke="#00D639" stroke-width="1.34779" stroke-linecap="round"/>
 </g>
-<line x1="90.0728" y1="38" x2="90.0728" y2="79.9676" stroke="#E6EBED" stroke-width="0.419676"/>
-<path d="M19.8352 88.5391H161.12C162.743 88.5391 164.058 89.8541 164.058 91.4766V167.762C164.058 169.384 162.743 170.699 161.12 170.699H19.8352C18.2127 170.699 16.8977 169.384 16.8977 167.762V91.4766C16.8977 89.8541 18.2127 88.5391 19.8352 88.5391Z" fill="white" stroke="#E2E2E2" stroke-width="0.839352"/>
-<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="6.71482" font-weight="bold" letter-spacing="0px"><tspan x="23.554" y="101.983">Revenue per Retail Hour by Location</tspan></text>
-<line x1="23.554" y1="106.925" x2="161.208" y2="106.925" stroke="#CCD6DB" stroke-width="0.419676"/>
-<rect x="76.4778" y="111.4" width="23" height="52" fill="#F7F7F7"/>
-<rect x="124.478" y="111.4" width="24" height="52" fill="#F7F7F7"/>
-<rect x="127.893" y="113.119" width="8.49057" height="76.4151" transform="rotate(90 127.893 113.119)" fill="#CBD95D"/>
-<rect x="141.478" y="126.61" width="7.64151" height="90" transform="rotate(90 141.478 126.61)" fill="#5DB2B1"/>
-<rect x="120.251" y="139.251" width="8.49057" height="68.7736" transform="rotate(90 120.251 139.251)" fill="#FFB500"/>
-<rect x="112.61" y="152.742" width="8.49057" height="61.1321" transform="rotate(90 112.61 152.742)" fill="#ED7D43"/>
-<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.03611" letter-spacing="0px"><tspan x="32.8672" y="118.068">London</tspan></text>
-<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.03611" letter-spacing="0px"><tspan x="23.5668" y="131.068">Manchester</tspan></text>
-<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.03611" letter-spacing="0px"><tspan x="36.91" y="146.068">Leeds</tspan></text>
-<line x1="51.6656" y1="111.4" x2="51.6656" y2="163.4" stroke="#E6EBED" stroke-width="0.388889"/>
-<line x1="51.4712" y1="163.206" x2="158.471" y2="163.206" stroke="#E6EBED" stroke-width="0.388889"/>
-<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.03611" letter-spacing="0px"><tspan x="30.2412" y="160.068">Brighton</tspan></text>
-<g filter="url(#filter1_d_17_507)">
-<path d="M188.508 12.375H351.028C358.28 12.375 364.16 18.255 364.16 25.5078V180.492C364.16 187.745 358.28 193.625 351.028 193.625H188.508C181.255 193.625 175.375 187.745 175.375 180.492V25.5078C175.375 18.255 181.255 12.375 188.508 12.375Z" fill="white" stroke="#E2E2E2" stroke-width="0.750421"/>
+<line x1="90.0726" y1="32" x2="90.0726" y2="73.9676" stroke="#E6EBED" stroke-width="0.419676"/>
+<path d="M19.3574 80.3876H164.643C166.265 80.3876 167.58 81.7026 167.58 83.3251V144.61C167.58 146.233 166.265 147.548 164.643 147.548H19.3574C17.735 147.548 16.4199 146.233 16.4199 144.61V83.3251C16.4199 81.7026 17.735 80.3876 19.3574 80.3876Z" fill="white" stroke="#E2E2E2" stroke-width="0.839352"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="6.71482" font-weight="bold" letter-spacing="0px"><tspan x="23.7581" y="93.9503">Revenue per Retail Hour by Location</tspan></text>
+<line x1="23.7581" y1="98.8925" x2="165.132" y2="98.8925" stroke="#CCD6DB" stroke-width="0.419676"/>
+<rect x="78.1055" y="103.368" width="23.6216" height="37" fill="#F7F7F7"/>
+<rect x="127.403" y="103.368" width="24.6486" height="37" fill="#F7F7F7"/>
+<rect x="130.917" y="105.087" width="8.49057" height="78.4804" transform="rotate(90 130.917 105.087)" fill="#CBD95D"/>
+<rect x="144.869" y="118.577" width="7.64151" height="92.4324" transform="rotate(90 144.869 118.577)" fill="#5DB2B1"/>
+<rect x="115.221" y="131.968" width="8.49057" height="62.7843" transform="rotate(90 115.221 131.968)" fill="#ED7D43"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.03611" letter-spacing="0px"><tspan x="33.7745" y="110.036">London</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.03611" letter-spacing="0px"><tspan x="24.4736" y="123.036">Manchester</tspan></text>
+<line x1="52.6244" y1="103.368" x2="52.6244" y2="140.368" stroke="#E6EBED" stroke-width="0.388889"/>
+<line x1="52.4299" y1="140.174" x2="162.322" y2="140.174" stroke="#E6EBED" stroke-width="0.388889"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="5.03611" letter-spacing="0px"><tspan x="31.1487" y="139.294">Brighton</tspan></text>
+<g filter="url(#filter1_d_18_279)">
+<path d="M185.733 13.4409H325.987C332.246 13.441 337.32 18.5148 337.32 24.7739V152.071C337.32 158.33 332.246 163.404 325.987 163.404H185.733C179.474 163.404 174.4 158.33 174.4 152.071V24.7739C174.4 18.5148 179.474 13.4409 185.733 13.4409Z" fill="white" stroke="#E2E2E2" stroke-width="0.647611"/>
 </g>
-<mask id="mask0_17_507" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="185" y="19" width="20" height="20">
-<path d="M204.598 19.068H185.148V38.518H204.598V19.068Z" fill="white"/>
+<mask id="mask0_18_279" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="182" y="19" width="19" height="19">
+<path d="M200.35 19.6481H182.377V37.6211H200.35V19.6481Z" fill="white"/>
 </mask>
-<g mask="url(#mask0_17_507)">
-<path d="M202.329 19.068H187.413C186.813 19.068 186.238 19.3112 185.813 19.7324C185.392 20.1582 185.148 20.734 185.148 21.3378V36.2535C185.148 36.8527 185.392 37.4285 185.813 37.8534C186.238 38.2792 186.813 38.5187 187.413 38.5187H202.329C202.929 38.5187 203.504 38.2755 203.93 37.8534C204.355 37.4285 204.594 36.8527 204.594 36.2535V21.3378C204.594 20.7377 204.351 20.1619 203.93 19.737C203.504 19.3112 202.929 19.0727 202.329 19.0727V19.068Z" fill="white"/>
-<path d="M201.916 28.4293L201.061 28.6929C200.758 28.7861 200.522 29.0247 200.429 29.3247L200.166 30.18C200.011 30.686 199.295 30.686 199.14 30.18L198.877 29.3247C198.784 29.0209 198.545 28.7861 198.245 28.6929L197.39 28.4293C196.883 28.2755 196.883 27.5581 197.39 27.4043L198.245 27.1406C198.548 27.0474 198.784 26.8089 198.877 26.5089L199.14 25.6535C199.295 25.1476 200.011 25.1476 200.166 25.6535L200.429 26.5089C200.522 26.8126 200.761 27.0474 201.061 27.1406L201.916 27.4043C202.423 27.5581 202.423 28.2755 201.916 28.4293Z" fill="url(#paint0_radial_17_507)"/>
-<path d="M191.884 21.0093C194.392 21.0093 196.433 22.7442 196.478 25.1594C196.502 25.8396 196.009 26.2123 195.469 26.2123C194.931 26.2123 194.509 25.8358 194.485 25.2032C194.461 23.8419 193.314 22.8328 191.859 22.8328C190.497 22.8328 189.469 23.7934 189.469 25.1063C189.469 26.5365 190.428 27.1692 192.422 27.8979C194.558 28.6722 196.502 29.5881 196.502 32.307C196.502 34.6774 194.651 36.5735 192.07 36.5735C189.489 36.5735 187.45 34.7911 187.45 32.3759C187.45 30.8767 188.176 29.8192 188.881 29.8192C189.493 29.8192 189.865 30.2161 189.865 30.7547C189.865 31.2252 189.469 31.4358 189.469 32.2781C189.469 33.7782 190.688 34.7426 192.07 34.7426C193.525 34.7426 194.485 33.7335 194.485 32.5138C194.485 31.0146 193.525 30.3782 191.531 29.6775C189.302 28.879 187.45 27.9183 187.45 25.2684C187.45 22.8775 189.371 21.0018 191.884 21.0018V21.0093Z" fill="url(#paint1_linear_17_507)"/>
+<g mask="url(#mask0_18_279)">
+<path d="M198.254 19.6481H184.471C183.916 19.6481 183.385 19.8728 182.991 20.262C182.602 20.6555 182.377 21.1876 182.377 21.7455V35.5285C182.377 36.0822 182.602 36.6143 182.991 37.0069C183.385 37.4004 183.916 37.6217 184.471 37.6217H198.254C198.808 37.6217 199.339 37.3969 199.733 37.0069C200.125 36.6143 200.347 36.0822 200.347 35.5285V21.7455C200.347 21.191 200.122 20.6589 199.733 20.2663C199.339 19.8728 198.808 19.6524 198.254 19.6524V19.6481Z" fill="white"/>
+<path d="M197.872 28.2983L197.082 28.542C196.802 28.6281 196.584 28.8485 196.498 29.1257L196.255 29.9161C196.112 30.3837 195.45 30.3837 195.307 29.9161L195.064 29.1257C194.978 28.845 194.757 28.6281 194.479 28.542L193.69 28.2983C193.222 28.1562 193.222 27.4933 193.69 27.3512L194.479 27.1075C194.76 27.0214 194.978 26.801 195.064 26.5237L195.307 25.7333C195.45 25.2658 196.112 25.2658 196.255 25.7333L196.498 26.5237C196.584 26.8044 196.805 27.0214 197.082 27.1075L197.872 27.3512C198.34 27.4933 198.34 28.1562 197.872 28.2983Z" fill="url(#paint0_radial_18_279)"/>
+<path d="M188.601 21.4418C190.919 21.4418 192.806 23.045 192.847 25.2768C192.869 25.9053 192.413 26.2497 191.914 26.2497C191.417 26.2497 191.028 25.9018 191.005 25.3172C190.983 24.0593 189.923 23.1268 188.579 23.1268C187.32 23.1268 186.37 24.0145 186.37 25.2277C186.37 26.5493 187.256 27.134 189.099 27.8073C191.072 28.5228 192.869 29.3691 192.869 31.8816C192.869 34.072 191.159 35.8241 188.774 35.8241C186.389 35.8241 184.505 34.177 184.505 31.9453C184.505 30.5599 185.175 29.5827 185.826 29.5827C186.392 29.5827 186.736 29.9495 186.736 30.4471C186.736 30.8819 186.37 31.0765 186.37 31.8549C186.37 33.2411 187.497 34.1322 188.774 34.1322C190.118 34.1322 191.005 33.1998 191.005 32.0727C191.005 30.6873 190.118 30.0993 188.275 29.4518C186.215 28.7139 184.505 27.8262 184.505 25.3775C184.505 23.1681 186.279 21.4349 188.601 21.4349V21.4418Z" fill="url(#paint1_linear_18_279)"/>
 </g>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="11.246" font-weight="500" letter-spacing="0px"><tspan x="207.41" y="32.6652">Copilot</tspan></text>
-<text opacity="0.9" fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.5431" font-weight="500" letter-spacing="0px"><tspan x="196.395" y="65.343">Welcome </tspan><tspan x="241.893" y="65.343">back </tspan><tspan x="267.52" y="65.343">!</tspan></text>
-<text opacity="0.9" fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.4345" letter-spacing="0px"><tspan x="196.395" y="82.8428">View </tspan><tspan x="215.082" y="82.8428">insights </tspan><tspan x="246.132" y="82.8428">or </tspan><tspan x="255.734" y="82.8428">start </tspan><tspan x="275.566" y="82.8428">a </tspan><tspan x="281.931" y="82.8428">chat </tspan><tspan x="300.379" y="82.8428">by </tspan><tspan x="311.191" y="82.8428">using </tspan><tspan x="196.395" y="95.8428">one </tspan><tspan x="211.921" y="95.8428">of </tspan><tspan x="221.443" y="95.8428">the </tspan><tspan x="235.618" y="95.8428">following </tspan><tspan x="270.79" y="95.8428">suggestions</tspan></text>
-<rect x="195.93" y="107.232" width="149.236" height="17.7981" rx="3.97892" fill="white"/>
-<rect x="195.93" y="107.232" width="149.236" height="17.7981" rx="3.97892" stroke="black" stroke-width="0.929093"/>
-<text opacity="0.7" fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.4345" font-weight="500" letter-spacing="0px"><tspan x="202.018" y="119.035">Show </tspan><tspan x="224.191" y="119.035">budget </tspan><tspan x="254.132" y="119.035">variance </tspan><tspan x="289.435" y="119.035">analysis </tspan><tspan x="322.366" y="119.035">YTD</tspan></text>
-<rect x="195.93" y="130.427" width="88.5808" height="17.7981" rx="3.97892" fill="white"/>
-<rect x="195.93" y="130.427" width="88.5808" height="17.7981" rx="3.97892" stroke="black" stroke-width="0.929093"/>
-<text opacity="0.7" fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.4345" font-weight="500" letter-spacing="0px"><tspan x="202.018" y="142.23">Run </tspan><tspan x="218.755" y="142.23">close </tspan><tspan x="240.714" y="142.23">assistant</tspan></text>
-<path d="M291.986 20.082H344.701C349.068 20.0822 352.609 23.6222 352.609 27.9893C352.609 32.3563 349.068 35.8964 344.701 35.8965H291.986C287.619 35.8965 284.078 32.3563 284.078 27.9893C284.078 23.6221 287.618 20.082 291.986 20.082Z" stroke="url(#paint2_linear_17_507)" stroke-width="1.05431"/>
-<g clip-path="url(#clip3_17_507)">
-<path d="M297.487 27.9035L295.895 27.2755C295.719 27.2063 295.58 27.0673 295.511 26.8917L294.883 25.2993C294.656 24.7244 293.842 24.7244 293.615 25.2993L292.987 26.8917C292.918 27.0673 292.779 27.2061 292.604 27.2755L291.011 27.9035C290.436 28.1303 290.436 28.9438 291.011 29.1705L292.604 29.7986C292.779 29.8678 292.918 30.0068 292.987 30.1824L293.615 31.7747C293.842 32.3496 294.656 32.3496 294.883 31.7747L295.511 30.1824C295.58 30.0068 295.719 29.8679 295.895 29.7986L297.487 29.1705C298.062 28.9438 298.062 28.1303 297.487 27.9035Z" fill="black" fill-opacity="0.9"/>
-<path d="M297.82 26.1561C298.479 26.1561 299.013 25.6223 299.013 24.9638C299.013 24.3053 298.479 23.7715 297.82 23.7715C297.162 23.7715 296.628 24.3053 296.628 24.9638C296.628 25.6223 297.162 26.1561 297.82 26.1561Z" fill="#00D639"/>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.392" font-weight="500" letter-spacing="0px"><tspan x="202.948" y="32.4089">Copilot</tspan></text>
+<text opacity="0.9" fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.90099" font-weight="500" letter-spacing="0px"><tspan x="193.211" y="56.1809">Welcome </tspan><tspan x="231.623" y="56.1809">back </tspan><tspan x="253.258" y="56.1809">!</tspan></text>
+<text opacity="0.9" fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.12079" letter-spacing="0px"><tspan x="193.211" y="70.955">View </tspan><tspan x="208.988" y="70.955">insights </tspan><tspan x="235.202" y="70.955">or </tspan><tspan x="243.308" y="70.955">start </tspan><tspan x="260.051" y="70.955">a </tspan><tspan x="265.424" y="70.955">chat </tspan><tspan x="280.999" y="70.955">by </tspan><tspan x="290.128" y="70.955">using </tspan><tspan x="193.211" y="81.955">one </tspan><tspan x="206.319" y="81.955">of </tspan><tspan x="214.358" y="81.955">the </tspan><tspan x="226.326" y="81.955">following </tspan><tspan x="256.019" y="81.955">suggestions</tspan></text>
+<rect x="192.819" y="91.5456" width="125.992" height="15.026" rx="3.35919" fill="white"/>
+<rect x="192.819" y="91.5456" width="125.992" height="15.026" rx="3.35919" stroke="black" stroke-width="0.784382"/>
+<text opacity="0.7" fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.12079" font-weight="500" letter-spacing="0px"><tspan x="197.958" y="101.543">Show </tspan><tspan x="216.678" y="101.543">budget </tspan><tspan x="241.956" y="101.543">variance </tspan><tspan x="271.76" y="101.543">analysis </tspan><tspan x="299.562" y="101.543">YTD</tspan></text>
+<rect x="192.819" y="111.128" width="74.4656" height="15.026" rx="3.35919" fill="white"/>
+<rect x="192.819" y="111.128" width="74.4656" height="15.026" rx="3.35919" stroke="black" stroke-width="0.784382"/>
+<text opacity="0.7" fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.12079" font-weight="500" letter-spacing="0px"><tspan x="197.958" y="121.126">Run </tspan><tspan x="212.089" y="121.126">close </tspan><tspan x="230.628" y="121.126">assistant</tspan></text>
+<rect x="182.979" y="43.5356" width="142.928" height="88.8966" rx="6.82409" stroke="#DEDEDE" stroke-width="0.593399"/>
+<path d="M267.933 20.5851H316.646C320.681 20.5853 323.953 23.8564 323.953 27.8917C323.953 31.927 320.681 35.1981 316.646 35.1984H267.933C263.898 35.1983 260.626 31.9272 260.626 27.8917C260.626 23.8563 263.898 20.5851 267.933 20.5851Z" stroke="url(#paint2_linear_18_279)" stroke-width="0.974248"/>
+<g clip-path="url(#clip3_18_279)">
+<path d="M273.017 27.8126L271.546 27.2322C271.384 27.1683 271.255 27.0398 271.191 26.8776L270.611 25.4061C270.401 24.8749 269.649 24.8749 269.44 25.4061L268.859 26.8776C268.795 27.0398 268.667 27.1681 268.505 27.2322L267.033 27.8126C266.502 28.0221 266.502 28.7738 267.033 28.9833L268.505 29.5637C268.667 29.6276 268.795 29.7561 268.859 29.9183L269.44 31.3898C269.649 31.921 270.401 31.921 270.611 31.3898L271.191 29.9183C271.255 29.7561 271.384 29.6278 271.546 29.5637L273.017 28.9833C273.549 28.7738 273.549 28.0221 273.017 27.8126Z" fill="black" fill-opacity="0.9"/>
+<path d="M273.325 26.1978C273.934 26.1978 274.427 25.7045 274.427 25.096C274.427 24.4875 273.934 23.9943 273.325 23.9943C272.717 23.9943 272.223 24.4875 272.223 25.096C272.223 25.7045 272.717 26.1978 273.325 26.1978Z" fill="#00D639"/>
 </g>
-<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.4345" font-weight="bold" letter-spacing="0em"><tspan x="301.825" y="31.4271">Insights</tspan></text>
-<g clip-path="url(#clip4_17_507)">
-<path d="M341.889 32.206C344.218 32.206 346.106 30.3179 346.106 27.9887C346.106 25.6596 344.218 23.7715 341.889 23.7715C339.56 23.7715 337.672 25.6596 337.672 27.9887C337.672 30.3179 339.56 32.206 341.889 32.206Z" fill="#D64309"/>
-<path d="M340.764 29.4634V29.0501C340.763 29.0373 340.766 29.0244 340.771 29.0126C340.776 29.0009 340.784 28.9905 340.794 28.9826L341.748 28.0548C342.052 27.7596 342.124 27.6247 342.124 27.4686C342.125 27.4242 342.117 27.38 342.1 27.3389C342.083 27.2978 342.057 27.2608 342.025 27.2303C341.992 27.1998 341.954 27.1765 341.912 27.1618C341.87 27.1472 341.825 27.1416 341.781 27.1453C341.57 27.1453 341.405 27.2859 341.219 27.5207C341.213 27.5287 341.206 27.5355 341.198 27.5407C341.19 27.5459 341.181 27.5495 341.172 27.551C341.162 27.5526 341.152 27.5522 341.143 27.5499C341.134 27.5476 341.125 27.5434 341.117 27.5375L340.696 27.2929C340.687 27.2885 340.68 27.2824 340.674 27.2748C340.668 27.2673 340.664 27.2586 340.662 27.2494C340.66 27.2401 340.66 27.2305 340.662 27.2213C340.665 27.2121 340.669 27.2034 340.675 27.1959C340.793 26.9947 340.962 26.8287 341.166 26.7152C341.37 26.6017 341.601 26.5449 341.834 26.5507C342.412 26.5507 342.842 26.9176 342.842 27.4026C342.842 27.7442 342.665 27.9846 342.26 28.3866L341.667 28.9728H342.792C342.799 28.9722 342.807 28.9732 342.814 28.9757C342.821 28.9782 342.828 28.9821 342.833 28.9873C342.839 28.9924 342.843 28.9987 342.846 29.0056C342.849 29.0126 342.851 29.0201 342.851 29.0276V29.4789C342.85 29.4944 342.844 29.5092 342.833 29.5202C342.822 29.5312 342.807 29.5376 342.792 29.5379H340.836C340.826 29.5388 340.816 29.5375 340.807 29.5341C340.798 29.5306 340.789 29.5251 340.782 29.5179C340.775 29.5108 340.77 29.5022 340.767 29.4927C340.764 29.4833 340.763 29.4733 340.764 29.4634Z" fill="white"/>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.79398" font-weight="bold" letter-spacing="0em"><tspan x="277.026" y="31.0622">Insights</tspan></text>
+<g clip-path="url(#clip4_18_279)">
+<path d="M314.047 31.7882C316.199 31.7882 317.944 30.0435 317.944 27.8913C317.944 25.739 316.199 23.9943 314.047 23.9943C311.895 23.9943 310.15 25.739 310.15 27.8913C310.15 30.0435 311.895 31.7882 314.047 31.7882Z" fill="#D64309"/>
+<path d="M313.008 29.2539V28.872C313.007 28.8602 313.009 28.8483 313.013 28.8374C313.018 28.8265 313.025 28.8169 313.035 28.8096L313.917 27.9523C314.197 27.6795 314.264 27.5548 314.264 27.4106C314.265 27.3695 314.257 27.3287 314.241 27.2907C314.226 27.2528 314.202 27.2186 314.172 27.1904C314.142 27.1622 314.107 27.1406 314.068 27.1271C314.029 27.1136 313.988 27.1084 313.947 27.1119C313.752 27.1119 313.6 27.2418 313.427 27.4587C313.422 27.4661 313.416 27.4724 313.408 27.4772C313.401 27.4821 313.393 27.4853 313.384 27.4868C313.375 27.4882 313.366 27.4879 313.357 27.4857C313.349 27.4836 313.341 27.4797 313.334 27.4743L312.944 27.2482C312.936 27.2442 312.929 27.2385 312.924 27.2315C312.919 27.2246 312.915 27.2165 312.913 27.208C312.911 27.1994 312.911 27.1906 312.913 27.1821C312.915 27.1735 312.919 27.1655 312.924 27.1586C313.034 26.9726 313.191 26.8192 313.379 26.7144C313.567 26.6096 313.781 26.5571 313.996 26.5624C314.53 26.5624 314.928 26.9014 314.928 27.3496C314.928 27.6652 314.764 27.8874 314.39 28.2589L313.842 28.8006H314.881C314.888 28.8 314.895 28.8009 314.901 28.8032C314.908 28.8055 314.914 28.8092 314.919 28.8139C314.924 28.8187 314.928 28.8245 314.931 28.8309C314.934 28.8373 314.935 28.8442 314.935 28.8512V29.2682C314.935 29.2826 314.929 29.2962 314.919 29.3064C314.909 29.3166 314.895 29.3224 314.881 29.3227H313.074C313.065 29.3236 313.055 29.3224 313.047 29.3192C313.038 29.316 313.03 29.3109 313.024 29.3043C313.018 29.2977 313.013 29.2897 313.01 29.281C313.007 29.2723 313.006 29.263 313.008 29.2539Z" fill="white"/>
 </g>
-<rect x="185.351" y="50.3514" width="169.297" height="105.297" rx="8.08307" stroke="#DEDEDE" stroke-width="0.702875"/>
-<rect x="185.531" y="166.383" width="55.9088" height="17.6151" rx="8.80755" stroke="black" stroke-opacity="0.65" stroke-width="0.765874"/>
-<text fill="black" fill-opacity="0.7" style="white-space: pre" xml:space="preserve" font-family="Sage Text" font-size="9.29093" font-weight="500" letter-spacing="0px"><tspan x="194.16" y="178.786">New chat</tspan></text>
+<rect x="182.732" y="139.338" width="51.663" height="16.2774" rx="8.13869" stroke="black" stroke-opacity="0.65" stroke-width="0.707713"/>
+<text fill="black" fill-opacity="0.7" style="white-space: pre" xml:space="preserve" font-family="Sage Text" font-size="8.58537" font-weight="500" letter-spacing="0px"><tspan x="190.705" y="150.799">New chat</tspan></text>
 </g>
 <defs>
-<filter id="filter0_d_17_507" x="0" y="-2" width="335" height="193" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<filter id="filter0_d_18_279" x="0" y="-2" width="320" height="165" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
 <feOffset dy="2"/>
 <feGaussianBlur stdDeviation="2"/>
 <feComposite in2="hardAlpha" operator="out"/>
 <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_17_507"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_17_507" result="shape"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_18_279"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_18_279" result="shape"/>
 </filter>
-<filter id="filter1_d_17_507" x="173" y="12" width="193.535" height="186" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<filter id="filter1_d_18_279" x="172.35" y="13.1167" width="167.02" height="154.063" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="2"/>
-<feGaussianBlur stdDeviation="1"/>
+<feOffset dy="1.72599"/>
+<feGaussianBlur stdDeviation="0.862997"/>
 <feComposite in2="hardAlpha" operator="out"/>
 <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_17_507"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_17_507" result="shape"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_18_279"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_18_279" result="shape"/>
 </filter>
-<radialGradient id="paint0_radial_17_507" cx="0" cy="0" r="1" gradientTransform="matrix(3.61808 4.14603 -3.98018 3.47336 197.434 25.3255)" gradientUnits="userSpaceOnUse">
+<radialGradient id="paint0_radial_18_279" cx="0" cy="0" r="1" gradientTransform="matrix(3.34332 3.83117 -3.67792 3.20959 193.73 25.4303)" gradientUnits="userSpaceOnUse">
 <stop offset="0.34" stop-color="#9D60FF"/>
 <stop offset="0.52" stop-color="#5A99F1"/>
 <stop offset="0.59" stop-color="#32B3E8"/>
@@ -1280,7 +1867,7 @@
 <stop offset="0.88" stop-color="#00D650"/>
 <stop offset="0.9" stop-color="#00D639"/>
 </radialGradient>
-<linearGradient id="paint1_linear_17_507" x1="194.672" y1="21.0903" x2="189.436" y2="36.0713" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint1_linear_18_279" x1="191.177" y1="21.5167" x2="186.339" y2="35.36" gradientUnits="userSpaceOnUse">
 <stop offset="0.27" stop-color="#9D60FF"/>
 <stop offset="0.33" stop-color="#7C78F8"/>
 <stop offset="0.48" stop-color="#29B7E6"/>
@@ -1293,25 +1880,25 @@
 <stop offset="0.65" stop-color="#00D665"/>
 <stop offset="0.66" stop-color="#00D639"/>
 </linearGradient>
-<linearGradient id="paint2_linear_17_507" x1="283.551" y1="36.4237" x2="353.136" y2="36.4237" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint2_linear_18_279" x1="260.139" y1="35.6857" x2="324.44" y2="35.6857" gradientUnits="userSpaceOnUse">
 <stop stop-color="#00D639"/>
 <stop offset="0.512152" stop-color="#11AFFF"/>
 <stop offset="1" stop-color="#8F49FE"/>
 </linearGradient>
-<clipPath id="clip0_17_507">
-<rect width="365" height="203" fill="white"/>
+<clipPath id="clip0_18_279">
+<rect width="365" height="166" fill="white"/>
 </clipPath>
-<clipPath id="clip1_17_507">
-<rect width="7.81085" height="8.27032" fill="white" transform="translate(72.1545 60.1659)"/>
+<clipPath id="clip1_18_279">
+<rect width="7.81085" height="8.27032" fill="white" transform="translate(72.1545 54.1659)"/>
 </clipPath>
-<clipPath id="clip2_17_507">
-<rect width="7.81085" height="8.27032" fill="white" transform="translate(147.696 60.1659)"/>
+<clipPath id="clip2_18_279">
+<rect width="7.81085" height="8.27032" fill="white" transform="translate(147.696 54.1659)"/>
 </clipPath>
-<clipPath id="clip3_17_507">
-<rect width="8.4345" height="8.4345" fill="white" transform="translate(290.58 23.7715)"/>
+<clipPath id="clip3_18_279">
+<rect width="7.79398" height="7.79398" fill="white" transform="translate(266.635 23.9943)"/>
 </clipPath>
-<clipPath id="clip4_17_507">
-<rect width="8.4345" height="8.4345" fill="white" transform="translate(337.672 23.7715)"/>
+<clipPath id="clip4_18_279">
+<rect width="7.79398" height="7.79398" fill="white" transform="translate(310.15 23.9943)"/>
 </clipPath>
 </defs>
 </svg>
@@ -2893,6 +3480,237 @@ Businesses all over the world trust Sage                    </span></h2>
         // the bootstrap testimonial Carousel, Lottie animations, buttons, etc.
         try { ML.loadPendingModules(document.body); } catch (e) {}
       });
+    })();
+  </script>
+
+  <script>
+    /* Product + business-size selector.
+
+       Ported from sage.com's live Optimizely experiment GWO-4624. The size
+       bands and the product/size -> card mapping below are TRANSCRIBED FROM
+       THE RUNNING EXPERIMENT, not invented: each product exposes its own set
+       of sizes (ERP uses 10-49 / 50+, Payroll & HR uses 1-150 / 151-249 /
+       250+), and each combination reveals a specific subset of cards.
+
+       Two departures from live, both deliberate:
+       - Our panels are the existing tabset panels, so the product select
+         switches panel (by id) and the size select filters the cards WITHIN
+         it. Live rebuilds one card container; the visible result is the same.
+       - "Accountants in practice" under Accounting shows the two cards that
+         live in our separate Accountants panel, so that combination switches
+         panel as well. Live has no separate panel to reconcile.
+
+       The bundle's TabSet is not used: it ignores synthetic clicks here, and
+       its `.fade { opacity: 0 }` outranks a plain .active toggle. The CSS
+       above overrides its panel rules so .active is the only thing deciding
+       visibility. */
+    (function () {
+      var product = document.getElementById('opt-gwo-product');
+      var size = document.getElementById('opt-gwo-size');
+      if (!product || !size) return;
+
+      var PANEL_SCOPE =
+        '.uk-sections .score-tab.button-tabset > .tab-content-wrapper-outer' +
+        ' > .tab-content-wrapper-inner > .tab-content > .tab-pane';
+      var panels = [].slice.call(document.querySelectorAll(PANEL_SCOPE));
+      if (!panels.length) return;
+
+      /* Panel ids, read off the markup so nothing can drift out of sync. */
+      var PANEL = {};
+      [].forEach.call(product.options, function (o) { PANEL[o.text.trim()] = o.value; });
+
+      /* Live's matrix. `cards: null` means "show everything in the panel".
+         Otherwise the listed card titles are the ones kept. */
+      var MATRIX = {
+        'Accounting': {
+          panel: PANEL['Accounting'],
+          sizes: [
+            { label: 'Select business size', cards: null },
+            { label: 'Just me',                 cards: ['Sage Sole Trader'] },
+            { label: '1-19 Employees',          cards: ['Sage Accounting'] },
+            { label: '20+ Employees',           cards: ['Sage Intacct'] },
+            { label: 'Accountants in practice', cards: null,
+              panel: PANEL['Accountants'] }
+          ]
+        },
+        'Payroll & HR': {
+          panel: PANEL['Payroll & HR'],
+          sizes: [
+            { label: 'Select business size', cards: null },
+            { label: '1-150 Employees',   cards: ['Sage Payroll', 'Sage HR'] },
+            { label: '151-249 Employees', cards: ['Sage HR'] },
+            { label: '250+ Employees',    cards: ['Sage People'] }
+          ]
+        },
+        'Accountants': {
+          panel: PANEL['Accountants'],
+          sizes: [{ label: 'Select business size', cards: null }]
+        },
+        'ERP': {
+          panel: PANEL['ERP'],
+          sizes: [
+            { label: 'Select business size', cards: null },
+            { label: '10-49 Employees', cards: ['Operations for Sage Intacct'] },
+            { label: '50+ Employees',   cards: ['Sage X3'] }
+          ]
+        },
+        'Explore Sage Ai': {
+          panel: PANEL['Explore Sage Ai'],
+          sizes: [{ label: 'Select business size', cards: null }]
+        }
+      };
+
+      function titleOf(card) {
+        var h = card.querySelector('.inner-heading');
+        return h ? h.textContent.trim() : '';
+      }
+
+      function apply() {
+        var entry = MATRIX[product.options[product.selectedIndex].text.trim()];
+        if (!entry) return;
+        var rule = entry.sizes[size.selectedIndex] || entry.sizes[0];
+
+        var panelId = rule.panel || entry.panel;
+        panels.forEach(function (p) { p.classList.toggle('active', p.id === panelId); });
+
+        var active = document.getElementById(panelId);
+        if (!active) return;
+        [].forEach.call(active.querySelectorAll('.flex-item'), function (card) {
+          card.style.display =
+            (!rule.cards || rule.cards.indexOf(titleOf(card)) !== -1) ? '' : 'none';
+        });
+      }
+
+      function rebuildSizes() {
+        var entry = MATRIX[product.options[product.selectedIndex].text.trim()];
+        size.innerHTML = '';
+        if (!entry) return;
+        entry.sizes.forEach(function (s) {
+          var o = document.createElement('option');
+          o.textContent = s.label;
+          size.appendChild(o);
+        });
+      }
+
+      /* ---- [LIVE-MATCH] Card carousel below 1200px ---------------------
+         Live GWO-4624 turns the card row into a single-card slick carousel
+         with pagination dots at max-width:1199px (see
+         uk-hero-optimizely/reference/gwo-4624-live.css). Above that it stays a
+         flex row. Our port previously wrapped the row at every width.
+
+         Why this is driven from JS rather than CSS alone: slick has to be
+         initialised and destroyed as the breakpoint is crossed, and — unlike
+         live — our cards are FILTERED by the size select via inline
+         `display:none`. Slick clones slides and drives them with transforms,
+         so a hidden slide still occupies a slot and the dots count it. The
+         order below is therefore always: unslick -> filter -> re-slick, so
+         slick only ever sees the cards that should actually be visible.
+
+         slick + jQuery both come from the Sage bundle already on the page. */
+      var MOBILE = window.matchMedia('(max-width: 1199px)');
+
+      function $row() {
+        var active = document.querySelector('.tab-pane.active .score-flex-box');
+        return active && window.jQuery ? window.jQuery(active) : null;
+      }
+
+      function unslick() {
+        var $r = $row();
+        if (!$r) return;
+        if ($r.hasClass('slick-initialized')) { $r.slick('unslick'); }
+        /* Put back any cards reslick() detached, at their original position,
+           so the next filter pass sees the full set again. Without this the
+           hidden cards would be lost the first time the size select changes. */
+        var hidden = $r.data('slickHidden');
+        if (hidden && hidden.length) {
+          hidden.each(function () {
+            var ph = this.__slickPlaceholder;
+            if (ph && ph.parentNode) { ph.parentNode.replaceChild(this, ph); }
+            this.__slickPlaceholder = null;
+          });
+          $r.removeData('slickHidden');
+        }
+      }
+
+      function reslick() {
+        if (!MOBILE.matches) return;
+        var $r = $row();
+        if (!$r || !$r.length || !$r.slick) return;
+        if ($r.hasClass('slick-initialized')) return;
+        /* Only the cards left visible by the size filter become slides. */
+        var visible = $r.children('.flex-item').filter(function () {
+          return this.style.display !== 'none';
+        });
+        if (visible.length < 2) return;   /* one card needs no carousel */
+        /* Slick takes ALL matching children as slides regardless of their
+           inline display, and a `:not([style*=...])` slide selector does not
+           reliably exclude them. The filtered-out cards are detached from the
+           DOM instead and stashed, then put back by unslick() — so slick only
+           ever sees real slides, and the dots count matches what is shown. */
+        var hidden = $r.children('.flex-item').filter(function () {
+          return this.style.display === 'none';
+        });
+        hidden.each(function () {
+          this.__slickPlaceholder = document.createComment('card');
+          this.parentNode.replaceChild(this.__slickPlaceholder, this);
+        });
+        $r.data('slickHidden', hidden);
+        $r.slick({
+          dots: true,
+          arrows: false,
+          infinite: false,
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          adaptiveHeight: false
+        });
+        /* Slick measures the row ONCE at init and writes an inline width onto
+           every slide from it. That measurement is taken before web fonts and
+           the hero's own scaling have settled, so the slides came out ~820px
+           instead of 450px and the single card sat off-centre in an oversized
+           slide. setPosition() re-measures; call it once layout has settled and
+           again on resize, since the row's width is viewport-dependent. */
+        var settle = function () {
+          if ($r.hasClass('slick-initialized')) { $r.slick('setPosition'); }
+        };
+        requestAnimationFrame(settle);
+        setTimeout(settle, 250);
+        if (document.fonts && document.fonts.ready) { document.fonts.ready.then(settle); }
+        window.addEventListener('resize', settle);
+      }
+
+      /* apply() is the existing filter routine; wrap it so every product/size
+         change tears the carousel down first and rebuilds it after. */
+      var baseApply = apply;
+      apply = function () {
+        unslick();
+        baseApply();
+        reslick();
+      };
+
+      /* Crossing the breakpoint in either direction rebuilds or removes it. */
+      function onBreakpoint() {
+        unslick();
+        if (MOBILE.matches) reslick();
+      }
+      if (MOBILE.addEventListener) MOBILE.addEventListener('change', onBreakpoint);
+      else if (MOBILE.addListener) MOBILE.addListener(onBreakpoint);
+
+      product.addEventListener('change', function () { rebuildSizes(); apply(); });
+      size.addEventListener('change', apply);
+      rebuildSizes();
+      apply();
+
+      /* This script runs at parse time, but jQuery and slick arrive later with
+         the Sage bundle (require.js, data-main=main). apply() above therefore
+         completes its FILTER pass with no carousel; poll for slick and build
+         it once the bundle has landed. Same wait-for-require shape the
+         hydration bootstrap above uses. */
+      (function waitForSlick(tries) {
+        tries = tries || 0;
+        var $ = window.jQuery;
+        if ($ && $.fn && $.fn.slick) { onBreakpoint(); return; }
+        if (tries < 100) setTimeout(function () { waitForSlick(tries + 1); }, 100);
+      })();
     })();
   </script>
 </body>
