@@ -1,0 +1,46 @@
+<svg width="365" height="166" viewBox="0 0 365 166" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_25_4847)">
+<g filter="url(#filter0_d_25_4847)">
+<path d="M4 15C4 7.26801 10.268 1 18 1H317C324.732 1 331 7.26801 331 15V148C331 155.732 324.732 162 317 162H18C10.268 162 4 155.732 4 148V15Z" fill="white" stroke="#C6C6C6" stroke-width="0.760539"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.72" font-weight="bold" letter-spacing="0em"><tspan x="21.4023" y="31.7783">Job: MTD Q1 </tspan></text>
+<rect x="20.5041" y="83.5041" width="287.992" height="58.9919" rx="7.56098" fill="white"/>
+<rect x="20.5041" y="83.5041" width="287.992" height="58.9919" rx="7.56098" stroke="#CCD6DB" stroke-width="1.00813"/>
+<text fill="black" fill-opacity="0.65" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.0813" letter-spacing="0em"><tspan x="34.1138" y="101.467">Client</tspan></text>
+<text fill="#007E45" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.0813" font-weight="500" letter-spacing="0em" text-decoration="underline"><tspan x="34.1138" y="117.491">Sutton </tspan><tspan x="34.1138" y="130.491">Landscaping</tspan></text>
+<text fill="black" fill-opacity="0.65" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.0813" letter-spacing="0em"><tspan x="143.667" y="102.475">Job due date</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.0813" font-weight="500" letter-spacing="0em"><tspan x="143.667" y="118.499">07/08/2026</tspan></text>
+<text fill="black" fill-opacity="0.65" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.0813" letter-spacing="0em"><tspan x="245.154" y="101.971">Job status</tspan></text>
+<text fill="#007E45" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.0813" font-weight="500" letter-spacing="0em" text-decoration="underline"><tspan x="245.154" y="117.995">Accounting</tspan></text>
+<path d="M24.0322 49.5039H304.968C306.916 49.5041 308.496 51.0838 308.496 53.0322C308.496 54.9808 306.916 56.5604 304.968 56.5605H24.0322C22.0837 56.5604 20.5039 54.9808 20.5039 53.0322C20.5041 51.0837 22.0837 49.5041 24.0322 49.5039Z" fill="#CCD6DB" stroke="#335B70" stroke-width="1.00813"/>
+<path d="M20 53C20 50.7909 21.7909 49 24 49H167C169.209 49 171 50.7909 171 53V53C171 55.2091 169.209 57 167 57H24C21.7909 57 20 55.2091 20 53V53Z" fill="#335B70"/>
+<text fill="black" fill-opacity="0.55" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.57862" letter-spacing="0em"><tspan x="25.1438" y="70.9176"> </tspan><tspan x="34.8283" y="70.9176"> </tspan><tspan x="41.7816" y="70.9176"> Tasks complete</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.57862" letter-spacing="0em"><tspan x="26.9534" y="70.9176">of</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.57862" font-weight="500" letter-spacing="0em"><tspan x="20" y="70.9176">2</tspan><tspan x="36.6378" y="70.9176">5</tspan></text>
+</g>
+<path d="M271.441 20.2359C271.441 19.3462 272.163 18.625 273.052 18.625H304.717C305.607 18.625 306.328 19.3462 306.328 20.2359V36.3446C306.328 37.2342 305.607 37.9554 304.717 37.9554H273.052C272.163 37.9554 271.441 37.2342 271.441 36.3446V20.2359Z" fill="#0060A7"/>
+<text fill="white" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="11.3911" font-weight="500" letter-spacing="0em"><tspan x="277.885" y="32.6984">New</tspan></text>
+<g clip-path="url(#clip1_25_4847)">
+<path d="M170.548 26.3099L166.963 24.8961C166.568 24.7405 166.255 24.4275 166.099 24.0324L164.685 20.448C164.175 19.154 162.343 19.154 161.833 20.448L160.419 24.0324C160.263 24.4275 159.95 24.7401 159.555 24.8961L155.97 26.3099C154.676 26.8202 154.676 28.6514 155.97 29.1617L159.555 30.5755C159.95 30.7311 160.263 31.0441 160.419 31.4393L161.833 35.0236C162.343 36.3176 164.175 36.3176 164.685 35.0236L166.099 31.4393C166.255 31.0441 166.568 30.7316 166.963 30.5755L170.548 29.1617C171.842 28.6514 171.842 26.8202 170.548 26.3099Z" fill="black" fill-opacity="0.9"/>
+<path d="M171.301 22.3754C172.783 22.3754 173.985 21.1738 173.985 19.6916C173.985 18.2094 172.783 17.0078 171.301 17.0078C169.818 17.0078 168.617 18.2094 168.617 19.6916C168.617 21.1738 169.818 22.3754 171.301 22.3754Z" fill="#00D639"/>
+</g>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="15.1882" letter-spacing="0em"><tspan x="184.111" y="32.3778">Copilot job</tspan></text>
+</g>
+<defs>
+<filter id="filter0_d_25_4847" x="-0.379883" y="-1.37988" width="335.76" height="169.76" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="2"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_25_4847"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_25_4847" result="shape"/>
+</filter>
+<clipPath id="clip0_25_4847">
+<rect width="365" height="166" fill="white"/>
+</clipPath>
+<clipPath id="clip1_25_4847">
+<rect width="18.9852" height="18.9852" fill="white" transform="translate(155 17.0078)"/>
+</clipPath>
+</defs>
+</svg>

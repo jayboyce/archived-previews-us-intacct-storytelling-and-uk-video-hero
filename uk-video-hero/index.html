@@ -263,38 +263,6 @@
         );
     }
 
-    /* ================== TEMPORARY DEBUG GUIDE — REMOVE ==================
-       Bright pink rule on the video panel's LEFT edge, to judge how far the
-       scrim's horizontal fade has to reach now the margins moved.
-
-       Sits on .ns-hero__bg (the media panel), so it tracks the real edge at
-       every width rather than a guessed offset. Above the scrim (z-index 2) so
-       the fade doesn't tint it, and pointer-events:none so it can't intercept
-       clicks. Delete this whole block — and nothing else — to remove.        */
-    .ns-hero::before {
-      /* HIDDEN, not deleted — flip `none` back to `""` to bring the guide back
-         (or add class="debug-scrim" to <body>, see the rule below). */
-      content: none;
-      position: absolute;
-      top: 0;
-      /* Same height as the media panel, so the rule spans exactly the edge the
-         scrim has to cover. */
-      height: calc(var(--video-h-cap) + var(--media-overhang));
-      /* The panel bleeds right and is --video-w wide, so its left edge is
-         --video-w in from the right. */
-      right: var(--video-w);
-      width: 2px;
-      background: #ff00a8;
-      /* Above the scrim: .ns-hero__bg and .ns-hero__scrim are both z-index:0
-         siblings, so a child of the panel would paint underneath the scrim. */
-      z-index: 5;
-      pointer-events: none;
-    }
-    /* Toggle without editing CSS: in devtools run
-         document.body.classList.add('debug-scrim')                          */
-    body.debug-scrim .ns-hero::before { content: ""; }
-    /* ================ END TEMPORARY DEBUG GUIDE ======================== */
-
     /* ---- Content ---- */
     .ns-hero__content {
       position: relative;
@@ -1477,7 +1445,7 @@
         id="heroVideo"
         class="ns-hero__video"
         autoplay muted loop playsinline preload="auto"
-        poster="assets/video/gb-hero-v9-poster.jpg">
+        poster="assets/video/sage-intacct-hero-gb-poster.jpg">
         <!-- Source chosen by viewport in the script below. -->
       </video>
     </div>
@@ -3401,8 +3369,8 @@ Businesses all over the world trust Sage                    </span></h2>
       // Pick the encode by viewport at load — <source media> is unreliable for
       // <video> across browsers, so set the source here instead.
       var src = window.matchMedia("(max-width: 640px)").matches
-        ? "assets/video/gb-hero-v9-web-mobile.mp4"
-        : "assets/video/gb-hero-v9-web.mp4";
+        ? "assets/video/sage-intacct-hero-gb-loop-web-mobile.mp4"
+        : "assets/video/sage-intacct-hero-gb-loop-web.mp4";
       var source = document.createElement("source");
       source.src = src;
       source.type = "video/mp4";

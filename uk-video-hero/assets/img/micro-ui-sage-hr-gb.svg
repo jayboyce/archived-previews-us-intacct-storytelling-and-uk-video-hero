@@ -1,0 +1,37 @@
+<svg width="365" height="166" viewBox="0 0 365 166" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_25_4749)">
+<g filter="url(#filter0_d_25_4749)">
+<path d="M4 15C4 7.26801 10.268 1 18 1H317C324.732 1 331 7.26801 331 15V148C331 155.732 324.732 162 317 162H18C10.268 162 4 155.732 4 148V15Z" fill="white" stroke="#C6C6C6" stroke-width="0.760539"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.72" font-weight="bold" letter-spacing="0em"><tspan x="21.4023" y="31.7783">My tasks</tspan></text>
+</g>
+<rect x="21.3107" y="44.3107" width="290.379" height="48.3787" rx="2.17457" fill="white" stroke="#E2E2E2" stroke-width="0.621306"/>
+<rect x="21.3107" y="102.311" width="290.379" height="48.3787" rx="2.17457" fill="white" stroke="#E2E2E2" stroke-width="0.621306"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.57804" font-weight="bold" letter-spacing="0px"><tspan x="76" y="60.933">New Expense Claim</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.3526" letter-spacing="0px"><tspan x="76" y="72.2644">Requested by Michael klein</tspan></text>
+<text fill="#666666" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="6.12717" letter-spacing="0px"><tspan x="76" y="80.6349">&#xa3;30.00 for Travel</tspan></text>
+<ellipse cx="46.7341" cy="68.5177" rx="14.0925" ry="14.1515" fill="#E5E0EF"/>
+<text fill="#7077A8" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.57804" font-weight="500" letter-spacing="0px"><tspan x="40.6556" y="71.4955">MK</tspan></text>
+<path d="M300.127 68.9563C300.127 70.6553 298.756 72.0327 297.064 72.0327C295.372 72.0327 294 70.6553 294 68.9563C294 67.2572 295.372 65.8799 297.064 65.8799C298.756 65.8799 300.127 67.2572 300.127 68.9563Z" fill="#008C4E"/>
+<ellipse cx="46.7341" cy="127.749" rx="14.0925" ry="14.1515" fill="#E4EEF8"/>
+<text fill="#7077A8" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.57804" font-weight="500" letter-spacing="0px"><tspan x="40.3624" y="130.642">GW</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.57804" font-weight="bold" letter-spacing="0px"><tspan x="75.832" y="120.056">Holiday (Pending approval)</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="7.3526" letter-spacing="0px"><tspan x="75.9536" y="131.496">Requested by Gwen Walker</tspan></text>
+<text fill="#666666" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="6.12717" letter-spacing="0px"><tspan x="75.832" y="139.582">Thurs 28/1</tspan></text>
+<path d="M300.127 127.572C300.127 129.272 298.756 130.649 297.064 130.649C295.372 130.649 294 129.272 294 127.572C294 125.873 295.372 124.496 297.064 124.496C298.756 124.496 300.127 125.873 300.127 127.572Z" fill="#008C4E"/>
+</g>
+<defs>
+<filter id="filter0_d_25_4749" x="-0.380371" y="-1.37988" width="335.761" height="169.76" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="2"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_25_4749"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_25_4749" result="shape"/>
+</filter>
+<clipPath id="clip0_25_4749">
+<rect width="365" height="166" fill="white"/>
+</clipPath>
+</defs>
+</svg>
