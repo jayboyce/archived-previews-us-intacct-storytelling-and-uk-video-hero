@@ -315,8 +315,11 @@ function heroTop() {
 
       '<div class="uk-hero__video-controls lottie-container">' +
         '<div class="lottie-controls">' +
+          // [OPT-CHANGE 22] The sr-only span is a FALLBACK, not decoration.
           '<button type="button" data-uk-hero-toggle class="lottie-control playing" ' +
-                  'aria-label="' + esc(c.pauseLabel) + '"></button>' +
+                  'aria-label="' + esc(c.pauseLabel) + '">' +
+            '<span class="sr-only">' + esc(c.pauseLabel) + '</span>' +
+          '</button>' +
         '</div>' +
       '</div>' +
 
@@ -515,10 +518,14 @@ function renderBody() {
       video.pause();
     }
 
+    var srLabel = toggle.querySelector('.sr-only');
     function sync() {
       var paused = video.paused;
+      var label = paused ? c.playLabel : c.pauseLabel;
       toggle.classList.toggle('playing', !paused);
-      toggle.setAttribute('aria-label', paused ? c.playLabel : c.pauseLabel);
+      toggle.setAttribute('aria-label', label);
+      // [OPT-CHANGE 22] Keep the visible fallback text in step with the
+      if (srLabel) srLabel.textContent = label;
     }
     video.addEventListener('play', sync);
     video.addEventListener('pause', sync);
