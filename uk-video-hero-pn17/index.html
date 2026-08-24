@@ -949,13 +949,27 @@
        image is a flex sibling of the text block. flex-shrink:0 stops it being
        squashed when the text is long, and .caption keeps its flex-grow:1 so
        the CTAs stay aligned across the row. */
+    /* [PN17] The bundle's 24px spacer div trails the media block now that the
+       artwork is last. Live PN17 ends the card on the artwork with only the
+       style box's own padding beneath it (39px there vs the 64px this spacer
+       was producing), so it is suppressed at every size — the media query
+       version below only covered short viewports. */
+    .ns-card__media + .score-style-box.spacer-xs {
+      display: none;
+    }
+
     .ns-card__media {
       flex: 0 0 auto;
       /* [PN17] The artwork sits BELOW the copy, so the gap it owns is above
          it, not beneath it. PN17 carries this as margin-b-sm on the copy
          box; expressed here as margin-top on the media so the card's
-         bottom padding stays the style box's own padding-sm. */
-      margin-top: 24px;
+         bottom padding stays the style box's own padding-sm.
+
+         32px, measured off live PN17 (377px card, same width as ours): the
+         gap between CTA and artwork EQUALS the card's own padding there, so
+         the artwork reads as another block in the card's rhythm rather than
+         something tacked underneath. 24px sat too close to the CTA. */
+      margin-top: 32px;
       /* The wrapper carries the bundle's .score-center-text, which centres its
          contents. That is wrong here: the image is narrower than the card's
          content box (see --vfit-img), so centring floats it 10px right of the
@@ -1254,7 +1268,7 @@
          cramped — but it must never collapse to nothing or the artwork and
          the eyebrow text run together. */
       .ns-card__media {
-        margin-top: max(10px, calc(24px * var(--vfit, 1)));
+        margin-top: max(14px, calc(32px * var(--vfit, 1)));
       }
       /* The micro-UI image's size, as a fraction of the card's content width.
          --vfit-img is set on :root (see below) so it applies at EVERY screen
