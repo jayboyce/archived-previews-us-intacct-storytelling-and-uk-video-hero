@@ -1261,14 +1261,19 @@
       }
       .ns-hero__ratings  { margin-top: max(20px, calc(32px * var(--vfit, 1))); }
 
-      /* The card's micro-UI image. Scaling its HEIGHT alone would distort the
-         The gap BELOW the micro-UI image. Floored at 12px: the image already
-         has a guaranteed 20px inset above it (the card's floored padding), so
-         the space beneath it can run tighter without the image reading as
-         cramped — but it must never collapse to nothing or the artwork and
-         the eyebrow text run together. */
+      /* [PN17] The gap ABOVE the artwork is deliberately NOT compressed by
+         --vfit. PN17 holds it at a flat 32px, equal to the card's padding,
+         and that equality is what makes the artwork read as part of the
+         card's rhythm rather than tacked under the CTA.
+
+         Letting --vfit scale it undid the whole fix at real window heights:
+         at 800-900px tall (an ordinary laptop) it computed to 15-20px, which
+         is what the 24px version already looked like. The compression is
+         meant to reclaim vertical space from padding and leading, not from
+         the one gap that carries this relationship. Other --vfit rules in
+         this block still compress; this one is exempt on purpose. */
       .ns-card__media {
-        margin-top: max(14px, calc(32px * var(--vfit, 1)));
+        margin-top: 32px;
       }
       /* The micro-UI image's size, as a fraction of the card's content width.
          --vfit-img is set on :root (see below) so it applies at EVERY screen
