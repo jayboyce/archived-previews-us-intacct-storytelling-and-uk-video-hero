@@ -1,0 +1,42 @@
+<svg width="365" height="166" viewBox="0 0 365 166" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_25_4816)">
+<g filter="url(#filter0_d_25_4816)">
+<path d="M4 15C4 7.26801 10.268 1 18 1H317C324.732 1 331 7.26801 331 15V148C331 155.732 324.732 162 317 162H18C10.268 162 4 155.732 4 148V15Z" fill="white" stroke="#C6C6C6" stroke-width="0.760539"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.72" font-weight="bold" letter-spacing="0em"><tspan x="21.4023" y="31.7783">Timeline</tspan></text>
+</g>
+<circle cx="144.086" cy="25.0001" r="4.08602" fill="#004D2A"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.80645" letter-spacing="0px"><tspan x="151.441" y="28.7951">Project</tspan></text>
+<circle cx="204.569" cy="25.0001" r="4.08602" fill="#008146"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.80645" letter-spacing="0px"><tspan x="211.924" y="28.7951">Task</tspan></text>
+<circle cx="254.053" cy="25.0001" r="4.08602" fill="#4AA4BE"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.80645" letter-spacing="0px"><tspan x="261.408" y="28.7951">Parent Task</tspan></text>
+<path d="M312 63.3125H148.932V77.2649H312V63.3125Z" fill="#004D2A"/>
+<path d="M237.878 84.2412H162.012V98.1936H237.878V84.2412Z" fill="#008146"/>
+<path d="M237.878 105.17H197.765V119.122H237.878V105.17Z" fill="#4AA4BE"/>
+<path d="M246.598 126.099H215.206V140.051H246.598V126.099Z" fill="#4AA4BE"/>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.72024" letter-spacing="0px"><tspan x="156.209" y="53.3747">May </tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.72024" letter-spacing="0px"><tspan x="219.996" y="53.3747">June</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="8.72024" letter-spacing="0px"><tspan x="287.647" y="53.3747">July</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.59226" letter-spacing="0em"><tspan x="22" y="73.0247">Chain conveyor</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.59226" letter-spacing="0em"><tspan x="22" y="93.7454">Project launch</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.59226" letter-spacing="0em"><tspan x="22" y="114.465">Contract review &#38; validation</tspan></text>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="9.59226" letter-spacing="0em"><tspan x="22" y="135.186">Project scheduling</tspan></text>
+<path d="M149 63L149 149" stroke="#D8D8D8" stroke-width="0.872024"/>
+<path d="M124.027 64.5244L124.027 76.6462" stroke="white" stroke-width="0.872024"/>
+</g>
+<defs>
+<filter id="filter0_d_25_4816" x="-0.380371" y="-1.37988" width="335.761" height="169.76" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="2"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_25_4816"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_25_4816" result="shape"/>
+</filter>
+<clipPath id="clip0_25_4816">
+<rect width="365" height="166" fill="white"/>
+</clipPath>
+</defs>
+</svg>

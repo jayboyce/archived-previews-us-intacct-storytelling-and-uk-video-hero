@@ -1,0 +1,43 @@
+<svg width="365" height="166" viewBox="0 0 365 166" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_25_4790)">
+<g filter="url(#filter0_d_25_4790)">
+<path d="M4 15C4 7.26801 10.268 1 18 1H317C324.732 1 331 7.26801 331 15V148C331 155.732 324.732 162 317 162H18C10.268 162 4 155.732 4 148V15Z" fill="white" stroke="#C6C6C6" stroke-width="0.760539"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.72" font-weight="bold" letter-spacing="0em"><tspan x="21.4023" y="31.7783">Shipment to invoice</tspan></text>
+<rect x="189" y="14" width="36.3211" height="22.3303" rx="11.1651" fill="#335B70"/>
+<text fill="white" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="15.156" font-weight="bold" letter-spacing="0em"><tspan x="197.661" y="31.0304">15</tspan></text>
+</g>
+<path d="M21.5947 52.5702C21.5947 50.0462 24.527 48 28.144 48H305.046C308.663 48 311.595 50.0462 311.595 52.5702V143.43C311.595 145.954 308.663 148 305.046 148H28.144C24.527 148 21.5947 145.954 21.5947 143.43V52.5702Z" fill="#F2F5F6"/>
+<path d="M21 53.3457C21 49.8411 24.8184 47 29.5286 47H303.471C308.181 47 312 49.8411 312 53.3457V141.654C312 145.159 308.181 148 303.471 148H29.5287C24.8184 148 21 145.159 21 141.654V53.3457Z" fill="white"/>
+<path d="M21 53.3457C21 49.8411 24.8184 47 29.5286 47H303.471C308.181 47 312 49.8411 312 53.3457V141.654C312 145.159 308.181 148 303.471 148H29.5287C24.8184 148 21 145.159 21 141.654V53.3457Z" stroke="#E2E2E2" stroke-width="0.875105"/>
+<path d="M42.4225 67.293H33.3647C32.2704 67.293 31.3833 68.1801 31.3833 69.2744V78.3324C31.3833 79.4267 32.2704 80.3138 33.3647 80.3138H42.4225C43.5168 80.3138 44.404 79.4267 44.404 78.3324V69.2744C44.404 68.1801 43.5168 67.293 42.4225 67.293Z" fill="white"/>
+<path d="M42.4225 67.293H33.3647C32.2704 67.293 31.3833 68.1801 31.3833 69.2744V78.3324C31.3833 79.4267 32.2704 80.3138 33.3647 80.3138H42.4225C43.5168 80.3138 44.404 79.4267 44.404 78.3324V69.2744C44.404 68.1801 43.5168 67.293 42.4225 67.293Z" stroke="#668494" stroke-width="0.566116"/>
+<text fill="#007E45" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.1901" font-weight="500" letter-spacing="0em" text-decoration="underline"><tspan x="53.7446" y="69.0002">SH202109003</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.1901" font-weight="bold" letter-spacing="0em"><tspan x="53.7446" y="85.9836">&#xa3;50</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="6.79337" letter-spacing="0em"><tspan x="258.216" y="65.506">30/09</tspan></text>
+<path d="M287.421 71.5391H249.492C244.802 71.5391 241 75.3409 241 80.0306C241 84.7206 244.802 88.5223 249.492 88.5223H287.421C292.111 88.5223 295.913 84.7206 295.913 80.0306C295.913 75.3409 292.111 71.5391 287.421 71.5391Z" fill="#EF6700"/>
+<text fill="white" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.1901" font-weight="bold" letter-spacing="0em"><tspan x="248.129" y="83.719">Shipped</tspan></text>
+<path d="M31.1001 97.2969H299.1" stroke="#E2E2E2" stroke-width="0.566116"/>
+<path d="M42.4225 114.847H33.3647C32.2704 114.847 31.3833 115.734 31.3833 116.828V125.886C31.3833 126.98 32.2704 127.867 33.3647 127.867H42.4225C43.5168 127.867 44.404 126.98 44.404 125.886V116.828C44.404 115.734 43.5168 114.847 42.4225 114.847Z" fill="white"/>
+<path d="M42.4225 114.847H33.3647C32.2704 114.847 31.3833 115.734 31.3833 116.828V125.886C31.3833 126.98 32.2704 127.867 33.3647 127.867H42.4225C43.5168 127.867 44.404 126.98 44.404 125.886V116.828C44.404 115.734 43.5168 114.847 42.4225 114.847Z" stroke="#668494" stroke-width="0.566116"/>
+<text fill="#007E45" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.1901" font-weight="500" letter-spacing="0em" text-decoration="underline"><tspan x="53.7446" y="116.554">SH202109003</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.1901" font-weight="bold" letter-spacing="0em"><tspan x="53.7446" y="133.537">&#xa3;138</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="6.79337" letter-spacing="0em"><tspan x="258.216" y="113.506">30/09</tspan></text>
+<path d="M287.421 119.092H249.492C244.802 119.092 241 122.894 241 127.584C241 132.273 244.802 136.075 249.492 136.075H287.421C292.111 136.075 295.913 132.273 295.913 127.584C295.913 122.894 292.111 119.092 287.421 119.092Z" fill="#EF6700"/>
+<text fill="white" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="10.1901" font-weight="bold" letter-spacing="0em"><tspan x="248.129" y="131.273">Shipped</tspan></text>
+</g>
+<defs>
+<filter id="filter0_d_25_4790" x="-0.380371" y="-1.37988" width="335.761" height="169.76" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="2"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_25_4790"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_25_4790" result="shape"/>
+</filter>
+<clipPath id="clip0_25_4790">
+<rect width="365" height="166" fill="white"/>
+</clipPath>
+</defs>
+</svg>
