@@ -1,0 +1,42 @@
+<svg width="365" height="166" viewBox="0 0 365 166" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_18_396)">
+<g filter="url(#filter0_d_18_396)">
+<path d="M4 15C4 7.26801 10.268 1 18 1H317C324.732 1 331 7.26801 331 15V142C331 149.732 324.732 156 317 156H18C10.268 156 4 149.732 4 142V15Z" fill="white" stroke="#C6C6C6" stroke-width="0.760539"/>
+<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Sage UI" font-size="16.72" font-weight="bold" letter-spacing="0em"><tspan x="21.4023" y="31.2447">Self Assessment Tax Returns</tspan></text>
+<rect x="21" y="48.0566" width="286" height="88" rx="3" fill="#00D639"/>
+<rect x="75" y="50.0566" width="230" height="84" rx="2" fill="white"/>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Open Sans" font-size="14" letter-spacing="0px"><tspan x="87.9792" y="98.5208">Submitted 1 January&#x2028;</tspan><tspan x="87.9792" y="117.921">at 2:13pm by Alice Ferns</tspan></text>
+<text fill="black" fill-opacity="0.9" style="white-space: pre" xml:space="preserve" font-family="Lato" font-size="15.1485" font-weight="bold" letter-spacing="0px"><tspan x="87.9792" y="75.9191">Submitted to HMRC</tspan></text>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M38.6913 91.914L35.4055 95.1998L43.62 103.414L61.6919 85.3424L58.4061 82.0566L43.62 96.8427L38.6913 91.914Z" fill="white"/>
+</g>
+<g filter="url(#filter1_d_18_396)">
+<path d="M277.001 126.263C277.048 119.054 279.228 112.021 283.267 106.049C287.306 100.078 293.023 95.4369 299.696 92.7106C306.37 89.9843 313.701 89.2952 320.766 90.7302C327.83 92.1653 334.312 95.6601 339.393 100.774C344.474 105.888 347.927 112.392 349.316 119.466C350.705 126.539 349.969 133.866 347.199 140.522C344.43 147.178 339.751 152.864 333.754 156.864C327.757 160.865 320.71 163 313.501 163C308.688 163 303.922 162.048 299.478 160.199C295.034 158.35 291 155.64 287.607 152.225C284.215 148.811 281.531 144.759 279.711 140.303C277.891 135.848 276.97 131.076 277.001 126.263Z" fill="white" stroke="#E2E2E2" stroke-width="0.760539"/>
+<path d="M328.345 142.499H298.706C297.687 142.499 296.853 141.665 296.853 140.646C296.853 139.628 297.687 138.794 298.706 138.794H306.116V118.602C304.541 118.602 302.967 119.066 301.577 119.899C297.224 122.863 298.613 128.791 298.613 129.069L299.54 134.811C299.632 135.46 299.447 136.108 298.891 136.571C298.335 137.034 297.687 137.127 297.039 136.849C296.39 136.571 295.927 136.108 295.835 135.367L294.908 129.81C294.816 129.624 292.871 121.196 299.447 116.843C303.152 114.712 307.598 114.249 311.58 115.731V112.86H309.728C308.709 112.86 307.876 112.026 307.876 111.007C307.876 109.989 308.709 109.155 309.728 109.155H311.58V107.303C311.58 106.284 312.414 105.45 313.433 105.45C314.452 105.45 315.285 106.284 315.285 107.303V109.155H317.138C318.157 109.155 318.99 109.989 318.99 111.007C318.99 112.026 318.157 112.86 317.138 112.86H315.285V115.731C319.268 114.249 323.714 114.712 327.419 116.843C333.995 121.196 331.957 129.624 331.865 129.995L330.938 135.46C330.846 136.108 330.383 136.664 329.734 136.942C329.086 137.127 328.438 137.034 327.882 136.664C327.326 136.201 327.141 135.552 327.233 134.904L328.16 129.347C328.252 128.976 329.642 122.956 325.288 120.084C323.899 119.251 322.325 118.788 320.75 118.788V138.794H328.16C329.179 138.794 330.012 139.628 330.012 140.646C330.012 141.665 329.364 142.499 328.345 142.499ZM309.821 138.794H317.23V119.066C316.211 119.343 315.285 119.621 314.359 120.084C314.174 120.177 313.989 120.27 313.711 120.27C313.525 120.27 313.248 120.27 313.062 120.27C312.877 120.27 312.784 120.177 312.599 120.084C311.673 119.621 310.747 119.343 309.728 119.066V138.794H309.821Z" fill="#00D639"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_d_18_396" x="-0.380371" y="-1.38025" width="335.761" height="163.76" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="2"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_18_396"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_18_396" result="shape"/>
+</filter>
+<filter id="filter1_d_18_396" x="274.62" y="89.6195" width="77.7607" height="77.7605" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="2"/>
+<feGaussianBlur stdDeviation="1"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_18_396"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_18_396" result="shape"/>
+</filter>
+<clipPath id="clip0_18_396">
+<rect width="365" height="166" fill="white"/>
+</clipPath>
+</defs>
+</svg>
